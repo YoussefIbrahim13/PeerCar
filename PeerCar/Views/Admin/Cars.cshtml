@@ -1,0 +1,33 @@
+﻿@model IEnumerable<CarRentalMVC.Models.Car>
+
+@{
+    ViewData["Title"] = "Cars";
+}
+
+<h2>Cars</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Model</th>
+            <th>Owner</th>
+            <th>Price per Day</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var car in Model)
+        {
+            <tr>
+                <td>@car.Model</td>
+                <td>@car.Owner.Name</td>
+                <td>@car.PricePerDay</td>
+                <td>
+                    <form method="post" action="@Url.Action("DeleteCar", "Admin", new { carId = car.Id })" style="display:inline;">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

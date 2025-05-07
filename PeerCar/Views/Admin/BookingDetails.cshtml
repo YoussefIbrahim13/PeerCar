@@ -1,0 +1,31 @@
+﻿@model CarRentalMVC.Models.Booking
+
+@{
+    ViewData["Title"] = "Booking Details";
+}
+
+<h2>Booking Details</h2>
+
+<div>
+    <h4>Car Model:</h4>
+    <p>@Model.Car.Model</p>
+
+    <h4>Renter:</h4>
+    <p>@Model.Renter.Name</p>
+
+    <h4>Status:</h4>
+    <p>@Model.Status</p>
+
+    <h4>Total Price:</h4>
+    <p>@Model.TotalPrice</p>
+
+    <h4>Start Date:</h4>
+    <p>@Model.StartDate.ToShortDateString()</p>
+
+    <h4>End Date:</h4>
+    <p>@Model.EndDate.ToShortDateString()</p>
+
+    <form method="post" action="@Url.Action("UpdateBookingStatus", "Admin", new { id = Model.Id, status = "Completed" })" style="display:inline;">
+        <button type="submit" class="btn btn-success">Mark as Completed</button>
+    </form>
+</div>

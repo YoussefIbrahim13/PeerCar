@@ -1,0 +1,35 @@
+﻿@model IEnumerable<CarRentalMVC.Models.Car>
+
+@{
+    ViewData["Title"] = "قائمة السيارات";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<table class="table table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.Brand)</th>
+            <th>@Html.DisplayNameFor(model => model.Model)</th>
+            <th>السعر/اليوم</th>
+            <th>الإجراءات</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(modelItem => item.Brand)</td>
+                <td>@Html.DisplayFor(modelItem => item.Model)</td>
+                <td>@Html.DisplayFor(modelItem => item.PricePerDay)</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">تفاصيل</a>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">تعديل</a>
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">حذف</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="Create" class="btn btn-success">إضافة سيارة جديدة</a>

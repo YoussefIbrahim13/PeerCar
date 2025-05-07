@@ -1,0 +1,30 @@
+﻿@model CarRentalMVC.Models.Car
+
+@{
+    ViewData["Title"] = "تفاصيل السيارة";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h4>@Model.Brand @Model.Model</h4>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">الماركة:</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.Brand)</dd>
+
+            <dt class="col-sm-3">الموديل:</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.Model)</dd>
+
+            <dt class="col-sm-3">السعر/اليوم:</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.PricePerDay)</dd>
+
+            <dt class="col-sm-3">الحالة:</dt>
+            <dd class="col-sm-9">@Html.DisplayFor(model => model.AvailabilityStatus)</dd>
+        </dl>
+    </div>
+    <div class="card-footer">
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">تعديل</a>
+        <a asp-action="Index" class="btn btn-secondary">العودة للقائمة</a>
+    </div>
+</div>

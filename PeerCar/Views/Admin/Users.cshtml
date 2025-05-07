@@ -1,0 +1,33 @@
+﻿@model IEnumerable<CarRentalMVC.Models.User>
+
+@{
+    ViewData["Title"] = "Users";
+}
+
+<h2>Users</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var user in Model)
+        {
+            <tr>
+                <td>@user.Name</td>
+                <td>@user.Email</td>
+                <td>@user.Role</td> <!-- يمكنك تخصيص عرض الدور حسب الحاجة -->
+                <td>
+                    <form method="post" action="@Url.Action("DeleteUser", "Admin", new { userId = user.Id })" style="display:inline;">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

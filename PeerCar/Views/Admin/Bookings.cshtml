@@ -1,0 +1,40 @@
+﻿@model IEnumerable<CarRentalMVC.Models.Booking>
+
+@{
+    ViewData["Title"] = "Bookings";
+}
+
+<h2>Bookings</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Car</th>
+            <th>Renter</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var booking in Model)
+        {
+            <tr>
+                <td>@booking.Car.Model</td>
+                <td>@booking.Renter.Name</td>
+                <td>@booking.Status</td>
+                <td>
+                    <a href="@Url.Action("BookingDetails", "Admin", new { id = booking.Id })" class="btn btn-info">Details</a>
+                    <form method="post" action="@Url.Action("DeleteBooking", "Admin", new { id = booking.Id })" style="display:inline;">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                    <form method="post" action="@Url.Action("UpdateBookingStatus", "Admin", new { id = booking.Id, status = "Confirmed" })" style="display:inline;">
+                        <button type="submit" class="btn btn-success">Confirm</button>
+                    </form>
+                    <form method="post" action="@Url.Action("UpdateBookingStatus", "Admin", new { id = booking.Id, status = "Cancelled" })" style="display:inline;">
+                        <button type="submit" class="btn btn-warning">Cancel</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

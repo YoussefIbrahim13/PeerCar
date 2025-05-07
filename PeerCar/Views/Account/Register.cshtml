@@ -1,0 +1,33 @@
+﻿@model CarRentalMVC.Models.RegisterViewModel
+
+@{
+    ViewData["Title"] = "إنشاء حساب جديد";
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<form asp-action="Register" method="post">
+    <div class="form-group">
+        <label asp-for="Email" class="control-label"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Password" class="control-label"></label>
+        <input asp-for="Password" type="password" class="form-control" />
+        <span asp-validation-for="Password" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ConfirmPassword" class="control-label"></label>
+        <input asp-for="ConfirmPassword" type="password" class="form-control" />
+        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="سجل الآن" class="btn btn-primary" />
+    </div>
+</form>
+
+<a href="@Url.Action("Login", "Account")">هل لديك حساب؟ تسجيل الدخول</a>
