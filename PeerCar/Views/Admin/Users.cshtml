@@ -1,33 +1,137 @@
 ﻿@model IEnumerable<CarRentalMVC.Models.User>
 
 @{
-    ViewData["Title"] = "Users";
+    ViewData["Title"] = "Manage Users";
 }
 
-<h2>Users</h2>
+<!-- Hero Section with Background -->
+<div class="hero-section position-relative mb-5">
+    <div class="hero-overlay"></div>
+    <div class="container position-relative py-5">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto text-center text-white">
+                <h1 class="display-3 fw-bold mb-4 animate__animated animate__fadeInDown">User Management</h1>
+                <p class="lead fs-4 mb-4 animate__animated animate__fadeInUp">Administer user accounts and permissions</p>
+            </div>
+        </div>
+    </div>
+</div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Username</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var user in Model)
-        {
-            <tr>
-                <td>@user.Name</td>
-                <td>@user.Email</td>
-                <td>@user.Role</td> <!-- يمكنك تخصيص عرض الدور حسب الحاجة -->
-                <td>
-                    <form method="post" action="@Url.Action("DeleteUser", "Admin", new { userId = user.Id })" style="display:inline;">
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<!-- Users List Section -->
+<div class="container mb-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="card-title fw-bold mb-0">Registered Users</h4>
+                        <button class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-person-plus-fill me-2"></i>Add New User
+                        </button>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Username</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var user in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar-circle me-2 bg-primary-subtle text-primary">
+                                                    @(user.Name.Substring(0, 1).ToUpper())
+                                                </div>
+                                                <div>
+                                                    <span class="fw-semibold">@user.Name</span>
+                                                    <small class="d-block text-muted">@user.FirstName @user.LastName</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>@user.Email</td>
+                                        <td>
+                                            <span class="badge rounded-pill bg-@(user.Role == CarRentalMVC.Models.UserRole.Owner ? "danger" : "info")">
+                                                @user.Role
+                                            </span>
+                                        </td>
+                                        <td>
+                                            @{
+                                                string statusClass = user.Status switch
+                                                {
+                                                    CarRentalMVC.Models.UserStatus.Active => "success",
+                                                    CarRentalMVC.Models.UserStatus.Inactive => "secondary",
+                                                    CarRentalMVC.Models.UserStatus.Suspended => "danger",
+                                                    CarRentalMVC.Models.UserStatus.PendingVerification => "warning",
+                                                    _ => "secondary"
+                                                };
+                                            }
+                                            <span class="badge rounded-pill bg-@statusClass">@user.Status</span>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="bi bi-gear-fill me-1"></i> Status
+                                                </button>
+                                                <ul class="dropdown-menu">
+                                                    @foreach (var status in Enum.GetValues(typeof(CarRentalMVC.Models.UserStatus)))
+                                                    {
+                                                        <li>
+                                                            <form method="post" action="@Url.Action("UpdateUserStatus", "Admin", new { userId = user.Id, status = status })">
+                                                                <button type="submit" class="dropdown-item @(user.Status.ToString() == status.ToString() ? "active" : "")">
+                                                                    @status
+                                                                </button>
+                                                            </form>
+                                                        </li>
+                                                    }
+                                                </ul>
+                                                <button type="button" class="btn btn-sm btn-outline-secondary" title="Edit User">
+                                                    <i class="bi bi-pencil"></i>
+                                                </button>
+                                                <form method="post" action="@Url.Action("DeleteUser", "Admin", new { userId = user.Id })" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete this user?');">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete User">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .avatar-circle {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
+    .dropdown-item.active {
+        font-weight: bold;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Admin users page loaded successfully");
+        });
+    </script>
+}

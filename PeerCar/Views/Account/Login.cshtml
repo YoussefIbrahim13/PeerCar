@@ -1,34 +1,79 @@
 ﻿@model CarRentalMVC.Models.LoginViewModel
 
 @{
-    ViewData["Title"] = "تسجيل الدخول";
+    ViewData["Title"] = "Login";
 }
 
-<h1>@ViewData["Title"]</h1>
-
-<form asp-action="Login" method="post">
-    <div class="form-group">
-        <label asp-for="Email" class="control-label"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Password" class="control-label"></label>
-        <input asp-for="Password" type="password" class="form-control" />
-        <span asp-validation-for="Password" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <div class="form-check">
-            <input asp-for="RememberMe" class="form-check-input" type="checkbox" />
-            <label asp-for="RememberMe" class="form-check-label">تذكرني</label>
+<!-- Hero Section with Background -->
+<div class="hero-section position-relative mb-5">
+    <div class="hero-overlay"></div>
+    <div class="container position-relative py-5">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto text-center text-white">
+                <h1 class="display-3 fw-bold mb-4 animate__animated animate__fadeInDown">Welcome Back</h1>
+                <p class="lead fs-4 mb-4 animate__animated animate__fadeInUp">Sign in to your PeerCar account</p>
+            </div>
         </div>
     </div>
+</div>
 
-    <div class="form-group">
-        <input type="submit" value="تسجيل الدخول" class="btn btn-primary" />
+<!-- Login Form Section -->
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-lg-6 col-md-8 mx-auto">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 p-md-5">
+                    <h4 class="card-title fw-bold mb-4 text-center">Account Login</h4>
+                    
+                    <form asp-action="Login" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+                        
+                        <div class="mb-4">
+                            <label asp-for="Email" class="form-label fw-semibold">Email Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-envelope"></i></span>
+                                <input asp-for="Email" class="form-control" placeholder="Enter your email" />
+                            </div>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Password" class="form-label fw-semibold">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="bi bi-lock"></i></span>
+                                <input asp-for="Password" type="password" class="form-control" placeholder="Enter your password" />
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="form-check">
+                                <input asp-for="RememberMe" class="form-check-input" type="checkbox" />
+                                <label asp-for="RememberMe" class="form-check-label">Remember me</label>
+                            </div>
+                        </div>
+
+                        <div class="d-grid mb-4">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+                            </button>
+                        </div>
+                        
+                        <div class="text-center">
+                            <p class="mb-0">Don't have an account? <a asp-action="Register" class="text-primary fw-semibold">Register now</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-</form>
+</div>
 
-<a href="@Url.Action("Register", "Account")">ليس لديك حساب؟ سجل الآن!</a>
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Login page loaded successfully");
+        });
+    </script>
+}

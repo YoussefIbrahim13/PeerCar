@@ -10,7 +10,7 @@ namespace CarRentalMVC.Models
         public int Id { get; set; }
 
         [Required]
-        public int UserId { get; set; } // Reviewer
+        public required string UserId { get; set; } // Changed from int to string for IdentityUser compatibility
 
         [Required]
         public int TargetId { get; set; } // Car or Owner being reviewed
@@ -29,16 +29,17 @@ namespace CarRentalMVC.Models
         [Range(1, 5)]
         public int Rating { get; set; }
 
+        [Required]
         [StringLength(500)]
-        public string Comment { get; set; }
+        public string Comment { get; set; } = string.Empty;
 
         [DataType(DataType.DateTime)]
         public DateTime Date { get; set; } = DateTime.Now;
 
         // Navigation properties
         [ForeignKey("UserId")]
-        public User User { get; set; }
+        public User? User { get; set; }
         public int? CarId { get; set; }
-        public Car Car { get; set; }
+        public Car? Car { get; set; }
     }
 }

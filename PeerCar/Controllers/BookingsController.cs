@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CarRentalMVC.Controllers
 {
-    [Authorize]  // التأكد من أن المستخدم مسجل دخوله
+    [Authorize]  // Ensures the user is logged in
     public class BookingsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -18,59 +18,86 @@ namespace CarRentalMVC.Controllers
             _context = context;
         }
 
-        // عرض كل الحجوزات للمستخدم
+        // Display all bookings for the user
         public async Task<IActionResult> MyBookings()
         {
-            var userId = User.Identity.Name;  // الحصول على الـ UserName
+            var userId = User.Identity?.Name;  // Get UserName considering potential null value
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
             var bookings = await _context.Bookings
-                .Where(b => b.Renter.Name == userId)  // استخدام اسم المستخدم لاستخراج الحجوزات الخاصة به
-                .Include(b => b.Car)  // تضمين معلومات السيارة المرتبطة بالحجز
-                .Include(b => b.Renter)  // تضمين معلومات المستأجر
+                .Where(b => b.RenterId == userId)  // Use user ID to retrieve their bookings
+                .Include(b => b.Car)  // Include information about the car associated with the booking
+                .Include(b => b.Renter)  // Include renter information
                 .ToListAsync();
 
             return View(bookings);
         }
 
-        // عرض صفحة إنشاء حجز
+        // Show booking creation page
         public IActionResult Create(int carId)
         {
-            var car = _context.Cars.FirstOrDefault(c => c.Id == carId);
+            var car = _context.Cars.Include(c => c.Owner).FirstOrDefault(c => c.Id == carId);
             if (car == null)
             {
                 return NotFound();
             }
 
-            // إعداد الحجز الجديد باستخدام تفاصيل السيارة
+            var userId = User.Identity?.Name;
+            if (userId == null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var renter = _context.Users.FirstOrDefault(u => u.UserName == userId);
+            if (renter == null)
+            {
+                return NotFound("User not found");
+            }
+
+            // Set up new booking using car details
             var booking = new Booking
             {
                 CarId = carId,
-                TotalPrice = car.PricePerDay  // السعر يوميًا للسيارة
+                TotalPrice = car.PricePerDay,  // Daily price of the car
+                RenterId = userId,
+                Car = car,
+                Renter = renter,
+                Status = BookingStatus.Pending
             };
             return View(booking);
         }
 
-        // معالجة عملية إنشاء الحجز
+        // Process booking creation
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(Booking booking)
         {
             if (ModelState.IsValid)
             {
-                // تعيين الـ RenterId إلى الـ User الحالي (المستخدم الذي قام بتسجيل الدخول)
-                booking.RenterId = User.Identity.Name;
+                // Set RenterId to the current User (logged in user)
+                var userId = User.Identity?.Name;
+                if (userId == null)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
 
-                // تحديث حالة الحجز إلى Pending (معلق) عند الإنشاء
+                booking.RenterId = userId;
+
+                // Update booking status to Pending when created
                 booking.Status = BookingStatus.Pending;
 
                 _context.Add(booking);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(MyBookings));  // إعادة توجيه إلى صفحة الحجوزات الخاصة بالمستخدم
+                return RedirectToAction(nameof(MyBookings));  // Redirect to user's bookings page
             }
 
             return View(booking);
         }
 
-        // عرض تفاصيل الحجز
+        // Display booking details
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -91,7 +118,7 @@ namespace CarRentalMVC.Controllers
             return View(booking);
         }
 
-        // تحديث حالة الحجز إلى "مكتمل" أو "ملغي"
+        // Update booking status to "Completed" or "Cancelled"
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateStatus(int bookingId, BookingStatus status)
@@ -103,15 +130,15 @@ namespace CarRentalMVC.Controllers
                 return NotFound();
             }
 
-            // تحديث حالة الحجز
+            // Update booking status
             booking.Status = status;
             _context.Update(booking);
             await _context.SaveChangesAsync();
 
-            return RedirectToAction(nameof(MyBookings));  // إعادة توجيه إلى صفحة الحجوزات الخاصة بالمستخدم
+            return RedirectToAction(nameof(MyBookings));  // Redirect to user's bookings page
         }
 
-        // إلغاء الحجز
+        // Cancel booking
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> CancelBooking(int bookingId)
@@ -123,7 +150,7 @@ namespace CarRentalMVC.Controllers
                 return NotFound();
             }
 
-            // تحديث الحالة إلى "ملغى"
+            // Update status to "Cancelled"
             booking.Status = BookingStatus.Cancelled;
             _context.Update(booking);
             await _context.SaveChangesAsync();

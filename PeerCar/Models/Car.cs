@@ -1,39 +1,41 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Microsoft.AspNetCore.Http;
+using System.Collections.Generic;
 
 namespace CarRentalMVC.Models
 {
     public class Car
     {
         public int Id { get; set; }
-        public string Brand { get; set; }
-        public string Model { get; set; }
+        public required string Brand { get; set; }
+        public required string Model { get; set; }
         public int Year { get; set; }
         [Column(TypeName = "decimal(18,2)")]
         public decimal PricePerDay { get; set; }
-        public string Location { get; set; }
+        public required string Location { get; set; }
 
         [NotMapped]
-        [Display(Name = "صورة السيارة")]
-        public IFormFile ImageFile { get; set; }
+        [Display(Name = "Car Image")]
+        public IFormFile? ImageFile { get; set; }
         
-        public string ImageUrl { get; set; }
+        public required string ImageUrl { get; set; } = string.Empty;
 
-        // Foreign key
-        public int OwnerId { get; set; }
+        // Foreign key - updated from int to string for IdentityUser compatibility
+        public required string OwnerId { get; set; } = string.Empty;
 
         // Navigation properties
-        public User Owner { get; set; }
+        public required User Owner { get; set; }
         public enum CarAvailabilityStatus
-    {
-        Available,
-        Rented,
-        Maintenance,
-        Reserved
-    }
+        {
+            Available,
+            Rented,
+            Maintenance,
+            Reserved
+        }
 
         
-        public ICollection<Booking> Bookings { get; set; }
+        public required ICollection<Booking> Bookings { get; set; } = new List<Booking>();
         public ICollection<Review> Reviews { get; set; } = new List<Review>();
         public CarAvailabilityStatus AvailabilityStatus { get; set; }
     }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
+using System;
 
 namespace CarRentalMVC.Controllers
 {
@@ -11,12 +12,18 @@ namespace CarRentalMVC.Controllers
     {
         private readonly SignInManager<User> _signInManager;
         private readonly UserManager<User> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ILogger<AccountController> _logger;
 
-        public AccountController(SignInManager<User> signInManager, UserManager<User> userManager, ILogger<AccountController> logger)
+        public AccountController(
+            SignInManager<User> signInManager, 
+            UserManager<User> userManager, 
+            RoleManager<IdentityRole> roleManager,
+            ILogger<AccountController> logger)
         {
             _signInManager = signInManager;
             _userManager = userManager;
+            _roleManager = roleManager;
             _logger = logger;
         }
 
@@ -67,19 +74,40 @@ namespace CarRentalMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new User { Name = model.Email, Email = model.Email };
-                var result = await _userManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
+                try
                 {
-                    _logger.LogInformation("User created a new account with password.");
+                    var user = new User 
+                    { 
+                        UserName = model.Email, 
+                        Email = model.Email,
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        Name = $"{model.FirstName} {model.LastName}",
+                        Role = UserRole.Renter,  // Default role
+                        EmailConfirmed = true // For testing purposes, auto-confirm email
+                    };
+                    
+                    var result = await _userManager.CreateAsync(user, model.Password);
+                    if (result.Succeeded)
+                    {
+                        _logger.LogInformation("User created a new account with password.");
+                        
+                        // Assign the "Renter" role to the user
+                        await _userManager.AddToRoleAsync(user, "Renter");
 
-                    // Automatically sign in the user after successful registration
-                    await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction("Index", "Home");
+                        // Automatically sign in the user after successful registration
+                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        return RedirectToAction("Index", "Home");
+                    }
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
                 }
-                foreach (var error in result.Errors)
+                catch (Exception ex)
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    _logger.LogError(ex, "Error during user registration");
+                    ModelState.AddModelError(string.Empty, "An error occurred during registration. Please try again.");
                 }
             }
             return View(model);

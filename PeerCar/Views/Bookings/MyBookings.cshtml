@@ -1,43 +1,128 @@
 ﻿@model IEnumerable<CarRentalMVC.Models.Booking>
 
 @{
-    ViewData["Title"] = "حجوزات المستخدم";
+    ViewData["Title"] = "My Bookings";
 }
 
-<h2>@ViewData["Title"]</h2>
+<!-- Hero Section with Background -->
+<div class="hero-section position-relative mb-5">
+    <div class="hero-overlay"></div>
+    <div class="container position-relative py-5">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto text-center text-white">
+                <h1 class="display-3 fw-bold mb-4 animate__animated animate__fadeInDown">My Bookings</h1>
+                <p class="lead fs-4 mb-4 animate__animated animate__fadeInUp">Manage all your car rental reservations</p>
+            </div>
+        </div>
+    </div>
+</div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>رقم الحجز</th>
-            <th>السيارة</th>
-            <th>تاريخ البداية</th>
-            <th>تاريخ النهاية</th>
-            <th>السعر الكلي</th>
-            <th>الحالة</th>
-            <th>الإجراءات</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var booking in Model)
-        {
-            <tr>
-                <td>@booking.Id</td>
-                <td>@booking.Car.Brand</td>
-                <td>@booking.StartDate.ToString("d")</td>
-                <td>@booking.EndDate.ToString("d")</td>
-                <td>@booking.TotalPrice</td>
-                <td>@booking.Status</td>
-                <td>
-                    @if (booking.Status == CarRentalMVC.Models.BookingStatus.Pending)
+<!-- Bookings List Section -->
+<div class="container mb-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h4 class="card-title fw-bold mb-4">Your Current Bookings</h4>
+                    
+                    @if (!Model.Any())
                     {
-                        <form method="post" action="/Bookings/CancelBooking">
-                            <input type="hidden" name="bookingId" value="@booking.Id" />
-                            <button type="submit" class="btn btn-danger">إلغاء الحجز</button>
-                        </form>
+                        <div class="text-center py-5">
+                            <div class="mb-3">
+                                <i class="bi bi-calendar-x fs-1 text-muted"></i>
+                            </div>
+                            <h5 class="mb-3">You don't have any bookings yet</h5>
+                            <p class="text-muted mb-4">Start by browsing available cars and make your first reservation</p>
+                            <a asp-controller="Cars" asp-action="Index" class="btn btn-primary">
+                                <i class="bi bi-search me-2"></i>Browse Cars
+                            </a>
+                        </div>
                     }
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+                    else
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Booking ID</th>
+                                        <th>Car</th>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>Total Price</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var booking in Model)
+                                    {
+                                        <tr>
+                                            <td>
+                                                <span class="fw-semibold">#@booking.Id</span>
+                                            </td>
+                                            <td>
+                                                <span class="fw-semibold">@booking.Car.Brand @booking.Car.Model</span>
+                                            </td>
+                                            <td>@booking.StartDate.ToString("MMM dd, yyyy")</td>
+                                            <td>@booking.EndDate.ToString("MMM dd, yyyy")</td>
+                                            <td>
+                                                <span class="fw-semibold">$@booking.TotalPrice</span>
+                                            </td>
+                                            <td>
+                                                @{
+                                                    string statusClass = booking.Status.ToString().ToLower() switch
+                                                    {
+                                                        "confirmed" => "bg-success",
+                                                        "pending" => "bg-warning",
+                                                        "cancelled" => "bg-danger",
+                                                        "completed" => "bg-info",
+                                                        _ => "bg-secondary"
+                                                    };
+                                                }
+                                                <span class="badge rounded-pill @statusClass">@booking.Status</span>
+                                            </td>
+                                            <td>
+                                                @if (booking.Status == CarRentalMVC.Models.BookingStatus.Pending)
+                                                {
+                                                    <form method="post" action="/Bookings/CancelBooking">
+                                                        <input type="hidden" name="bookingId" value="@booking.Id" />
+                                                        <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                            <i class="bi bi-x-circle me-1"></i>Cancel
+                                                        </button>
+                                                    </form>
+                                                }
+                                                else
+                                                {
+                                                    <a href="#" class="btn btn-sm btn-outline-primary">
+                                                        <i class="bi bi-info-circle me-1"></i>Details
+                                                    </a>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Additional Actions -->
+    <div class="row">
+        <div class="col-12 text-center">
+            <a asp-controller="Cars" asp-action="Index" class="btn btn-primary">
+                <i class="bi bi-search me-2"></i>Find More Cars
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("My bookings page loaded successfully");
+        });
+    </script>
+}

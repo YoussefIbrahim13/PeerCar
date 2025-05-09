@@ -1,8 +1,288 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    bool isAdmin = User.IsInRole("Admin");
 }
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<CarRentalMVC.Models.User> SignInManager
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<!-- Hero Section with Background -->
+<div class="hero-section position-relative mb-5">
+    <div class="hero-overlay"></div>
+    <div class="container position-relative py-5">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto text-center text-white">
+                <h1 class="display-3 fw-bold mb-4 animate__animated animate__fadeInDown">Welcome to PeerCar</h1>
+                <p class="lead fs-4 mb-4 animate__animated animate__fadeInUp">The smarter way to rent or share cars in your community</p>
+                <div class="d-flex justify-content-center gap-3 animate__animated animate__fadeInUp animate__delay-1s">
+                    <a asp-controller="Cars" asp-action="Index" class="btn btn-primary btn-lg px-4 py-2">Find a Car</a>
+                    @if (isAdmin)
+                    {
+                        <a asp-controller="Cars" asp-action="Create" class="btn btn-outline-light btn-lg px-4 py-2">Add New Car</a>
+                    }
+                </div>
+                @if (SignInManager.IsSignedIn(User) && !isAdmin)
+                {
+                    <div class="alert alert-light text-center mt-3 animate__animated animate__fadeIn animate__delay-1s">
+                        <i class="bi bi-info-circle me-2"></i> Only administrators can add cars to our fleet
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- Features Section -->
+<div class="container mb-5">
+    <div class="row text-center mb-4">
+        <div class="col-12">
+            <h2 class="fw-bold">How PeerCar Works</h2>
+            <p class="text-muted">Simple, secure, and convenient car sharing</p>
+        </div>
+    </div>
+    
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="feature-card text-center p-4">
+                <div class="icon-wrapper mb-3">
+                    <i class="bi bi-search fs-1 text-primary"></i>
+                </div>
+                <h4>Browse</h4>
+                <p>Search through our diverse selection of peer-shared vehicles</p>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="feature-card text-center p-4">
+                <div class="icon-wrapper mb-3">
+                    <i class="bi bi-calendar-check fs-1 text-primary"></i>
+                </div>
+                <h4>Book</h4>
+                <p>Reserve your preferred car with just a few clicks</p>
+            </div>
+        </div>
+        
+        <div class="col-md-4">
+            <div class="feature-card text-center p-4">
+                <div class="icon-wrapper mb-3">
+                    <i class="bi bi-key fs-1 text-primary"></i>
+                </div>
+                <h4>Drive</h4>
+                <p>Pick up the keys and enjoy your journey</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Main Actions Cards -->
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-12 mb-4">
+            <h2 class="fw-bold">Quick Actions</h2>
+        </div>
+    </div>
+    
+    <div class="row g-4">
+        <div class="col-lg-4 col-md-6">
+            <div class="card action-card border-0 shadow-sm h-100 transition-card">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="icon-circle bg-primary-subtle me-3">
+                            <i class="bi bi-car-front fs-4 text-primary"></i>
+                        </div>
+                        <h5 class="card-title mb-0">Browse Cars</h5>
+                    </div>
+                    <p class="card-text text-muted">Discover the perfect vehicle for your next adventure or everyday needs.</p>
+                    <a asp-controller="Cars" asp-action="Index" class="btn btn-primary mt-2">View All Cars</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6">
+            <div class="card action-card border-0 shadow-sm h-100 transition-card">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="icon-circle bg-success-subtle me-3">
+                            <i class="bi bi-journal-check fs-4 text-success"></i>
+                        </div>
+                        <h5 class="card-title mb-0">My Bookings</h5>
+                    </div>
+                    <p class="card-text text-muted">Track and manage all your current and upcoming reservations.</p>
+                    <a asp-controller="Bookings" asp-action="MyBookings" class="btn btn-success mt-2">View Bookings</a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6">
+            <div class="card action-card border-0 shadow-sm h-100 transition-card">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="icon-circle bg-info-subtle me-3">
+                            <i class="bi bi-person-circle fs-4 text-info"></i>
+                        </div>
+                        <h5 class="card-title mb-0">Account</h5>
+                    </div>
+                    <p class="card-text text-muted">Access your profile and manage your personal information.</p>
+                    <div class="d-flex gap-2 mt-2">
+                        <a asp-controller="Account" asp-action="Login" class="btn btn-info">Login</a>
+                        <a asp-controller="Account" asp-action="Register" class="btn btn-outline-info">Register</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Reviews Section -->
+<div class="container mb-5">
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <h2 class="fw-bold">What Our Users Say</h2>
+            <p class="text-muted">Real experiences from the PeerCar community</p>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-12">
+            <div class="reviews-carousel position-relative">
+                <div class="review-slider">
+                    @await Component.InvokeAsync("RecentReviews", new { count = 5 })
+                </div>
+                <div class="carousel-controls mt-4 text-center">
+                    <button class="btn btn-sm btn-outline-primary me-2 prev-review">
+                        <i class="bi bi-chevron-left"></i> Previous
+                    </button>
+                    <button class="btn btn-sm btn-outline-primary next-review">
+                        Next <i class="bi bi-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="text-center mt-4">
+                <a asp-controller="Reviews" asp-action="ReviewList" class="btn btn-primary">
+                    View All Reviews <i class="bi bi-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Additional Services -->
+<div class="container mb-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="fw-bold">Other Services</h2>
+        </div>
+    </div>
+    
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="card h-100 border-0 shadow-sm transition-card">
+                <div class="card-body p-4">
+                    @if (isAdmin)
+                    {
+                        <h5 class="card-title fw-bold mb-3">Manage Cars</h5>
+                        <p class="card-text">As an administrator, you can add new vehicles to the fleet for users to rent.</p>
+                        <a asp-controller="Cars" asp-action="Create" class="btn btn-primary btn-sm">Add New Car</a>
+                    }
+                    else
+                    {
+                        <h5 class="card-title fw-bold mb-3">Car Rentals</h5>
+                        <p class="card-text">Explore our selection of cars available for rent. All vehicles are added and managed by our administrators.</p>
+                        <a asp-controller="Cars" asp-action="Index" class="btn btn-primary btn-sm">Browse Cars</a>
+                    }
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card h-100 border-0 shadow-sm transition-card">
+                <div class="card-body p-4">
+                    <h5 class="card-title fw-bold mb-3">Admin Portal</h5>
+                    <p class="card-text">For administrators: Comprehensive tools to manage platform users, vehicles, and reservations.</p>
+                    <div class="btn-group">
+                        <a asp-controller="Admin" asp-action="Users" class="btn btn-outline-dark btn-sm">Users</a>
+                        <a asp-controller="Admin" asp-action="Cars" class="btn btn-outline-dark btn-sm">Cars</a>
+                        <a asp-controller="Admin" asp-action="Bookings" class="btn btn-outline-dark btn-sm">Bookings</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Add some interaction to the cards
+        document.addEventListener('DOMContentLoaded', function() {
+            // Calculate dynamic prices if needed
+            console.log("Home page loaded successfully");
+            
+            // Simple carousel logic for reviews
+            const reviewContainer = document.querySelector('.review-slider');
+            const prevBtn = document.querySelector('.prev-review');
+            const nextBtn = document.querySelector('.next-review');
+            
+            if (reviewContainer && prevBtn && nextBtn) {
+                let scrollAmount = 0;
+                const cardWidth = 320; // Approximate width of a review card with margin
+                
+                nextBtn.addEventListener('click', () => {
+                    scrollAmount += cardWidth;
+                    // Prevent scrolling too far
+                    const maxScroll = reviewContainer.scrollWidth - reviewContainer.clientWidth;
+                    if (scrollAmount > maxScroll) scrollAmount = maxScroll;
+                    
+                    reviewContainer.scroll({
+                        left: scrollAmount,
+                        behavior: 'smooth'
+                    });
+                });
+                
+                prevBtn.addEventListener('click', () => {
+                    scrollAmount -= cardWidth;
+                    if (scrollAmount < 0) scrollAmount = 0;
+                    
+                    reviewContainer.scroll({
+                        left: scrollAmount,
+                        behavior: 'smooth'
+                    });
+                });
+            }
+        });
+    </script>
+    
+    <style>
+        .review-slider {
+            display: flex;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 20px 0;
+            scrollbar-width: thin;
+            scrollbar-color: #dee2e6 #f8f9fa;
+            gap: 20px;
+        }
+        
+        .review-slider::-webkit-scrollbar {
+            height: 6px;
+        }
+        
+        .review-slider::-webkit-scrollbar-track {
+            background: #f8f9fa;
+        }
+        
+        .review-slider::-webkit-scrollbar-thumb {
+            background-color: #dee2e6;
+            border-radius: 20px;
+        }
+        
+        .review-card {
+            min-width: 300px;
+            max-width: 300px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .review-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+        }
+    </style>
+}

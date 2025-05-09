@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
 namespace CarRentalMVC.Models
@@ -20,7 +21,7 @@ namespace CarRentalMVC.Models
         public int CarId { get; set; }
 
         [Required]
-        public string RenterId { get; set; }
+        public required string RenterId { get; set; }
 
         [Required]
         [DataType(DataType.Date)]
@@ -38,11 +39,11 @@ namespace CarRentalMVC.Models
         public BookingStatus Status { get; set; }
 
         [ForeignKey("CarId")]
-        public Car Car { get; set; }
+        public required Car Car { get; set; }
 
         [ForeignKey("RenterId")]
-        public User Renter { get; set; }
+        public required User Renter { get; set; }
 
-        public Payment Payment { get; set; }
+        public Payment? Payment { get; set; }
     }
 }

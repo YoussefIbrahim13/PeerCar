@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CarRentalMVC.Models
@@ -16,7 +17,7 @@ namespace CarRentalMVC.Models
         public decimal Amount { get; set; }
 
         [Required]
-        public string PaymentMethod { get; set; } // Card, PayPal, Cash
+        public required string PaymentMethod { get; set; } // Card, PayPal, Cash
 
         public enum PaymentStatus
         {
@@ -32,10 +33,10 @@ namespace CarRentalMVC.Models
         [DataType(DataType.DateTime)]
         public DateTime PaymentDate { get; set; } = DateTime.Now;
 
-        public string TransactionId { get; set; }
+        public string TransactionId { get; set; } = string.Empty;
 
         // Navigation property
         [ForeignKey("BookingId")]
-        public Booking Booking { get; set; }
+        public Booking? Booking { get; set; }
     }
 }

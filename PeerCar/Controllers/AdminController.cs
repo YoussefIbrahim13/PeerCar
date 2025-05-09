@@ -6,7 +6,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CarRentalMVC.Controllers
 {
-    [Authorize(Roles = "Admin")] // التأكد أن المستخدم لديه صلاحيات الادمن
+    [Authorize(Roles = "Admin")]
+    [Route("admin")]
     public class AdminController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -16,7 +17,32 @@ namespace CarRentalMVC.Controllers
             _context = context;
         }
 
-        // عرض قائمة بالحجوزات
+        // GET: /admin
+        [Route("")]
+        [Route("dashboard")]
+        public async Task<IActionResult> Dashboard()
+        {
+            // Get summary counts for the dashboard
+            ViewBag.TotalUsers = await _context.Users.CountAsync();
+            ViewBag.TotalCars = await _context.Cars.CountAsync();
+            ViewBag.TotalBookings = await _context.Bookings.CountAsync();
+            ViewBag.PendingBookings = await _context.Bookings
+                .Where(b => b.Status == BookingStatus.Pending)
+                .CountAsync();
+            
+            // Get recent bookings for quick overview
+            var recentBookings = await _context.Bookings
+                .Include(b => b.Car)
+                .Include(b => b.Renter)
+                .OrderByDescending(b => b.Id)
+                .Take(5)
+                .ToListAsync();
+                
+            return View(recentBookings);
+        }
+
+        // GET: /admin/bookings
+        [Route("bookings")]
         public async Task<IActionResult> Bookings()
         {
             var bookings = await _context.Bookings
@@ -26,21 +52,24 @@ namespace CarRentalMVC.Controllers
             return View(bookings);
         }
 
-        // عرض قائمة بالمستخدمين
+        // GET: /admin/users
+        [Route("users")]
         public async Task<IActionResult> Users()
         {
             var users = await _context.Users.ToListAsync();
             return View(users);
         }
 
-        // عرض قائمة بالسيارات
+        // GET: /admin/cars
+        [Route("cars")]
         public async Task<IActionResult> Cars()
         {
             var cars = await _context.Cars.Include(c => c.Owner).ToListAsync();
             return View(cars);
         }
 
-        // عرض تفاصيل حجز
+        // GET: /admin/bookings/{id}
+        [Route("bookings/{id}")]
         public async Task<IActionResult> BookingDetails(int id)
         {
             var booking = await _context.Bookings
@@ -56,8 +85,9 @@ namespace CarRentalMVC.Controllers
             return View(booking);
         }
 
-        // تغيير حالة الحجز
+        // POST: /admin/bookings/update-status
         [HttpPost]
+        [Route("bookings/update-status")]
         public async Task<IActionResult> UpdateBookingStatus(int id, string status)
         {
             var booking = await _context.Bookings.FindAsync(id);
@@ -77,8 +107,32 @@ namespace CarRentalMVC.Controllers
             return BadRequest("Invalid status.");
         }
 
-        // حذف حجز
+        // POST: /admin/users/update-status
         [HttpPost]
+        [Route("users/update-status")]
+        public async Task<IActionResult> UpdateUserStatus(string userId, string status)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // تحويل النص إلى حالة المستخدم
+            if (Enum.TryParse(status, out UserStatus userStatus))
+            {
+                user.Status = userStatus;
+                user.LastActive = DateTime.Now;
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Users));
+            }
+
+            return BadRequest("Invalid status.");
+        }
+
+        // POST: /admin/bookings/delete
+        [HttpPost]
+        [Route("bookings/delete")]
         public async Task<IActionResult> DeleteBooking(int id)
         {
             var booking = await _context.Bookings.FindAsync(id);
@@ -92,8 +146,9 @@ namespace CarRentalMVC.Controllers
             return RedirectToAction(nameof(Bookings));
         }
 
-        // حذف مستخدم
+        // POST: /admin/users/delete
         [HttpPost]
+        [Route("users/delete")]
         public async Task<IActionResult> DeleteUser(string userId)
         {
             var user = await _context.Users.FindAsync(userId);
@@ -107,8 +162,9 @@ namespace CarRentalMVC.Controllers
             return RedirectToAction(nameof(Users));
         }
 
-        // حذف سيارة
+        // POST: /admin/cars/delete
         [HttpPost]
+        [Route("cars/delete")]
         public async Task<IActionResult> DeleteCar(int carId)
         {
             var car = await _context.Cars.FindAsync(carId);

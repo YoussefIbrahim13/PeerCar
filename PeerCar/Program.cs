@@ -2,32 +2,67 @@
 using CarRentalMVC.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore; // Ensure this namespace is included
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using System;
+using System.IO;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// إعداد قاعدة البيانات (التأكد من استخدام الـ Dev و Prod Connections حسب البيئة)
+// Get SQLite connection string from appsettings.json
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+// Configure DbContext to use SQLite
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString(
-        builder.Environment.IsDevelopment() ? "DevConnection" : "ProdConnection")));
+    options.UseSqlite(connectionString));
 
-// إضافة خدمات المصادقة Identity
-builder.Services.AddIdentity<User, IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>() // Ensure this method is available
-    .AddDefaultTokenProviders(); // لتوليد الرموز (مثل الرموز الخاصة بإعادة تعيين كلمة المرور)
+// Identity configuration remains the same
+builder.Services.AddIdentity<User, IdentityRole>(options => {
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequiredLength = 6;
+})
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
 
-builder.Services.AddControllersWithViews(); // إضافة خدمات الـ MVC
+builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
 
-// تأكد من أن قاعدة البيانات تم إنشاؤها في بداية تشغيل التطبيق
+// Create and initialize the database
 using (var scope = app.Services.CreateScope())
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-    dbContext.Database.EnsureCreated(); // تأكد من أن قاعدة البيانات موجودة
+    var services = scope.ServiceProvider;
+    try
+    {
+        var dbContext = services.GetRequiredService<ApplicationDbContext>();
+        
+        // Migrate the database instead of recreating it
+        dbContext.Database.Migrate();
+        
+        // Create initial roles if needed
+        var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
+        if (!await roleManager.RoleExistsAsync("Admin"))
+        {
+            await roleManager.CreateAsync(new IdentityRole("Admin"));
+        }
+        if (!await roleManager.RoleExistsAsync("Owner"))
+        {
+            await roleManager.CreateAsync(new IdentityRole("Owner"));
+        }
+        if (!await roleManager.RoleExistsAsync("Renter"))
+        {
+            await roleManager.CreateAsync(new IdentityRole("Renter"));
+        }
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "An error occurred while initializing the database.");
+    }
 }
 
-// تكوين أنابيب HTTP (التعامل مع الاستثناءات، HSTS، إلخ)
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -39,9 +74,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization(); // إضافة خدمة المصادقة
+app.UseAuthentication(); // Make sure this is called before UseAuthorization
+app.UseAuthorization();
 
-// ضبط المسارات (Routing)
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");

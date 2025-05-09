@@ -1,23 +1,125 @@
 ﻿@model CarRentalMVC.Models.Booking
 
 @{
-    ViewData["Title"] = "إنشاء حجز";
+    ViewData["Title"] = "Create Booking";
 }
 
-<h2>@ViewData["Title"]</h2>
+<!-- Hero Section with Background -->
+<div class="hero-section position-relative mb-5">
+    <div class="hero-overlay"></div>
+    <div class="container position-relative py-5">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto text-center text-white">
+                <h1 class="display-3 fw-bold mb-4 animate__animated animate__fadeInDown">Book Your Car</h1>
+                <p class="lead fs-4 mb-4 animate__animated animate__fadeInUp">Complete your reservation details</p>
+            </div>
+        </div>
+    </div>
+</div>
 
-<form method="post">
-    <div class="form-group">
-        <label for="StartDate">تاريخ البداية</label>
-        <input type="date" class="form-control" id="StartDate" name="StartDate" required />
+<!-- Booking Form Section -->
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h4 class="card-title fw-bold mb-4">Reservation Details</h4>
+                    
+                    <form method="post">
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="StartDate" class="form-label fw-semibold">Start Date</label>
+                                    <input type="date" class="form-control" id="StartDate" name="StartDate" required />
+                                    <div class="form-text">The day you'll pick up the car</div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="EndDate" class="form-label fw-semibold">End Date</label>
+                                    <input type="date" class="form-control" id="EndDate" name="EndDate" required />
+                                    <div class="form-text">The day you'll return the car</div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12">
+                                <div class="alert alert-info">
+                                    <div class="d-flex align-items-center">
+                                        <i class="bi bi-info-circle-fill me-2"></i>
+                                        <div>
+                                            <h5 class="mb-1">Booking Information</h5>
+                                            <p class="mb-0">The total price will be calculated based on the selected dates and the car's daily rate.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12">
+                                <div class="mb-3">
+                                    <label for="TotalPrice" class="form-label fw-semibold">Total Price</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text">$</span>
+                                        <input type="text" class="form-control" id="TotalPrice" name="TotalPrice" value="@Model.TotalPrice" readonly />
+                                    </div>
+                                    <div class="form-text">The total cost for your booking period</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="submit" class="btn btn-success px-4">
+                                <i class="bi bi-calendar-check me-2"></i>Confirm Booking
+                            </button>
+                            <a asp-controller="Cars" asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>Back to Cars
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="form-group">
-        <label for="EndDate">تاريخ النهاية</label>
-        <input type="date" class="form-control" id="EndDate" name="EndDate" required />
-    </div>
-    <div class="form-group">
-        <label for="TotalPrice">السعر الكلي</label>
-        <input type="text" class="form-control" id="TotalPrice" name="TotalPrice" value="@Model.TotalPrice" readonly />
-    </div>
-    <button type="submit" class="btn btn-primary">إنشاء الحجز</button>
-</form>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Date range validation
+            const startDateInput = document.getElementById('StartDate');
+            const endDateInput = document.getElementById('EndDate');
+            const totalPriceInput = document.getElementById('TotalPrice');
+            
+            // Set minimum date to today
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            const todayStr = `${yyyy}-${mm}-${dd}`;
+            
+            startDateInput.min = todayStr;
+            
+            // Update end date min when start date changes
+            startDateInput.addEventListener('change', function() {
+                endDateInput.min = this.value;
+                calculateTotalPrice();
+            });
+            
+            endDateInput.addEventListener('change', calculateTotalPrice);
+            
+            function calculateTotalPrice() {
+                if (startDateInput.value && endDateInput.value) {
+                    const start = new Date(startDateInput.value);
+                    const end = new Date(endDateInput.value);
+                    const days = Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1;
+                    
+                    // Assuming we have a dailyRate variable from the model
+                    // This is just a placeholder and might need to be adjusted
+                    const dailyRate = @(ViewBag.DailyRate ?? 0);
+                    totalPriceInput.value = (days * dailyRate).toFixed(2);
+                }
+            }
+            
+            console.log("Create booking page loaded successfully");
+        });
+    </script>
+}

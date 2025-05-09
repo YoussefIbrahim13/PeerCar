@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 
 namespace CarRentalMVC.Models
 {
@@ -8,24 +10,36 @@ namespace CarRentalMVC.Models
         Renter
     }
 
-    public class User
+    public enum UserStatus
     {
-        public int Id { get; set; }
+        Active,
+        Inactive,
+        Suspended,
+        PendingVerification
+    }
 
+    public class User : IdentityUser
+    {
         [Required, StringLength(100)]
-        public string Name { get; set; }
+        public required string Name { get; set; }
 
-        [Required, EmailAddress]
-        public string Email { get; set; }
+        [Required, StringLength(50)]
+        public required string FirstName { get; set; }
 
-        [Required]
-        public string PasswordHash { get; set; } // استخدم تجزئة بدلاً من كلمة المرور نفسها
-
-        [Phone]
-        public string Phone { get; set; }
+        [Required, StringLength(50)]
+        public required string LastName { get; set; }
 
         [Required]
         public UserRole Role { get; set; }
+
+        [Required]
+        public UserStatus Status { get; set; } = UserStatus.Active;
+
+        [DataType(DataType.Date)]
+        public DateTime DateRegistered { get; set; } = DateTime.Now;
+
+        [DataType(DataType.Date)]
+        public DateTime? LastActive { get; set; }
 
         // Navigation properties
         public ICollection<Car> OwnedCars { get; set; } = new List<Car>();

@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using CarRentalMVC.Models;
 
 namespace CarRentalMVC.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext<User>
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
@@ -11,7 +12,6 @@ namespace CarRentalMVC.Data
         }
 
         // جداول قاعدة البيانات
-        public DbSet<User> Users { get; set; }
         public DbSet<Car> Cars { get; set; }
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Payment> Payments { get; set; }
@@ -19,6 +19,8 @@ namespace CarRentalMVC.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+            
             // تكوين العلاقات بين الجداول
             modelBuilder.Entity<Car>()
                 .HasOne(c => c.Owner)
@@ -36,7 +38,6 @@ namespace CarRentalMVC.Data
                 .WithMany(u => u.Reviews)
                 .HasForeignKey(r => r.UserId);
            
-
             modelBuilder.Entity<Booking>()
                 .HasOne(b => b.Renter)
                 .WithMany(u => u.Bookings)
@@ -52,8 +53,6 @@ namespace CarRentalMVC.Data
             modelBuilder.Entity<Car>()
               .Property(c => c.PricePerDay)
               .HasColumnType("decimal(18,2)");
-
-
         }
     }
 }

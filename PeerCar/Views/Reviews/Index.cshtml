@@ -1,0 +1,87 @@
+@model IEnumerable<CarRentalMVC.Models.Review>
+
+@{
+    ViewData["Title"] = "Reviews";
+}
+
+<h1>Reviews</h1>
+
+<div class="mb-3">
+    <a asp-action="Create" class="btn btn-primary">Create New Review</a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        No reviews found.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Reviewer</th>
+                    <th>Rating</th>
+                    <th>Target</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @if (item.User != null)
+                            {
+                                @item.User.UserName
+                            }
+                            else
+                            {
+                                <span>Unknown User</span>
+                            }
+                        </td>
+                        <td>
+                            @for (int i = 0; i < item.Rating; i++)
+                            {
+                                <i class="bi bi-star-fill text-warning"></i>
+                            }
+                            @for (int i = item.Rating; i < 5; i++)
+                            {
+                                <i class="bi bi-star text-secondary"></i>
+                            }
+                        </td>
+                        <td>
+                            @if (item.TargetType == CarRentalMVC.Models.Review.ReviewTargetType.Car && item.Car != null)
+                            {
+                                <a asp-controller="Cars" asp-action="Details" asp-route-id="@item.CarId">
+                                    @item.Car.Brand @item.Car.Model
+                                </a>
+                            }
+                            else if (item.TargetType == CarRentalMVC.Models.Review.ReviewTargetType.User)
+                            {
+                                <span>User #@item.TargetId</span>
+                            }
+                        </td>
+                        <td>@item.Date.ToString("yyyy-MM-dd")</td>
+                        <td>
+                            <div class="btn-group">
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info">
+                                    <i class="bi bi-eye"></i> Details
+                                </a>
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-primary">
+                                    <i class="bi bi-pencil"></i> Edit
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger">
+                                    <i class="bi bi-trash"></i> Delete
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

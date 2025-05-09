@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
 
 public class CarsController : Controller
 {
@@ -33,6 +34,7 @@ public class CarsController : Controller
     }
 
     // GET: Cars/Create
+    [Authorize(Roles = "Admin")]
     public IActionResult Create()
     {
         // تحويل الـ enum إلى قائمة SelectListItem
@@ -46,7 +48,9 @@ public class CarsController : Controller
 
         return View();
     }
+    
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Create([Bind("Id,Brand,Model,PricePerDay,AvailabilityStatus")] Car car)
     {
         if (ModelState.IsValid)
@@ -79,6 +83,7 @@ public class CarsController : Controller
     }
 
     // GET: Cars/Edit/5
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
@@ -105,6 +110,7 @@ public class CarsController : Controller
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> Edit(int id, [Bind("Id,Brand,Model,PricePerDay,AvailabilityStatus")] Car car)
     {
         if (id != car.Id)

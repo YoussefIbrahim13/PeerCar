@@ -1,40 +1,168 @@
 ﻿@model IEnumerable<CarRentalMVC.Models.Booking>
 
 @{
-    ViewData["Title"] = "Bookings";
+    ViewData["Title"] = "Manage Bookings";
 }
 
-<h2>Bookings</h2>
+<!-- Hero Section with Background -->
+<div class="hero-section position-relative mb-5">
+    <div class="hero-overlay"></div>
+    <div class="container position-relative py-5">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto text-center text-white">
+                <h1 class="display-3 fw-bold mb-4 animate__animated animate__fadeInDown">Booking Management</h1>
+                <p class="lead fs-4 mb-4 animate__animated animate__fadeInUp">Administer all reservations in the platform</p>
+            </div>
+        </div>
+    </div>
+</div>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Car</th>
-            <th>Renter</th>
-            <th>Status</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var booking in Model)
-        {
-            <tr>
-                <td>@booking.Car.Model</td>
-                <td>@booking.Renter.Name</td>
-                <td>@booking.Status</td>
-                <td>
-                    <a href="@Url.Action("BookingDetails", "Admin", new { id = booking.Id })" class="btn btn-info">Details</a>
-                    <form method="post" action="@Url.Action("DeleteBooking", "Admin", new { id = booking.Id })" style="display:inline;">
-                        <button type="submit" class="btn btn-danger">Delete</button>
-                    </form>
-                    <form method="post" action="@Url.Action("UpdateBookingStatus", "Admin", new { id = booking.Id, status = "Confirmed" })" style="display:inline;">
-                        <button type="submit" class="btn btn-success">Confirm</button>
-                    </form>
-                    <form method="post" action="@Url.Action("UpdateBookingStatus", "Admin", new { id = booking.Id, status = "Cancelled" })" style="display:inline;">
-                        <button type="submit" class="btn btn-warning">Cancel</button>
-                    </form>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<!-- Bookings List Section -->
+<div class="container mb-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="card-title fw-bold mb-0">All Reservations</h4>
+                        <div>
+                            <div class="btn-group" role="group">
+                                <button type="button" class="btn btn-sm btn-outline-primary active">All</button>
+                                <button type="button" class="btn btn-sm btn-outline-primary">Pending</button>
+                                <button type="button" class="btn btn-sm btn-outline-primary">Confirmed</button>
+                                <button type="button" class="btn btn-sm btn-outline-primary">Completed</button>
+                                <button type="button" class="btn btn-sm btn-outline-primary">Cancelled</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Booking ID</th>
+                                    <th>Car</th>
+                                    <th>Renter</th>
+                                    <th>Period</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var booking in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            <span class="fw-semibold">#@booking.Id</span>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="car-icon me-2 bg-primary-subtle text-primary rounded">
+                                                    <i class="bi bi-car-front"></i>
+                                                </div>
+                                                <span>@booking.Car.Brand @booking.Car.Model</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="avatar-circle me-2 bg-info-subtle text-info">
+                                                    @(booking.Renter.Name.Substring(0, 1).ToUpper())
+                                                </div>
+                                                <span>@booking.Renter.Name</span>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="small">
+                                                <div><i class="bi bi-calendar-check me-1"></i> @booking.StartDate.ToString("MMM dd, yyyy")</div>
+                                                <div><i class="bi bi-calendar-x me-1"></i> @booking.EndDate.ToString("MMM dd, yyyy")</div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            @{
+                                                string statusClass = booking.Status.ToString().ToLower() switch
+                                                {
+                                                    "confirmed" => "bg-success",
+                                                    "pending" => "bg-warning",
+                                                    "cancelled" => "bg-danger",
+                                                    "completed" => "bg-info",
+                                                    _ => "bg-secondary"
+                                                };
+                                            }
+                                            <span class="badge rounded-pill @statusClass">@booking.Status</span>
+                                        </td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" id="dropdownMenuButton-@booking.Id" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Actions
+                                                </button>
+                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton-@booking.Id">
+                                                    <li>
+                                                        <a href="@Url.Action("BookingDetails", "Admin", new { id = booking.Id })" class="dropdown-item">
+                                                            <i class="bi bi-eye me-2"></i>View Details
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <form method="post" action="@Url.Action("UpdateBookingStatus", "Admin", new { id = booking.Id, status = "Confirmed" })">
+                                                            <button type="submit" class="dropdown-item">
+                                                                <i class="bi bi-check-circle me-2 text-success"></i>Confirm
+                                                            </button>
+                                                        </form>
+                                                    </li>
+                                                    <li>
+                                                        <form method="post" action="@Url.Action("UpdateBookingStatus", "Admin", new { id = booking.Id, status = "Cancelled" })">
+                                                            <button type="submit" class="dropdown-item">
+                                                                <i class="bi bi-x-circle me-2 text-danger"></i>Cancel
+                                                            </button>
+                                                        </form>
+                                                    </li>
+                                                    <li><hr class="dropdown-divider"></li>
+                                                    <li>
+                                                        <form method="post" action="@Url.Action("DeleteBooking", "Admin", new { id = booking.Id })">
+                                                            <button type="submit" class="dropdown-item text-danger">
+                                                                <i class="bi bi-trash me-2"></i>Delete
+                                                            </button>
+                                                        </form>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .avatar-circle, .car-icon {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Admin bookings page loaded successfully");
+            
+            // Toggle filter buttons
+            const filterButtons = document.querySelectorAll('.btn-group .btn-outline-primary');
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    // Here you would add filtering logic
+                });
+            });
+        });
+    </script>
+}

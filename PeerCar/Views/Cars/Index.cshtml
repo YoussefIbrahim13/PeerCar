@@ -1,35 +1,112 @@
 ﻿@model IEnumerable<CarRentalMVC.Models.Car>
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<CarRentalMVC.Models.User> SignInManager
+@inject UserManager<CarRentalMVC.Models.User> UserManager
 
 @{
-    ViewData["Title"] = "قائمة السيارات";
+    ViewData["Title"] = "Available Cars";
+    bool isAdmin = User.IsInRole("Admin");
 }
 
-<h1>@ViewData["Title"]</h1>
+<!-- Hero Section with Background -->
+<div class="hero-section position-relative mb-5">
+    <div class="hero-overlay"></div>
+    <div class="container position-relative py-5">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto text-center text-white">
+                <h1 class="display-3 fw-bold mb-4 animate__animated animate__fadeInDown">Available Cars</h1>
+                <p class="lead fs-4 mb-4 animate__animated animate__fadeInUp">Find the perfect vehicle for your next journey</p>
+                @if (isAdmin)
+                {
+                    <div class="d-flex justify-content-center gap-3 animate__animated animate__fadeInUp animate__delay-1s">
+                        <a asp-action="Create" class="btn btn-primary btn-lg px-4 py-2">Add New Car</a>
+                    </div>
+                }
+                else if (SignInManager.IsSignedIn(User))
+                {
+                    <div class="alert alert-info text-center animate__animated animate__fadeInUp animate__delay-1s">
+                        <i class="bi bi-info-circle me-2"></i> Only administrators can add new cars to the system.
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
 
-<table class="table table-striped">
-    <thead class="thead-dark">
-        <tr>
-            <th>@Html.DisplayNameFor(model => model.Brand)</th>
-            <th>@Html.DisplayNameFor(model => model.Model)</th>
-            <th>السعر/اليوم</th>
-            <th>الإجراءات</th>
-        </tr>
-    </thead>
-    <tbody>
+<!-- Filter Section -->
+<div class="container mb-4">
+    <div class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+            <h4 class="card-title mb-3">Filter Options</h4>
+            <form method="get" class="row g-3">
+                <div class="col-md-4">
+                    <label class="form-label">Brand</label>
+                    <select class="form-select" name="brand">
+                        <option value="">All Brands</option>
+                        <!-- Add brand options dynamically -->
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label class="form-label">Price Range</label>
+                    <select class="form-select" name="priceRange">
+                        <option value="">Any Price</option>
+                        <option value="0-50">$0 - $50 per day</option>
+                        <option value="50-100">$50 - $100 per day</option>
+                        <option value="100-200">$100 - $200 per day</option>
+                        <option value="200+">$200+ per day</option>
+                    </select>
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button type="submit" class="btn btn-primary w-100">Apply Filters</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Cars Grid -->
+<div class="container mb-5">
+    <div class="row g-4">
         @foreach (var item in Model)
         {
-            <tr>
-                <td>@Html.DisplayFor(modelItem => item.Brand)</td>
-                <td>@Html.DisplayFor(modelItem => item.Model)</td>
-                <td>@Html.DisplayFor(modelItem => item.PricePerDay)</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info">تفاصيل</a>
-                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning">تعديل</a>
-                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger">حذف</a>
-                </td>
-            </tr>
+            <div class="col-lg-4 col-md-6">
+                <div class="card h-100 border-0 shadow-sm transition-card">
+                    <div class="card-body p-4">
+                        <h5 class="card-title fw-bold mb-2">@item.Brand @item.Model</h5>
+                        <p class="text-muted mb-3">$@item.PricePerDay per day</p>
+                        <div class="d-flex justify-content-end mt-3">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-outline-primary me-2">Details</a>
+                            @if (isAdmin)
+                            {
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-warning me-2">Edit</a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-outline-danger">Delete</a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
         }
-    </tbody>
-</table>
+    </div>
+</div>
 
-<a asp-action="Create" class="btn btn-success">إضافة سيارة جديدة</a>
+<!-- Add New Car Button - Only visible to Admin -->
+@if (isAdmin)
+{
+    <div class="container mb-5">
+        <div class="row">
+            <div class="col-12 text-center">
+                <a asp-action="Create" class="btn btn-success btn-lg px-4 py-2">
+                    <i class="bi bi-plus-circle me-2"></i>Add New Car
+                </a>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Cars index page loaded successfully");
+        });
+    </script>
+}

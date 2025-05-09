@@ -1,0 +1,156 @@
+@model CarRentalMVC.Models.Review
+
+@{
+    ViewData["Title"] = "Create Review";
+}
+
+<div class="container mt-4">
+    <h1>Create New Review</h1>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    @if (ViewBag.TargetName != null)
+                    {
+                        <h5>Review for @ViewBag.TargetName</h5>
+                    }
+                    else
+                    {
+                        <h5>New Review</h5>
+                    }
+                </div>
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        @if (ViewBag.TargetId == null)
+                        {
+                            <div class="mb-3">
+                                <label class="form-label">Target Type</label>
+                                <select asp-for="TargetType" class="form-select" id="targetTypeSelect">
+                                    <option value="@((int)CarRentalMVC.Models.Review.ReviewTargetType.Car)">Car</option>
+                                    <option value="@((int)CarRentalMVC.Models.Review.ReviewTargetType.User)">User</option>
+                                </select>
+                                <span asp-validation-for="TargetType" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3" id="carTargetDiv">
+                                <label class="form-label">Car</label>
+                                <select name="TargetId" class="form-select" asp-items="ViewBag.Cars"></select>
+                            </div>
+
+                            <div class="mb-3 d-none" id="userTargetDiv">
+                                <label class="form-label">User</label>
+                                <select name="TargetId" class="form-select" asp-items="ViewBag.Users"></select>
+                            </div>
+                        }
+                        else
+                        {
+                            <input type="hidden" name="TargetId" value="@ViewBag.TargetId" />
+                            <input type="hidden" name="TargetType" value="@((ViewBag.TargetType == "Car" ? CarRentalMVC.Models.Review.ReviewTargetType.Car : CarRentalMVC.Models.Review.ReviewTargetType.User))" />
+                        }
+
+                        <div class="mb-3">
+                            <label asp-for="Rating" class="form-label">Rating</label>
+                            <div class="star-rating">
+                                <div class="rating-group">
+                                    @for (int i = 1; i <= 5; i++)
+                                    {
+                                        <input type="radio" id="rating-@i" name="Rating" value="@i" class="rating-input" @(i == 5 ? "checked" : "") />
+                                        <label for="rating-@i" class="rating-label">
+                                            <i class="bi bi-star-fill"></i>
+                                        </label>
+                                    }
+                                </div>
+                            </div>
+                            <span asp-validation-for="Rating" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Comment" class="form-label">Comment</label>
+                            <textarea asp-for="Comment" class="form-control" rows="4"></textarea>
+                            <span asp-validation-for="Comment" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Create</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Handle target type selection to show the appropriate dropdown
+            $("#targetTypeSelect").change(function () {
+                if ($(this).val() == "@((int)CarRentalMVC.Models.Review.ReviewTargetType.Car)") {
+                    $("#carTargetDiv").removeClass("d-none");
+                    $("#userTargetDiv").addClass("d-none");
+                } else {
+                    $("#carTargetDiv").addClass("d-none");
+                    $("#userTargetDiv").removeClass("d-none");
+                }
+            });
+
+            // Visual star rating functionality
+            $(".rating-input").change(function () {
+                const value = $(this).val();
+                $(".rating-label").each(function (index) {
+                    if (index < value) {
+                        $(this).addClass("selected");
+                    } else {
+                        $(this).removeClass("selected");
+                    }
+                });
+            });
+        });
+    </script>
+
+    <style>
+        .star-rating {
+            display: flex;
+            flex-direction: row-reverse;
+            font-size: 1.5rem;
+            justify-content: flex-end;
+            padding: 0 0.2em;
+            text-align: center;
+        }
+
+        .rating-group {
+            display: flex;
+            flex-direction: row-reverse;
+        }
+
+        .rating-input {
+            position: absolute !important;
+            left: -9999px !important;
+        }
+
+        .rating-label {
+            color: #ddd;
+            cursor: pointer;
+            margin: 0 3px;
+            transition: color 0.3s;
+        }
+
+        .rating-label:hover,
+        .rating-label:hover ~ .rating-label,
+        .rating-input:checked ~ .rating-label {
+            color: #ffc107;
+        }
+
+        .rating-label.selected {
+            color: #ffc107;
+        }
+    </style>
+
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

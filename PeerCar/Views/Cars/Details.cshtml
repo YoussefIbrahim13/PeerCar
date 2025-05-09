@@ -1,30 +1,87 @@
 ﻿@model CarRentalMVC.Models.Car
 
 @{
-    ViewData["Title"] = "تفاصيل السيارة";
+    ViewData["Title"] = "Car Details";
 }
 
-<div class="card">
-    <div class="card-header">
-        <h4>@Model.Brand @Model.Model</h4>
-    </div>
-    <div class="card-body">
-        <dl class="row">
-            <dt class="col-sm-3">الماركة:</dt>
-            <dd class="col-sm-9">@Html.DisplayFor(model => model.Brand)</dd>
-
-            <dt class="col-sm-3">الموديل:</dt>
-            <dd class="col-sm-9">@Html.DisplayFor(model => model.Model)</dd>
-
-            <dt class="col-sm-3">السعر/اليوم:</dt>
-            <dd class="col-sm-9">@Html.DisplayFor(model => model.PricePerDay)</dd>
-
-            <dt class="col-sm-3">الحالة:</dt>
-            <dd class="col-sm-9">@Html.DisplayFor(model => model.AvailabilityStatus)</dd>
-        </dl>
-    </div>
-    <div class="card-footer">
-        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">تعديل</a>
-        <a asp-action="Index" class="btn btn-secondary">العودة للقائمة</a>
+<!-- Hero Section with Background -->
+<div class="hero-section position-relative mb-5">
+    <div class="hero-overlay"></div>
+    <div class="container position-relative py-5">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto text-center text-white">
+                <h1 class="display-3 fw-bold mb-4 animate__animated animate__fadeInDown">@Model.Brand @Model.Model</h1>
+                <p class="lead fs-4 mb-4 animate__animated animate__fadeInUp">View detailed information about this vehicle</p>
+            </div>
+        </div>
     </div>
 </div>
+
+<!-- Car Details Section -->
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <h4 class="card-title fw-bold mb-3">Car Information</h4>
+                            <div class="mb-3">
+                                <span class="text-muted">Brand:</span>
+                                <span class="fw-semibold ms-2">@Model.Brand</span>
+                            </div>
+                            <div class="mb-3">
+                                <span class="text-muted">Model:</span>
+                                <span class="fw-semibold ms-2">@Model.Model</span>
+                            </div>
+                            <div class="mb-3">
+                                <span class="text-muted">Price per day:</span>
+                                <span class="fw-semibold ms-2">$@Model.PricePerDay</span>
+                            </div>
+                            <div class="mb-3">
+                                <span class="text-muted">Availability:</span>
+                                <span class="fw-semibold ms-2 @(Model.AvailabilityStatus == CarRentalMVC.Models.Car.CarAvailabilityStatus.Available ? "text-success" : "text-danger")">
+                                    @Model.AvailabilityStatus
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="bg-light p-3 rounded">
+                                <h5 class="mb-3">Booking Information</h5>
+                                @if (Model.AvailabilityStatus == CarRentalMVC.Models.Car.CarAvailabilityStatus.Available)
+                                {
+                                    <p class="mb-3">This car is currently available for booking.</p>
+                                    <a asp-controller="Bookings" asp-action="Create" asp-route-carId="@Model.Id" class="btn btn-success">
+                                        Book Now
+                                    </a>
+                                }
+                                else
+                                {
+                                    <p class="mb-3">This car is currently unavailable for booking.</p>
+                                    <button class="btn btn-secondary" disabled>Currently Unavailable</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mt-4">
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">
+                            <i class="bi bi-pencil me-2"></i>Edit
+                        </a>
+                        <a asp-action="Index" class="btn btn-outline-secondary">
+                            <i class="bi bi-arrow-left me-2"></i>Back to List
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Car details page loaded successfully");
+        });
+    </script>
+}
