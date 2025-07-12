@@ -1,0 +1,241 @@
+@model IEnumerable<CarRentalMVC.Models.Booking>
+@using CarRentalMVC.Models
+
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="container-fluid py-4">
+    <!-- Header -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-primary text-white border-0 shadow">
+                <div class="card-body p-4">
+                    <h2 class="mb-0">PeerCar Admin Dashboard</h2>
+                    <p class="lead mb-0">Manage your car rental platform</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-1">Total Users</h6>
+                            <h3 class="mb-0">@ViewBag.TotalUsers</h3>
+                        </div>
+                        <div class="icon-bg bg-primary-subtle rounded p-3">
+                            <i class="bi bi-people-fill text-primary fs-4"></i>
+                        </div>
+                    </div>
+                    <a href="@Url.Action("Users", "Admin")" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-1">Total Cars</h6>
+                            <h3 class="mb-0">@ViewBag.TotalCars</h3>
+                        </div>
+                        <div class="icon-bg bg-success-subtle rounded p-3">
+                            <i class="bi bi-car-front-fill text-success fs-4"></i>
+                        </div>
+                    </div>
+                    <a href="@Url.Action("Cars", "Admin")" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-1">Total Bookings</h6>
+                            <h3 class="mb-0">@ViewBag.TotalBookings</h3>
+                        </div>
+                        <div class="icon-bg bg-info-subtle rounded p-3">
+                            <i class="bi bi-calendar2-check-fill text-info fs-4"></i>
+                        </div>
+                    </div>
+                    <a href="@Url.Action("Bookings", "Admin")" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-warning text-white mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-0">@ViewBag.PendingBookings</h4>
+                            <div>Pending Bookings</div>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-calendar-clock fs-1"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card bg-info text-white mb-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div>
+                            <h4 class="mb-0">@ViewBag.PendingSubmissions</h4>
+                            <div>Pending Car Submissions</div>
+                        </div>
+                        <div class="align-self-center">
+                            <i class="bi bi-file-earmark-check fs-1"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Links -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <a href="@Url.Action("Users", "Admin")" class="btn btn-outline-primary d-flex align-items-center justify-content-between w-100 p-3">
+                                <span>Manage Users</span>
+                                <i class="bi bi-chevron-right"></i>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="@Url.Action("Cars", "Admin")" class="btn btn-outline-success d-flex align-items-center justify-content-between w-100 p-3">
+                                <span>Manage Cars</span>
+                                <i class="bi bi-chevron-right"></i>
+                            </a>
+                        </div>
+                        <div class="col-md-4">
+                            <a href="@Url.Action("Bookings", "Admin")" class="btn btn-outline-info d-flex align-items-center justify-content-between w-100 p-3">
+                                <span>Manage Bookings</span>
+                                <i class="bi bi-chevron-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Bookings -->
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Recent Bookings</h5>
+                    <a href="@Url.Action("Bookings", "Admin")" class="btn btn-sm btn-primary">View All</a>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Car</th>
+                                    <th>Customer</th>
+                                    <th>Dates</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var booking in Model)
+                                {
+                                    <tr>
+                                        <td>@booking.Id</td>
+                                        <td>
+                                            @if (booking.Car != null)
+                                            {
+                                                <span>@booking.Car.Brand @booking.Car.Model</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">Unknown Car</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (booking.Renter != null)
+                                            {
+                                                <span>@booking.Renter.Name</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="text-muted">Unknown User</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <div>From: @booking.StartDate.ToString("yyyy-MM-dd")</div>
+                                            <div>To: @booking.EndDate.ToString("yyyy-MM-dd")</div>
+                                        </td>
+                                        <td>
+                                            @{
+                                                string badgeClass = booking.Status switch
+                                                {
+                                                    BookingStatus.Pending => "warning",
+                                                    BookingStatus.Confirmed => "success",
+                                                    BookingStatus.Cancelled => "danger",
+                                                    BookingStatus.Completed => "info",
+                                                    _ => "secondary"
+                                                };
+                                            }
+                                            <span class="badge bg-@badgeClass">@booking.Status</span>
+                                        </td>
+                                        <td>
+                                            <a href="@Url.Action("BookingDetails", "Admin", new { id = booking.Id })" class="btn btn-sm btn-outline-primary">
+                                                <i class="bi bi-eye"></i> Details
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .icon-bg {
+        width: 50px;
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .card {
+        transition: transform 0.2s;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+    }
+</style>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Admin dashboard loaded successfully");
+        });
+    </script>
+}

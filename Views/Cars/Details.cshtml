@@ -1,0 +1,89 @@
+﻿@model CarRentalMVC.Models.Car
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<CarRentalMVC.Models.User> UserManager
+@{
+    ViewData["Title"] = "Car Details";
+    string ownerPhone = Model.Owner?.PhoneNumber ?? "";
+    if (ownerPhone.StartsWith("+200"))
+    {
+        ownerPhone = "+20" + ownerPhone.Substring(4);
+    }
+    bool isAdmin = User.IsInRole("Admin");
+    bool isOwner = User.Identity != null && User.Identity.IsAuthenticated && UserManager.GetUserId(User) == Model.OwnerId;
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow-lg border-0 p-4 rounded-4">
+                <div class="row g-4 align-items-center">
+                    <div class="col-md-6 text-center">
+                        @if (!string.IsNullOrEmpty(Model.ImagePath)) {
+                            <img src="@Url.Content(Model.ImagePath)" alt="Car Image" class="img-fluid rounded-4 border shadow mb-3" style="width:100%; max-width:420px; height:320px; object-fit:cover;" />
+                        } else {
+                            <div class="bg-light border rounded-4 d-flex align-items-center justify-content-center" style="height:320px; width:100%; max-width:420px;">
+                                <span class="text-muted">No Image Available</span>
+                            </div>
+                        }
+                    </div>
+                    <div class="col-md-6">
+                        <h2 class="fw-bold mb-2">@Model.Brand @Model.Model</h2>
+                        <div class="mb-2">
+                            <span class="badge bg-secondary me-2"><i class="bi bi-calendar3"></i> @Model.Year</span>
+                            <span class="badge bg-info text-dark"><i class="bi bi-geo-alt"></i> @Model.Location</span>
+                        </div>
+                        <div class="mb-3 fs-4 fw-semibold text-warning">
+                            $@Model.PricePerDay <span class="fs-6 text-muted">/day</span>
+                        </div>
+                        <div class="mb-3">
+                            <span class="fw-bold">Owner: </span>
+                            @if (Model.Owner != null)
+                            {
+                                <a asp-controller="Users" asp-action="Profile" asp-route-id="@Model.Owner.Id" class="fw-semibold text-primary text-decoration-underline">
+                                    @Model.Owner.FirstName @Model.Owner.LastName
+                                </a>
+                            }
+                        </div>
+                        <div class="mb-3">
+                            <span class="fw-bold">Availability: </span>
+                            <span class="badge bg-@(Model.AvailabilityStatus == CarRentalMVC.Models.Car.CarAvailabilityStatus.Available ? "success" : "danger")">
+                                @Model.AvailabilityStatus
+                            </span>
+                        </div>
+                        <div class="d-flex flex-wrap gap-2 mb-4">
+                            <a asp-controller="Reviews" asp-action="Index" asp-route-carId="@Model.Id" class="btn btn-outline-info btn-sm"><i class="bi bi-chat-left-text me-1"></i> See Reviews</a>
+                        </div>
+                        @if (Model.AvailabilityStatus == CarRentalMVC.Models.Car.CarAvailabilityStatus.Available && !isAdmin && !isOwner)
+                        {
+                            <form asp-controller="Bookings" asp-action="Create" method="get" class="d-inline">
+                                <input type="hidden" name="carId" value="@Model.Id" />
+                                <button type="submit" class="btn btn-primary btn-lg fw-bold px-4 mb-2">
+                                    <i class="bi bi-calendar-plus"></i> Book Now
+                                </button>
+                            </form>
+                        }
+                        @if (isAdmin || isOwner)
+                        {
+                            <div class="d-flex gap-2 mt-2">
+                                <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning btn-sm">Edit</a>
+                                <form asp-action="Delete" asp-route-id="@Model.Id" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this car? This will also delete its image.')" style="margin:0;">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card {
+    border-radius: 1.5rem;
+}
+.card-img-top, .rounded-4 {
+    border-radius: 1.5rem;
+}
+</style>

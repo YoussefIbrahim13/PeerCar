@@ -1,0 +1,92 @@
+@model IEnumerable<PeerCar.Models.ReviewModel>
+
+@{
+    ViewData["Title"] = "Review List";
+    var reviewsByCar = Model
+        .Where(r => r.TargetType == CarRentalMVC.Models.Review.ReviewTargetType.Car)
+        .GroupBy(r => new { r.TargetId, r.CarYear })
+        .OrderBy(g => g.Key.TargetId)
+        .ToList();
+}
+
+<div class="container mt-4">
+    <h1 class="mb-4">Reviews by Car</h1>
+    @if (!reviewsByCar.Any())
+    {
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i> No car reviews available at the moment.
+        </div>
+    }
+    else
+    {
+        foreach (var carGroup in reviewsByCar)
+        {
+            <h3 class="mt-5 mb-3 text-primary">
+                <a asp-controller="Cars" asp-action="Details" asp-route-id="@carGroup.Key.TargetId" class="text-decoration-none text-primary">
+                    @carGroup.First().TargetName
+                </a>
+                @if (carGroup.Key.CarYear != null && carGroup.Key.CarYear > 0)
+                {
+                    <span>(@carGroup.Key.CarYear)</span>
+                }
+            </h3>
+            <div class="row row-cols-1 row-cols-md-2 g-4">
+                @foreach (var review in carGroup)
+                {
+                    <div class="col">
+                        <div class="card h-100 shadow-sm border-0">
+                            <div class="card-header bg-light d-flex justify-content-between">
+                                <span class="fw-bold">@review.ReviewerName</span>
+                                <span class="text-muted"><i class="bi bi-calendar3"></i> @review.FormattedDate</span>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-2">
+                                </div>
+                                <p class="card-text">
+                                    @if (review.Comment.Length > 150)
+                                    {
+                                        @review.Comment.Substring(0, 150)<text>...</text>
+                                    }
+                                    else
+                                    {
+                                        @review.Comment
+                                    }
+                                </p>
+                            </div>
+                            <div class="card-footer bg-transparent border-top-0">
+                                <div class="d-flex justify-content-between">
+                                    <a asp-action="Details" asp-route-id="@review.Id" class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i> Read more
+                                    </a>
+                                    <!-- Removed edit and delete buttons -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Animate the cards when page loads
+            $(".card").each(function(index) {
+                $(this).delay(100 * index).animate({opacity: 1}, 500);
+            });
+        });
+    </script>
+
+    <style>
+        .card {
+            transition: transform 0.3s;
+            opacity: 0;
+        }
+
+            .card:hover {
+                transform: translateY(-5px);
+            }
+    </style>
+}

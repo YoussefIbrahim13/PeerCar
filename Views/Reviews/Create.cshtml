@@ -1,0 +1,80 @@
+@model CarRentalMVC.Models.Review
+
+@{
+    ViewData["Title"] = "Create Review";
+    var showForm = false;
+    var errorMessage = "";
+    if (ViewBag.TargetId == null || ViewBag.TargetName == null || ViewBag.BookingId == null)
+    {
+        errorMessage = "No car is associated with this review. Please access the review form from your completed booking.";
+    }
+    else if (ViewBag.AlreadyReviewed == true)
+    {
+        errorMessage = "You have already submitted a review for this booking.";
+    }
+    else if (ViewBag.BookingStatus != null && ViewBag.BookingStatus != "Completed")
+    {
+        errorMessage = "You can only review a car after your booking is completed.";
+    }
+    else
+    {
+        showForm = true;
+    }
+    string imageUrl = ViewBag.TargetImage as string;
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg border-0 rounded-4 p-4">
+                <div class="text-center mb-4">
+                    @if (!string.IsNullOrEmpty(imageUrl))
+                    {
+                        <img src="@Url.Content(imageUrl)" alt="Target Image" class="rounded-circle border shadow mb-2" style="width:100px; height:100px; object-fit:cover;" />
+                    }
+                    <h3 class="fw-bold mb-0">@ViewBag.TargetName</h3>
+                    <div class="text-muted">Leave your review</div>
+                </div>
+                @if (!string.IsNullOrEmpty(errorMessage))
+                {
+                    <div class="alert alert-danger text-center">@errorMessage</div>
+                    <div class="text-center">
+                        <a asp-action="Index" class="btn btn-secondary">Back to Reviews</a>
+                    </div>
+                }
+                else if (showForm)
+                {
+                    <form asp-action="Create" method="post" class="needs-validation" novalidate>
+                        <input type="hidden" name="TargetId" value="@ViewBag.TargetId" />
+                        <input type="hidden" name="TargetType" value="@((int)CarRentalMVC.Models.Review.ReviewTargetType.Car)" />
+                        <input type="hidden" name="BookingId" value="@ViewBag.BookingId" />
+                        <div class="form-floating mb-4">
+                            <textarea asp-for="Comment" class="form-control" placeholder="Leave a comment here" id="commentArea" style="height: 120px;" required></textarea>
+                            <label for="commentArea">Your Comment <span class="text-danger">*</span></label>
+                            <span asp-validation-for="Comment" class="text-danger"></span>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-lg btn-primary fw-bold shadow-sm"><i class="bi bi-send me-2"></i>Submit Review</button>
+                            <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                        </div>
+                    </form>
+                }
+                @if (!ViewData.ModelState.IsValid)
+                {
+                    <div class="alert alert-danger">
+                        <ul>
+                            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                            {
+                                <li>@error.ErrorMessage</li>
+                            }
+                        </ul>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

@@ -1,0 +1,184 @@
+﻿@model CarRentalMVC.Models.Booking
+
+@{
+    ViewData["Title"] = "Booking Details";
+}
+
+<!-- Hero Section with Background -->
+<div class="hero-section position-relative mb-5">
+    <div class="hero-overlay"></div>
+    <div class="container position-relative py-5">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto text-center text-white">
+                <h1 class="display-3 fw-bold mb-4 animate__animated animate__fadeInDown">Booking Details</h1>
+                <p class="lead fs-4 mb-4 animate__animated animate__fadeInUp">Reservation #@Model.Id</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Booking Details Section -->
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="card-title fw-bold mb-0">Reservation Information</h4>
+                        <span class="badge rounded-pill bg-@(Model.Status.ToString().ToLower() switch
+                        {
+                            "confirmed" => "success",
+                            "pending" => "warning",
+                            "cancelled" => "danger",
+                            "completed" => "info",
+                            _ => "secondary"
+                        })">@Model.Status</span>
+                    </div>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <h5 class="fw-semibold mb-3">Car Information</h5>
+                                <div class="d-flex align-items-center mb-2">
+                                    <div class="car-icon me-2 bg-primary-subtle text-primary rounded">
+                                        <i class="bi bi-car-front"></i>
+                                    </div>
+                                    <span class="fs-5">@Model.Car.Brand @Model.Car.Model</span>
+                                </div>
+                                <p class="text-muted mb-0">Daily Rate: $@Model.Car.PricePerDay</p>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <h5 class="fw-semibold mb-3">Renter Information</h5>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-circle me-2 bg-info-subtle text-info">
+                                        @(Model.Renter.Name.Substring(0, 1).ToUpper())
+                                    </div>
+                                    <div>
+                                        <p class="mb-0 fw-semibold">@Model.Renter.Name</p>
+                                        <p class="mb-0 small text-muted">@Model.Renter.Email</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <h5 class="fw-semibold mb-3">Booking Period</h5>
+                                <div class="mb-2">
+                                    <span class="text-muted">Start Date:</span>
+                                    <span class="fw-semibold ms-2">@Model.StartDate.ToString("MMM dd, yyyy")</span>
+                                </div>
+                                <div class="mb-2">
+                                    <span class="text-muted">End Date:</span>
+                                    <span class="fw-semibold ms-2">@Model.EndDate.ToString("MMM dd, yyyy")</span>
+                                </div>
+                                <div class="mb-2">
+                                    <span class="text-muted">Duration:</span>
+                                    <span class="fw-semibold ms-2">@((Model.EndDate - Model.StartDate).Days + 1) days</span>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <h5 class="fw-semibold mb-3">Payment Information</h5>
+                                <div class="mb-2">
+                                    <span class="text-muted">Total Price:</span>
+                                    <span class="fw-semibold ms-2">$@Model.TotalPrice</span>
+                                </div>
+                                <div class="mb-2">
+                                    <span class="text-muted">Payment Status:</span>
+                                    <span class="badge bg-success ms-2">Paid</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Refund Status Section -->
+                    <div class="mb-4">
+                        <h5 class="fw-semibold mb-3">Refund Status</h5>
+                        @if (Model.RefundAmount.HasValue && Model.RefundAmount.Value > 0 && Model.IsCarReturnedByUser)
+                        {
+                            if (Model.IsRefunded)
+                            {
+                                <span class="badge bg-success">Refund Completed</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning text-dark">Pending Refund</span>
+                                <form method="post" asp-action="ConfirmRefund" asp-controller="Admin" asp-route-id="@Model.Id" class="d-inline ms-3">
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit" class="btn btn-outline-primary btn-sm">Confirm Refund Processed</button>
+                                </form>
+                            }
+                            <div class="mt-2 small text-muted">Refund Amount: <strong>$@Model.RefundAmount.Value.ToString("F2")</strong></div>
+                        }
+                        else
+                        {
+                            <span class="badge bg-secondary">No refund</span>
+                        }
+                    </div>
+                    
+                    <div class="border-top pt-4">
+                        <h5 class="fw-semibold mb-3">Actions</h5>
+                        <div class="d-flex flex-wrap gap-2">
+                            @if (Model.Status == CarRentalMVC.Models.BookingStatus.Cancelled || Model.Status == CarRentalMVC.Models.BookingStatus.Completed)
+                            {
+                                <a asp-action="Bookings" class="btn btn-outline-secondary">
+                                    <i class="bi bi-arrow-left me-2"></i>Back to List
+                                </a>
+                            }
+                            else if (Model.IsCarReceivedByUser)
+                            {
+                                <div class="alert alert-info mb-0">User has confirmed car pickup. No further admin actions available.</div>
+                                <a asp-action="Bookings" class="btn btn-outline-secondary">
+                                    <i class="bi bi-arrow-left me-2"></i>Back to List
+                                </a>
+                            }
+                            else
+                            {
+                                <form method="post" action="@Url.Action("UpdateBookingStatus", "Admin", new { id = Model.Id, status = "Completed" })">
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="bi bi-check-circle me-2"></i>Mark as Completed
+                                    </button>
+                                </form>
+                                <form method="post" action="@Url.Action("UpdateBookingStatus", "Admin", new { id = Model.Id, status = "Confirmed" })">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="bi bi-check-square me-2"></i>Confirm Booking
+                                    </button>
+                                </form>
+                                <form method="post" action="@Url.Action("UpdateBookingStatus", "Admin", new { id = Model.Id, status = "Cancelled" })">
+                                    <button type="submit" class="btn btn-danger">
+                                        <i class="bi bi-x-circle me-2"></i>Cancel Booking
+                                    </button>
+                                </form>
+                                <a asp-action="Bookings" class="btn btn-outline-secondary">
+                                    <i class="bi bi-arrow-left me-2"></i>Back to List
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .avatar-circle, .car-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Booking details page loaded successfully");
+        });
+    </script>
+}

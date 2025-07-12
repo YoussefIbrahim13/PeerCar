@@ -1,0 +1,101 @@
+@model IEnumerable<PeerCar.Models.ReviewModel>
+
+@{
+    ViewData["Title"] = "Review List";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Reviews</h1>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i> Write a Review
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            <i class="bi bi-info-circle me-2"></i> No reviews available at the moment.
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            @foreach (var review in Model)
+            {
+                <div class="col">
+                    <div class="card h-100 shadow-sm border-0">
+                        <div class="card-header bg-light d-flex justify-content-between align-items-center">
+                            <span class="fw-bold">@review.ReviewerName</span>
+                            <span class="text-muted"><i class="bi bi-calendar3"></i> @review.FormattedDate</span>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                @if (!string.IsNullOrEmpty(review.CarImagePath))
+                                {
+                                    <img src="@Url.Content(review.CarImagePath)" alt="Car Image" class="rounded me-3" style="width: 80px; height: 60px; object-fit: cover;" />
+                                }
+                                <div>
+                                    <h5 class="card-title mb-1">
+                                        <span class="badge rounded-pill bg-primary">@review.TargetName</span>
+                                    </h5>
+                                    <div class="text-muted small">
+                                        @if (!string.IsNullOrEmpty(review.CarOwnerName))
+                                        {
+                                            <span>Owner: @review.CarOwnerName</span>
+                                        }
+                                        else if (!string.IsNullOrEmpty(review.CarOwnerEmail))
+                                        {
+                                            <span>Owner: @review.CarOwnerEmail</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <p class="card-text">
+                                @if (review.Comment.Length > 150)
+                                {
+                                    @review.Comment.Substring(0, 150)<text>...</text>
+                                }
+                                else
+                                {
+                                    @review.Comment
+                                }
+                            </p>
+                        </div>
+                        <div class="card-footer bg-transparent border-top-0 d-flex justify-content-between align-items-center">
+                            <a asp-action="Details" asp-route-id="@review.Id" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-eye"></i> Read more
+                            </a>
+                            @if (review.TargetId > 0)
+                            {
+                                <a asp-controller="Cars" asp-action="Details" asp-route-id="@review.TargetId" class="btn btn-sm btn-outline-secondary">
+                                    <i class="bi bi-car-front"></i> View Car Details
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Animate the cards when page loads
+            $(".card").each(function(index) {
+                $(this).delay(100 * index).animate({opacity: 1}, 500);
+            });
+        });
+    </script>
+    <style>
+        .card {
+            transition: transform 0.3s;
+            opacity: 0;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+}

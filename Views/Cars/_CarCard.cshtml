@@ -1,0 +1,12 @@
+﻿@model CarRentalMVC.Models.Car
+
+
+<div class="col-md-4 mb-4">
+    <div class="card h-100">
+        <div class="card-body">
+            <h5 class="card-title">@Model.Brand @Model.Model</h5>
+            <p class="card-text">@Model.PricePerDay SAR/day</p>
+            <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-primary">Details</a>
+        </div>
+    </div>
+</div>

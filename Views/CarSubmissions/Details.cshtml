@@ -1,0 +1,81 @@
+@model CarRentalMVC.Models.CarSubmissionViewModel
+@{
+    ViewData["Title"] = "Submission Details";
+}
+<div class="container mt-5">
+    <h2 class="mb-4">Submission Details</h2>
+    <div class="card mb-4">
+        <div class="card-header bg-light">
+            <strong>User:</strong> @Model.SubmittedByName (@Model.SubmittedByEmail)
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">@Model.Car.Brand @Model.Car.Model (@Model.Car.Year)</h5>
+            <p><strong>Location:</strong> @Model.Car.Location</p>
+            <p><strong>Price Per Day:</strong> $@Model.Car.PricePerDay</p>
+            <p><strong>Submission Date:</strong> @Model.SubmissionDate.ToShortDateString()</p>
+            <p><strong>Status:</strong> @Model.Status.ToString()</p>
+            @if (!string.IsNullOrEmpty(Model.Car.ImagePath))
+            {
+                <div class="mb-3">
+                    <img src="@Url.Content(Model.Car.ImagePath)" alt="Car Image" style="max-width:300px; max-height:200px; object-fit:cover;" />
+                </div>
+            }
+            @if (!string.IsNullOrEmpty(Model.Car.DocumentPath))
+            {
+                <div class="mb-3">
+                    <a href="@Url.Content(Model.Car.DocumentPath)" target="_blank" class="btn btn-outline-secondary">View Document</a>
+                </div>
+            }
+            @if (Model.Status == CarRentalMVC.Models.CarSubmissionStatus.Pending)
+            {
+                <form asp-action="Approve" asp-route-id="@Model.Id" method="post" class="d-inline">
+                    <button type="submit" class="btn btn-success">Approve</button>
+                </form>
+                <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#rejectModal">Reject</button>
+                <!-- Modal for rejection reason -->
+                <div class="modal fade" id="rejectModal" tabindex="-1" aria-labelledby="rejectModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form asp-action="Reject" asp-route-id="@Model.Id" method="post">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="rejectModalLabel">Reject Car Submission</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="reason" class="form-label">Reason for rejection</label>
+                                        <textarea name="reason" id="reason" class="form-control" required></textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-danger">Reject</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            }
+            @if (Model.Status == CarRentalMVC.Models.CarSubmissionStatus.Rejected && !string.IsNullOrEmpty(Model.RejectionReason))
+            {
+                <div class="alert alert-danger mt-3">Reason for rejection: @Model.RejectionReason</div>
+            }
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        // Bootstrap modal fix for multiple modals
+        document.addEventListener('show.bs.modal', function (event) {
+            var zIndex = 1040 + (10 * document.querySelectorAll('.modal.show').length);
+            event.target.style.zIndex = zIndex;
+            setTimeout(function () {
+                var modalBackdrop = document.querySelector('.modal-backdrop:not(.modal-stack)');
+                if (modalBackdrop) {
+                    modalBackdrop.style.zIndex = zIndex - 1;
+                    modalBackdrop.classList.add('modal-stack');
+                }
+            }, 0);
+        });
+    </script>
+} 

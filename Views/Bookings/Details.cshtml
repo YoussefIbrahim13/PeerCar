@@ -1,0 +1,79 @@
+@model CarRentalMVC.Models.Booking
+
+@{
+    ViewData["Title"] = "Booking Details";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    Booking Details
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-5">
+                            @if (!string.IsNullOrEmpty(Model.Car.ImagePath))
+                            {
+                                <img src="@Url.Content(Model.Car.ImagePath)" alt="Car Image" class="img-fluid rounded mb-2" style="max-height:200px;object-fit:cover;" />
+                            }
+                            else
+                            {
+                                <div class="d-flex align-items-center justify-content-center bg-light text-muted" style="height:200px;">
+                                    <i class="bi bi-image fs-1"></i>
+                                </div>
+                            }
+                        </div>
+                        <div class="col-md-7">
+                            <h5 class="card-title">@Model.Car.Brand @Model.Car.Model (@Model.Car.Year)</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">Location: @Model.Car.Location</h6>
+                            <h6 class="card-subtitle mb-2 text-muted">
+                                Owner: <a href="@Url.Action("Profile", "Users", new { id = Model.Car.Owner?.Id })" class="fw-bold text-decoration-underline">@Model.Car.Owner?.Name</a>
+                            </h6>
+                        </div>
+                    </div>
+                    <ul class="list-group list-group-flush mb-3">
+                        <li class="list-group-item"><strong>Renter:</strong> @Model.Renter.Name (@Model.Renter.Email)</li>
+                        <li class="list-group-item"><strong>Booking Dates:</strong> @Model.StartDate.ToString("yyyy-MM-dd") to @Model.EndDate.ToString("yyyy-MM-dd")</li>
+                        <li class="list-group-item"><strong>Status:</strong> <span class="badge rounded-pill bg-@(
+                            Model.Status.ToString().ToLower() == "confirmed" ? "success" :
+                            Model.Status.ToString().ToLower() == "pending" ? "warning" :
+                            Model.Status.ToString().ToLower() == "cancelled" ? "danger" :
+                            Model.Status.ToString().ToLower() == "completed" ? "info" : "secondary")">
+                            @Model.Status
+                        </span></li>
+                        <li class="list-group-item"><strong>Total Price:</strong> $@Model.TotalPrice.ToString("F2")</li>
+                        @if (Model.IsCarReceivedByUser)
+                        {
+                            <li class="list-group-item text-success"><i class="bi bi-check-circle me-1"></i>Car pickup confirmed (@Model.CarReceivedDate?.ToString("g"))</li>
+                        }
+                        @if (Model.IsCarReturnedByUser)
+                        {
+                            <li class="list-group-item text-info"><i class="bi bi-arrow-return-left me-1"></i>Car return confirmed (@Model.CarReturnedDate?.ToString("g"))</li>
+                        }
+                        @if (Model.RefundAmount.HasValue && Model.RefundAmount.Value > 0)
+                        {
+                            <li class="list-group-item text-primary"><i class="bi bi-cash-coin me-1"></i>Refund for early return: <strong>$@Model.RefundAmount.Value.ToString("F2")</strong></li>
+                        }
+                    </ul>
+                    @if (Model.Status == CarRentalMVC.Models.BookingStatus.Confirmed && !Model.IsCarReceivedByUser)
+                    {
+                        <form asp-action="ConfirmCarReceived" asp-route-id="@Model.Id" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-success mb-2">Confirm Car Received</button>
+                        </form>
+                    }
+                    @if (Model.Status == CarRentalMVC.Models.BookingStatus.Confirmed && Model.IsCarReceivedByUser && !Model.IsCarReturnedByUser)
+                    {
+                        <form asp-action="ConfirmCarReturned" asp-route-id="@Model.Id" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-info mb-2">Confirm Car Returned</button>
+                        </form>
+                    }
+                    <a href="@Url.Action("MyBookings", "Bookings")" class="btn btn-secondary">Back to My Bookings</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
