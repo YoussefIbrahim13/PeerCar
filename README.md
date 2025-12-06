@@ -8,6 +8,11 @@
 **PeerCar** is a robust peer-to-peer car rental web application built with **ASP.NET Core MVC**. It connects car owners with renters through a secure, feature-rich platform. The system handles the entire rental lifecycle, from car listings and booking management to payments and reviews, ensuring a seamless user experience.
 
 ---
+## 🎥 Project Demo
+
+https://github.com/user-attachments/assets/728943c6-c9c2-43e4-b660-702d3a72a82a
+
+---
 
 ## ✨ Key Features
 
@@ -99,18 +104,6 @@ Follow these steps to set up the project locally.
     dotnet run
     ```
     Visit `https://localhost:7198` (or the port shown in your terminal) to view the app.
-
----
-
-## 📸 Screenshots
-
-| Home Page | Car Details |
-|:---:|:---:|
-| ![Home Page](path/to/image1.png) | ![Car Details](path/to/image2.png) |
-
-| Admin Dashboard | Booking Flow |
-|:---:|:---:|
-| ![Dashboard](path/to/image3.png) | ![Booking](path/to/image4.png) |
 
 ---
 
