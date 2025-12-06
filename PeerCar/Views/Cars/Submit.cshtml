@@ -1,0 +1,128 @@
+@model CarRentalMVC.Models.Car
+@{
+    ViewData["Title"] = "Submit Car";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h4 class="card-title mb-4">Submit a Car</h4>
+                    <form asp-action="Submit" method="post" enctype="multipart/form-data" id="submitForm">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <div class="mb-3">
+                            <label asp-for="Brand" class="form-label fw-semibold">Brand</label>
+                            <input asp-for="Brand" class="form-control" placeholder="Enter car brand" />
+                            <span asp-validation-for="Brand" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Model" class="form-label fw-semibold">Model</label>
+                            <input asp-for="Model" class="form-control" placeholder="Enter car model" />
+                            <span asp-validation-for="Model" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Year" class="form-label fw-semibold">Year</label>
+                            <input asp-for="Year" class="form-control" type="text" placeholder="Enter car year" />
+                            <span asp-validation-for="Year" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="Location" class="form-label fw-semibold">Location</label>
+                            <input asp-for="Location" class="form-control" placeholder="Enter location" />
+                            <span asp-validation-for="Location" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="PricePerDay" class="form-label fw-semibold">Price Per Day</label>
+                            <input asp-for="PricePerDay" class="form-control" type="number" step="0.01" placeholder="Enter price per day" />
+                            <span asp-validation-for="PricePerDay" class="text-danger"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Car Image</label>
+                            <input type="file" name="CarImage" class="form-control" accept="image/*" required id="carImage" />
+                            <div class="form-text">Max size: 5MB. Allowed formats: JPG, PNG, GIF, WebP</div>
+                            <div id="imagePreview" class="mt-2" style="display:none;">
+                                <img id="previewImg" src="" alt="Preview" style="max-width:200px; max-height:150px; object-fit:cover;" class="border rounded" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Official Document (PDF, DOC, etc.)</label>
+                            <input type="file" name="CarDocument" class="form-control" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" required id="carDocument" />
+                            <div class="form-text">Max size: 10MB. Allowed formats: PDF, DOC, DOCX, JPG, PNG</div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mt-3" id="submitBtn">
+                            <span id="submitText">Submit for Approval</span>
+                            <span id="submitSpinner" style="display:none;">
+                                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                Submitting...
+                            </span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // File validation and preview
+        document.getElementById('carImage').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Check file size (5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('Image file size must be less than 5MB.');
+                    this.value = '';
+                    return;
+                }
+                
+                // Check file type
+                const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+                if (!allowedTypes.includes(file.type)) {
+                    alert('Only JPG, PNG, GIF, and WebP images are allowed.');
+                    this.value = '';
+                    return;
+                }
+                
+                // Show preview
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewImg').src = e.target.result;
+                    document.getElementById('imagePreview').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+        
+        document.getElementById('carDocument').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Check file size (10MB)
+                if (file.size > 10 * 1024 * 1024) {
+                    alert('Document file size must be less than 10MB.');
+                    this.value = '';
+                    return;
+                }
+                
+                // Check file type
+                const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'image/jpeg', 'image/jpg', 'image/png'];
+                if (!allowedTypes.includes(file.type)) {
+                    alert('Only PDF, DOC, DOCX, JPG, and PNG documents are allowed.');
+                    this.value = '';
+                    return;
+                }
+            }
+        });
+        
+        // Form submission with loading state
+        document.getElementById('submitForm').addEventListener('submit', function() {
+            const submitBtn = document.getElementById('submitBtn');
+            const submitText = document.getElementById('submitText');
+            const submitSpinner = document.getElementById('submitSpinner');
+            
+            submitBtn.disabled = true;
+            submitText.style.display = 'none';
+            submitSpinner.style.display = 'inline';
+        });
+    </script>
+} 

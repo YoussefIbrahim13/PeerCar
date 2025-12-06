@@ -1,0 +1,170 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+    bool isAdmin = User.IsInRole("Admin");
+}
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<CarRentalMVC.Models.User> SignInManager
+
+<!-- Hero Section with Gradient Background -->
+<div class="hero-section position-relative mb-5 p-0" style="background: linear-gradient(135deg, #4f8cff 0%, #6dd5ed 100%); min-height: 320px;">
+    <div class="container position-relative py-5">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto text-center text-white">
+                <h1 class="display-2 fw-bold mb-3 animate__animated animate__fadeInDown">Welcome to PeerCar</h1>
+                <p class="lead fs-3 mb-4 animate__animated animate__fadeInUp">Your trusted platform for car rentals and sharing</p>
+                <a asp-controller="Cars" asp-action="Index" class="btn btn-lg btn-primary px-5 py-3 shadow">Browse Cars</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions Section -->
+<div class="container mb-5">
+    <h2 class="fw-bold mb-4">Quick Actions</h2>
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="quick-action-card card h-100 border-0 shadow-sm text-center p-4">
+                <div class="quick-action-icon mb-3 bg-primary text-white">
+                    <i class="bi bi-car-front"></i>
+                </div>
+                <h5 class="card-title fw-bold">Browse Cars</h5>
+                <p class="card-text">Discover the perfect vehicle for your next adventure or everyday needs.</p>
+                <a asp-controller="Cars" asp-action="Index" class="btn btn-primary w-100">View All Cars</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="quick-action-card card h-100 border-0 shadow-sm text-center p-4">
+                <div class="quick-action-icon mb-3 bg-success text-white">
+                    <i class="bi bi-list-check"></i>
+                </div>
+                <h5 class="card-title fw-bold">@((User.IsInRole("Admin")) ? "User Reservations" : "My Bookings")</h5>
+                <p class="card-text">@((User.IsInRole("Admin")) ? "View and review all users' reservations as an admin." : "Track and manage all your current and upcoming reservations.")</p>
+                <a asp-area="" asp-controller="@((User.IsInRole("Admin")) ? "Admin" : "Bookings")" asp-action="@((User.IsInRole("Admin")) ? "UserReservations" : "MyBookings")" class="btn btn-success w-100">@((User.IsInRole("Admin")) ? "View User Reservations" : "View Bookings")</a>
+            </div>
+        </div>
+        @if (!(User.Identity != null && User.Identity.IsAuthenticated))
+        {
+            <div class="col-md-4">
+                <div class="quick-action-card card h-100 border-0 shadow-sm text-center p-4">
+                    <div class="quick-action-icon mb-3 bg-info text-white">
+                        <i class="bi bi-person-circle"></i>
+                    </div>
+                    <h5 class="card-title fw-bold">Account</h5>
+                    <p class="card-text">Manage your profile, settings, and security information.</p>
+                    <a asp-controller="Account" asp-action="Login" class="btn btn-info text-white w-100">Go to Account</a>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Available Cars Section -->
+<div class="container mb-5">
+    <h2 class="fw-bold mb-4 text-primary">Available Cars</h2>
+    <div class="row g-4">
+        @await Component.InvokeAsync("RecentCars")
+    </div>
+    <div class="text-center mt-4">
+        <a asp-controller="Cars" asp-action="Index" class="btn btn-lg btn-outline-primary px-5 py-2">See All Cars</a>
+    </div>
+</div>
+
+@if (User.IsInRole("Admin"))
+{
+    <!-- Other Services Section (Admins Only) -->
+    <div class="container mb-5">
+        <h2 class="fw-bold mb-4">Other Services</h2>
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="card h-100 border-0 shadow-sm service-card">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="d-flex align-items-center mb-3">
+                                <span class="icon-circle bg-primary text-white me-3"><i class="bi bi-car-front fs-2"></i></span>
+                                <h5 class="card-title fw-bold mb-0">Car Rentals</h5>
+                            </div>
+                            <p class="card-text">Explore our selection of cars available for rent. All vehicles are added and managed by our administrators.</p>
+                        </div>
+                        <a asp-controller="Cars" asp-action="Index" class="btn btn-outline-primary mt-3">Browse Cars</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div class="card h-100 border-0 shadow-sm service-card">
+                    <div class="card-body d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="d-flex align-items-center mb-3">
+                                <span class="icon-circle bg-secondary text-white me-3"><i class="bi bi-shield-lock fs-2"></i></span>
+                                <h5 class="card-title fw-bold mb-0">Admin Portal</h5>
+                            </div>
+                            <p class="card-text">For administrators: Comprehensive tools to manage platform users, vehicles, and reservations.</p>
+                        </div>
+                        <div class="btn-group mt-3" role="group">
+                            <a asp-area="" asp-controller="Admin" asp-action="Users" class="btn btn-outline-secondary btn-sm">Users</a>
+                            <a asp-area="" asp-controller="Admin" asp-action="Cars" class="btn btn-outline-secondary btn-sm">Cars</a>
+                            <a asp-area="" asp-controller="Admin" asp-action="UserReservations" class="btn btn-outline-secondary btn-sm">User Reservations</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<style>
+.hero-section {
+    background: linear-gradient(135deg, #4f8cff 0%, #6dd5ed 100%);
+    border-radius: 0 0 2rem 2rem;
+    box-shadow: 0 4px 24px rgba(79,140,255,0.10);
+}
+.icon-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 2px 8px rgba(79,140,255,0.10);
+}
+.card {
+    border-radius: 1rem;
+}
+.card-title {
+    font-size: 1.25rem;
+}
+.btn {
+    font-weight: 500;
+    border-radius: 0.5rem;
+}
+.service-card {
+    border-radius: 1.25rem;
+    transition: box-shadow 0.2s;
+}
+.service-card:hover {
+    box-shadow: 0 8px 32px rgba(79,140,255,0.18);
+    transform: translateY(-2px) scale(1.01);
+}
+.quick-action-card {
+    border-radius: 1.25rem;
+    transition: box-shadow 0.18s cubic-bezier(.4,2,.6,1), transform 0.18s cubic-bezier(.4,2,.6,1);
+    background: #fafdff;
+}
+.quick-action-card:hover {
+    box-shadow: 0 8px 32px rgba(79,140,255,0.13), 0 1.5px 6px rgba(0,0,0,0.04);
+    transform: translateY(-6px) scale(1.03);
+    background: #f5faff;
+}
+.quick-action-icon {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem auto;
+    border-radius: 50%;
+    font-size: 2.25rem;
+    box-shadow: 0 2px 8px rgba(79,140,255,0.07);
+}
+</style>

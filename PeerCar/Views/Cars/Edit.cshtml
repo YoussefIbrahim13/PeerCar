@@ -1,0 +1,117 @@
+﻿@model CarRentalMVC.Models.Car
+@using CarRentalMVC.Models
+
+@{
+    ViewData["Title"] = "Edit Car";
+}
+
+<!-- Hero Section with Background -->
+<div class="hero-section position-relative mb-5">
+    <div class="hero-overlay"></div>
+    <div class="container position-relative py-5">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto text-center text-white">
+                <h1 class="display-3 fw-bold mb-4 animate__animated animate__fadeInDown">Edit Car Details</h1>
+                <p class="lead fs-4 mb-4 animate__animated animate__fadeInUp">Update information for @Model.Brand @Model.Model</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success Message -->
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success alert-dismissible fade show container" role="alert">
+        @TempData["SuccessMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<!-- Edit Form Section -->
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <h4 class="card-title fw-bold mb-4">Car Information</h4>
+
+                    <form asp-action="Edit" enctype="multipart/form-data">
+                        <input type="hidden" asp-for="Id" />
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-4"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Brand" class="form-label fw-semibold">Brand</label>
+                            <input asp-for="Brand" class="form-control" />
+                            <span asp-validation-for="Brand" class="text-danger"></span>
+                            <div class="form-text">Enter the brand name of the car, e.g., Toyota</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Model" class="form-label fw-semibold">Model</label>
+                            <input asp-for="Model" class="form-control" />
+                            <span asp-validation-for="Model" class="text-danger"></span>
+                            <div class="form-text">Enter the specific model, e.g., Corolla</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Year" class="form-label fw-semibold">Year</label>
+                            <input asp-for="Year" class="form-control" type="text" />
+                            <span asp-validation-for="Year" class="text-danger"></span>
+                            <div class="form-text">Enter the manufacturing year, e.g., 2022</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="PricePerDay" class="form-label fw-semibold">Price Per Day ($)</label>
+                            <input asp-for="PricePerDay" class="form-control" />
+                            <span asp-validation-for="PricePerDay" class="text-danger"></span>
+                            <div class="form-text">Set the daily rental price for this car</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="AvailabilityStatus" class="form-label">Availability Status</label>
+                            <select asp-for="AvailabilityStatus" asp-items="Html.GetEnumSelectList<CarRentalMVC.Models.Car.CarAvailabilityStatus>()" class="form-select"></select>
+                            <span asp-validation-for="AvailabilityStatus" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Location" class="form-label fw-semibold">Location</label>
+                            <input asp-for="Location" class="form-control" placeholder="Enter car location" />
+                            <span asp-validation-for="Location" class="text-danger"></span>
+                            <div class="form-text">Enter the location of the car, e.g., New York</div>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.ImagePath)) {
+                            <div class="mb-3">
+                                <label class="form-label">Current Image</label><br />
+                                <img src="@Url.Content(Model.ImagePath)" alt="Car Image" class="img-fluid rounded mb-2" style="max-height:200px;" />
+                            </div>
+                        }
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Change Car Image</label>
+                            <input type="file" name="CarImage" class="form-control" accept="image/*" />
+                            <div class="form-text">Upload a new photo to replace the current image (JPG, PNG, etc.)</div>
+                        </div>
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="submit" class="btn btn-success px-4">
+                                <i class="bi bi-check-circle me-2"></i>Save Changes
+                            </button>
+                            <a asp-action="Index" class="btn btn-outline-secondary">
+                                <i class="bi bi-arrow-left me-2"></i>Back to List
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log("Edit car page loaded successfully");
+        });
+    </script>
+}

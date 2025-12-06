@@ -1,0 +1,120 @@
+﻿@model IEnumerable<CarRentalMVC.Models.Car>
+
+@{
+    ViewData["Title"] = "Manage Cars";
+}
+
+<!-- Hero Section with Background -->
+<div class="hero-section position-relative mb-5">
+    <div class="hero-overlay"></div>
+    <div class="container position-relative py-5">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto text-center text-white">
+                <h1 class="display-3 fw-bold mb-4 animate__animated animate__fadeInDown">Car Management</h1>
+                <p class="lead fs-4 mb-4 animate__animated animate__fadeInUp">Administer all vehicles in the platform</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Cars List Section -->
+<div class="container mb-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="card-title fw-bold mb-0">Registered Vehicles</h4>
+                        <div>
+                            <a asp-controller="CarSubmissions" asp-action="Index" class="btn btn-sm btn-outline-warning me-2">
+                                <i class="bi bi-file-earmark-check me-2"></i>Pending Submissions
+                            </a>
+                            <a asp-controller="Cars" asp-action="Create" class="btn btn-sm btn-outline-primary">
+                                <i class="bi bi-plus-circle me-2"></i>Add New Car
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Brand & Model</th>
+                                    <th>Owner</th>
+                                    <th>Price per Day</th>
+                                    <th>Status</th>
+                                    <th>Submission Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var car in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <div class="car-icon me-2 bg-primary-subtle text-primary rounded">
+                                                    <i class="bi bi-car-front"></i>
+                                                </div>
+                                                <span class="fw-semibold">@car.Brand @car.Model</span>
+                                            </div>
+                                        </td>
+                                        <td>@(car.Owner?.Name ?? "N/A")</td>
+                                        <td>$@car.PricePerDay</td>
+                                        <td>
+                                            <span class="badge bg-@(car.AvailabilityStatus == CarRentalMVC.Models.Car.CarAvailabilityStatus.Available ? "success" : 
+                                                              car.AvailabilityStatus == CarRentalMVC.Models.Car.CarAvailabilityStatus.Rented ? "warning" : 
+                                                              car.AvailabilityStatus == CarRentalMVC.Models.Car.CarAvailabilityStatus.Maintenance ? "danger" : "info")">
+                                                @car.AvailabilityStatus
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="badge bg-@(car.SubmissionStatus == CarRentalMVC.Models.CarSubmissionStatus.Approved ? "success" : 
+                                                              car.SubmissionStatus == CarRentalMVC.Models.CarSubmissionStatus.Pending ? "warning" : "danger")">
+                                                @car.SubmissionStatus
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group">
+                                                <a asp-controller="Cars" asp-action="Details" asp-route-id="@car.Id" class="btn btn-sm btn-outline-info">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                                <a asp-controller="Cars" asp-action="Edit" asp-route-id="@car.Id" class="btn btn-sm btn-outline-secondary">
+                                                    <i class="bi bi-pencil"></i>
+                                                </a>
+                                                <form method="post" action="@Url.Action("DeleteCar", "Admin", new { carId = car.Id })" style="display:inline;">
+                                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .car-icon {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
+</style>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Admin cars page loaded successfully");
+        });
+    </script>
+}

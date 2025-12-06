@@ -1,0 +1,182 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using CarRentalMVC.Models
+@inject UserManager<User> UserManager
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - PeerCar</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/PeerCar.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm py-3">
+            <div class="container">
+                <a class="navbar-brand fw-bold text-primary" asp-area="" asp-controller="Home" asp-action="Index">
+                    <i class="bi bi-car-front me-2"></i>PeerCar
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-lg-inline-flex justify-content-between">
+                    <ul class="navbar-nav">
+                        <li class="nav-item mx-2">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">
+                                <i class="bi bi-house-door me-1"></i> Home
+                            </a>
+                        </li>
+                        <li class="nav-item mx-2">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Cars" asp-action="Index">
+                                <i class="bi bi-car-front-fill me-1"></i> Cars
+                            </a>
+                        </li>
+                        @if (!User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item mx-2">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Cars" asp-action="Submit">
+                                    <i class="bi bi-plus-circle me-1"></i> Submit Car
+                                </a>
+                            </li>
+                            <li class="nav-item mx-2">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Cars" asp-action="MyCars">
+                                    <i class="bi bi-car-front me-1"></i> My Cars
+                                </a>
+                            </li>
+                        }
+                        <li class="nav-item mx-2">
+                            @if (User.IsInRole("Admin"))
+                            {
+                                <a asp-area="" asp-controller="Admin" asp-action="UserReservations" class="nav-link">
+                                    <i class="bi bi-people me-1"></i> User Reservations
+                                </a>
+                            }
+                            else
+                            {
+                                <a asp-area="" asp-controller="Bookings" asp-action="MyBookings" class="nav-link">
+                                    <i class="bi bi-calendar-check me-1"></i> My Bookings
+                                </a>
+                            }
+                        </li>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown mx-2">
+                                <a class="nav-link dropdown-toggle text-dark" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-gear-fill me-1"></i> Admin
+                                </a>
+                                <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                                    <li><a class="dropdown-item" href="/admin"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
+                                    <li><a class="dropdown-item" href="/admin/users"><i class="bi bi-people me-2"></i>Users</a></li>
+                                    <li><a class="dropdown-item" href="/admin/cars"><i class="bi bi-car-front me-2"></i>Cars</a></li>
+                                    <li><a class="dropdown-item" href="/admin/bookings"><i class="bi bi-calendar2-check me-2"></i>Bookings</a></li>
+                                    <li><a class="dropdown-item" asp-controller="CarSubmissions" asp-action="Index"><i class="bi bi-file-earmark-check me-2"></i>Car Submissions</a></li>
+                                    <li><a class="dropdown-item" href="/admin/deleted-users"><i class="bi bi-person-x me-2"></i>Deleted Users</a></li>
+                                </ul>
+                            </li>
+                        }
+                        <li class="nav-item mx-2">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">
+                                <i class="bi bi-shield-check me-1"></i> Privacy
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="d-flex align-items-center">
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            string displayName = User.Identity.Name ?? "User";
+                            string profileImg = "default.png";
+                            try
+                            {
+                                var userObj = await UserManager.GetUserAsync(User);
+                                if (userObj != null)
+                                {
+                                    if (!string.IsNullOrEmpty(userObj.FirstName))
+                                        displayName = userObj.FirstName;
+                                    if (!string.IsNullOrEmpty(userObj.ProfileImageUrl))
+                                        profileImg = System.IO.Path.GetFileName(userObj.ProfileImageUrl);
+                                }
+                            }
+                            catch { }
+                            <div class="dropdown">
+                                <button class="btn btn-outline-primary dropdown-toggle d-flex align-items-center" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    @{
+                                        var profileUrl = Url.Content("~/images/profiles/" + profileImg);
+                                        var defaultUrl = Url.Content("~/images/profiles/default.png");
+                                        var cacheSuffix = profileImg != "default.png" ? ("?v=" + DateTime.UtcNow.Ticks) : string.Empty;
+                                    }
+                                    <img src="@((profileUrl) + cacheSuffix)" 
+                                         class="rounded-circle img-thumbnail me-2 align-middle" 
+                                         style="width:40px; height:40px; object-fit:cover; image-rendering:auto; padding:0;" 
+                                         alt="Profile" 
+                                         title="@profileImg" 
+                                         onerror="this.onerror=null;this.src='@defaultUrl';" />
+                                    @displayName
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                    @if (!User.IsInRole("Admin"))
+                                    {
+                                        <li><a class="dropdown-item" asp-controller="Bookings" asp-action="MyBookings"><i class="bi bi-calendar-check me-2"></i>My Bookings</a></li>
+                                    }
+                                    @if (User.IsInRole("Admin"))
+                                    {
+                                        <li><a class="dropdown-item" href="/admin"><i class="bi bi-speedometer2 me-2"></i>Admin Dashboard</a></li>
+                                    }
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="MyAccount"><i class="bi bi-person-lines-fill me-2"></i>My Account</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="EditProfile"><i class="bi bi-pencil-square me-2"></i>Edit Profile</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="dropdown-item" style="background:none; border:none; padding:0; margin:0;">
+                                                <i class="bi bi-box-arrow-right me-2"></i>Logout
+                                            </button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        }
+                        else
+                        {
+                            <a asp-controller="Account" asp-action="Login" class="btn btn-outline-primary me-2">
+                                <i class="bi bi-box-arrow-in-right me-1"></i> Login
+                            </a>
+                            <a asp-controller="Account" asp-action="Register" class="btn btn-primary">
+                                <i class="bi bi-person-plus me-1"></i> Register
+                            </a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container mt-4">
+        <main role="main" class="pb-3">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <i class="bi bi-check-circle me-2"></i>@TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <i class="bi bi-exclamation-triangle me-2"></i>@TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

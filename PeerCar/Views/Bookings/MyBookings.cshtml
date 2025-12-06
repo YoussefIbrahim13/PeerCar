@@ -1,0 +1,114 @@
+﻿@model IEnumerable<CarRentalMVC.Models.Booking>
+
+@{
+    ViewData["Title"] = "My Bookings";
+}
+
+<div class="container my-5">
+    <div class="row mb-4">
+        <div class="col-12 text-center">
+            <h1 class="display-4 fw-bold mb-2">My Bookings</h1>
+            <p class="lead text-muted mb-4">Manage all your car rental reservations</p>
+        </div>
+    </div>
+    @if (!Model.Any())
+    {
+        <div class="row justify-content-center">
+            <div class="col-md-8 col-lg-6">
+                <div class="card border-0 shadow-lg rounded-4 text-center p-5">
+                    <div class="mb-3">
+                        <i class="bi bi-calendar-x fs-1 text-muted"></i>
+                    </div>
+                    <h5 class="mb-3">You don't have any bookings yet</h5>
+                    <p class="text-muted mb-4">Start by browsing available cars and make your first reservation</p>
+                    <a asp-controller="Cars" asp-action="Index" class="btn btn-primary">
+                        <i class="bi bi-search me-2"></i>Browse Cars
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var booking in Model)
+            {
+                <div class="col-12 col-md-6 col-lg-4">
+                    <div class="card h-100 border-0 shadow-lg rounded-4 overflow-hidden">
+                        <div class="row g-0 h-100">
+                            <div class="col-5 d-flex align-items-center bg-light" style="min-height: 160px;">
+                                @if (!string.IsNullOrEmpty(booking.Car.ImagePath))
+                                {
+                                    <img src="@Url.Content(booking.Car.ImagePath)" alt="Car Image" class="img-fluid rounded-0 w-100 h-100" style="object-fit:cover; min-height:160px; max-height:180px;" />
+                                }
+                                else
+                                {
+                                    <div class="d-flex align-items-center justify-content-center w-100 h-100 text-muted fs-3">
+                                        <i class="bi bi-image"></i>
+                                    </div>
+                                }
+                            </div>
+                            <div class="col-7">
+                                <div class="card-body d-flex flex-column h-100">
+                                    <h5 class="card-title fw-bold mb-2"><i class="bi bi-car-front me-1"></i>@booking.Car.Brand @booking.Car.Model</h5>
+                                    <div class="mb-2">
+                                        <span class="badge bg-secondary me-1"><i class="bi bi-calendar-date me-1"></i>@booking.StartDate.ToString("MMM dd")</span>
+                                        <span class="badge bg-info text-dark"><i class="bi bi-calendar-date me-1"></i>@booking.EndDate.ToString("MMM dd")</span>
+                                    </div>
+                                    <div class="mb-2">
+                                        <span class="fw-semibold text-warning fs-5"><i class="bi bi-currency-dollar me-1"></i>@booking.TotalPrice</span>
+                                    </div>
+                                    <div class="mb-2">
+                                        <span class="badge rounded-pill bg-@(
+                                            booking.Status.ToString().ToLower() == "confirmed" ? "success" :
+                                            booking.Status.ToString().ToLower() == "pending" ? "warning" :
+                                            booking.Status.ToString().ToLower() == "cancelled" ? "danger" :
+                                            booking.Status.ToString().ToLower() == "completed" ? "info" : "secondary")">
+                                            @booking.Status
+                                        </span>
+                                    </div>
+                                    <div class="mt-auto d-flex gap-2 flex-wrap">
+                                        <a asp-controller="Bookings" asp-action="Details" asp-route-id="@booking.Id" class="btn btn-outline-primary btn-sm">
+                                            <i class="bi bi-eye"></i> View Details
+                                        </a>
+                                        @if (booking.Status == CarRentalMVC.Models.BookingStatus.Pending)
+                                        {
+                                            <form asp-action="CancelBooking" method="post" class="d-inline">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="bookingId" value="@booking.Id" />
+                                                <button type="submit" class="btn btn-danger btn-sm">
+                                                    <i class="bi bi-x-circle me-1"></i>Cancel
+                                                </button>
+                                            </form>
+                                        }
+                                        @if (booking.Status == CarRentalMVC.Models.BookingStatus.Completed)
+                                        {
+                                            <a asp-controller="Reviews" asp-action="Create" asp-route-carId="@booking.Car.Id" asp-route-bookingId="@booking.Id" class="btn btn-outline-success btn-sm">
+                                                <i class="bi bi-star"></i> Review Car
+                                            </a>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+    <div class="row mt-5">
+        <div class="col-12 text-center">
+            <a asp-controller="Cars" asp-action="Index" class="btn btn-primary">
+                <i class="bi bi-search me-2"></i>Find More Cars
+            </a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("My bookings page loaded successfully");
+        });
+    </script>
+}
