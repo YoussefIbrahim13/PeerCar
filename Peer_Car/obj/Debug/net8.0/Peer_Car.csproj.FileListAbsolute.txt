@@ -457,3 +457,4 @@ Y:\projects\Peer_Car\Peer_Car\obj\Debug\net8.0\refint\Peer_Car.dll
 Y:\projects\Peer_Car\Peer_Car\obj\Debug\net8.0\Peer_Car.pdb
 Y:\projects\Peer_Car\Peer_Car\obj\Debug\net8.0\Peer_Car.genruntimeconfig.cache
 Y:\projects\Peer_Car\Peer_Car\obj\Debug\net8.0\ref\Peer_Car.dll
+Y:\projects\Peer_Car\Peer_Car\obj\Debug\net8.0\Peer_Car.sourcelink.json
