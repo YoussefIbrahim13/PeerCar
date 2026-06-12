@@ -1,0 +1,89 @@
+@model CarRentalMVC.Models.UserProfileViewModel
+@using System.Globalization
+@{
+    ViewData["Title"] = "User Profile";
+    var isOwner = Model.Role == "Owner";
+    var hasEmail = !string.IsNullOrWhiteSpace(Model.Email);
+    var hasPhone = !string.IsNullOrWhiteSpace(Model.PhoneNumber);
+    var verified = Model.EmailConfirmed;
+}
+
+<!-- Header Section with Background and Overlay -->
+<div class="profile-header position-relative mb-5" style="background: linear-gradient(120deg, #007bff 60%, #6c757d 100%); min-height: 220px;">
+    <div class="position-absolute top-0 start-0 w-100 h-100" style="opacity:0.25; background: url('/images/profile-bg.jpg'), linear-gradient(120deg, #007bff 60%, #6c757d 100%); background-size: cover;"></div>
+    <div class="container position-relative z-2 py-5">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-auto text-center">
+                <img src="~/images/profiles/@(string.IsNullOrEmpty(Model.ProfileImageUrl) ? "default.png" : System.IO.Path.GetFileName(Model.ProfileImageUrl))" asp-append-version="true" class="rounded-circle shadow border border-3 border-white mb-3" style="width: 120px; height: 120px; object-fit: cover; background: #fff;" alt="Profile Picture" />
+                <h2 class="fw-bold text-white mb-1 d-flex align-items-center justify-content-center">
+                    @Model.FullName
+                </h2>
+                <span class="badge bg-light text-primary fs-6">@Model.Role</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <div class="mb-3 text-center">
+                        @if (hasEmail) {
+                            <div class="mb-2">
+                                <i class="bi bi-envelope-at me-1"></i>
+                                <span>@Model.Email</span>
+                                @if (verified) {
+                                    <span class="badge bg-success ms-2"><i class="bi bi-patch-check-fill"></i> Verified Email</span>
+                                }
+                            </div>
+                        }
+                        @if (hasPhone) {
+                            <div>
+                                <i class="bi bi-telephone me-1"></i>
+                                <span>@Model.PhoneNumber</span>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+            @if (isOwner) {
+                <div class="mb-4">
+                    <h4 class="fw-bold mb-3 text-center">Cars Owned</h4>
+                    @if (Model.Cars != null && Model.Cars.Count > 0) {
+                        <div class="row row-cols-1 row-cols-md-2 g-4">
+                            @foreach (var car in Model.Cars) {
+                                <div class="col">
+                                    <div class="card h-100 shadow-sm">
+                                        @if (!string.IsNullOrEmpty(car.ImagePath)) {
+                                            <img src="@Url.Content(car.ImagePath)" class="card-img-top" style="height: 140px; object-fit: cover;" alt="@car.Brand @car.Model" />
+                                        } else {
+                                            <div class="bg-light d-flex align-items-center justify-content-center" style="height: 140px;">
+                                                <span class="text-muted">No Image</span>
+                                            </div>
+                                        }
+                                        <div class="card-body pb-2">
+                                            <h6 class="card-title mb-1">@car.Brand @car.Model (@car.Year)</h6>
+                                            <div class="mb-2 small text-muted">$@car.PricePerDay/day</div>
+                                            <a asp-controller="Cars" asp-action="Details" asp-route-id="@car.Id" class="btn btn-outline-primary btn-sm w-100">View Details</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    } else {
+                        <div class="text-muted text-center">No cars listed.</div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+.profile-header {
+    border-radius: 0 0 2rem 2rem;
+    overflow: hidden;
+}
+</style>

@@ -1,0 +1,21 @@
+@{
+    ViewData["Title"] = "Delete Account";
+}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow-lg border-0 p-4">
+                <div class="card-body text-center">
+                    <h2 class="fw-bold mb-3">Delete Account</h2>
+                    <p class="mb-4 text-danger">Are you sure you want to delete your account? This action cannot be undone.<br />
+                    You will receive a confirmation link by email to complete the deletion process.</p>
+                    <form asp-action="SubmitDeleteAccountRequest" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger btn-lg px-4"><i class="bi bi-trash me-2"></i> Send Confirmation Email</button>
+                        <a asp-action="MyAccount" class="btn btn-secondary btn-lg px-4 ms-2">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,63 @@
+@model CarRentalMVC.Models.UserCarViewModel
+@{
+    ViewData["Title"] = "My Cars";
+}
+<div class="container mt-5">
+    <h2 class="mb-4">My Cars</h2>
+    <div class="mb-5">
+        <h4>Approved Cars</h4>
+        @if (Model.ApprovedCars.Any())
+        {
+            <ul class="list-group mb-3">
+                @foreach (var car in Model.ApprovedCars)
+                {
+                    <li class="list-group-item">
+                        <strong>@car.Brand @car.Model</strong> - @car.Year - $@car.PricePerDay/day
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <div class="text-muted">No approved cars.</div>
+        }
+    </div>
+    <div class="mb-5">
+        <h4>Pending Submissions</h4>
+        @if (Model.PendingSubmissions.Any())
+        {
+            <ul class="list-group mb-3">
+                @foreach (var sub in Model.PendingSubmissions)
+                {
+                    <li class="list-group-item">
+                        <strong>@sub.Car.Brand @sub.Car.Model</strong> - @sub.Car.Year (Submitted: @sub.SubmissionDate.ToShortDateString())
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <div class="text-muted">No pending submissions.</div>
+        }
+    </div>
+    <div class="mb-5">
+        <h4>Rejected Submissions</h4>
+        @if (Model.RejectedSubmissions.Any())
+        {
+            <ul class="list-group mb-3">
+                @foreach (var sub in Model.RejectedSubmissions)
+                {
+                    <li class="list-group-item">
+                        <strong>@sub.Car.Brand @sub.Car.Model</strong> - @sub.Car.Year
+                        <div class="text-danger">Reason: @sub.RejectionReason</div>
+                        <a asp-action="EditRejected" asp-route-id="@sub.Car.Id" class="btn btn-sm btn-warning mt-2">Edit & Resubmit</a>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <div class="text-muted">No rejected submissions.</div>
+        }
+    </div>
+</div> 

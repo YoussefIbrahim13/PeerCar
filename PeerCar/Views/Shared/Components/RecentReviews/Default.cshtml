@@ -1,0 +1,42 @@
+@model IEnumerable<PeerCar.Models.ReviewModel>
+
+@if (Model.Any())
+{
+    @foreach (var review in Model)
+    {
+        <div class="review-card card border-0 shadow-sm h-100">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-start mb-3">
+                    <h6 class="card-subtitle text-primary mb-0">@review.TargetName</h6>
+                </div>
+                <p class="card-text">
+                    @if (review.Comment.Length > 120)
+                    {
+                        @review.Comment.Substring(0, 120)<text>...</text>
+                    }
+                    else
+                    {
+                        @review.Comment
+                    }
+                </p>
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                    <small class="text-muted">By @review.ReviewerName</small>
+                    <small class="text-muted">@review.FormattedDate</small>
+                </div>
+            </div>
+            <div class="card-footer bg-transparent border-top-0 text-center">
+                <a asp-controller="Reviews" asp-action="Details" asp-route-id="@review.Id" class="btn btn-sm btn-outline-primary">
+                    Read Full Review
+                </a>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="col-12">
+        <div class="alert alert-info text-center">
+            <i class="bi bi-info-circle me-2"></i> No reviews available yet.
+        </div>
+    </div>
+}

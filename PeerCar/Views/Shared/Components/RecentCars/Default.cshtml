@@ -1,0 +1,53 @@
+@model IEnumerable<CarRentalMVC.Models.Car>
+@if (!Model.Any())
+{
+    <div class="col-12 text-center text-muted">No cars available.</div>
+}
+else
+{
+    foreach (var car in Model)
+    {
+        <div class="col-md-4 mb-4">
+            <div class="card h-100 border-0 shadow-sm">
+                @if (!string.IsNullOrEmpty(car.ImagePath))
+                {
+                    <img src="@Url.Content(car.ImagePath)" alt="Car Image" class="card-img-top" style="height:220px; object-fit:cover;" />
+                }
+                else
+                {
+                    <img src="/images/default-car.png" alt="Default Car Image" class="card-img-top" style="height:220px; object-fit:cover;" />
+                }
+                <div class="card-body">
+                    <h5 class="card-title fw-bold">@car.Brand @car.Model</h5>
+                    <p class="card-text mb-1"><strong>Year:</strong> @car.Year</p>
+                    <p class="card-text mb-1"><strong>Location:</strong> @car.Location</p>
+                    <p class="card-text mb-1"><strong>Price/Day:</strong> $@car.PricePerDay</p>
+                    <div class="d-flex gap-2 mt-2">
+                        <a asp-controller="Cars" asp-action="Details" asp-route-id="@car.Id" class="btn btn-outline-primary btn-sm">View Details</a>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-controller="Cars" asp-action="Edit" asp-route-id="@car.Id" class="btn btn-outline-yellow btn-sm">Edit</a>
+                            <form asp-controller="Cars" asp-action="Delete" asp-route-id="@car.Id" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this car? This will also delete its image.')" style="margin:0;">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+                            </form>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+}
+
+<style>
+.btn-outline-yellow {
+    color: #ffc107;
+    border-color: #ffc107;
+    background-color: transparent;
+}
+.btn-outline-yellow:hover, .btn-outline-yellow:focus {
+    color: #212529;
+    background-color: #ffc107;
+    border-color: #ffc107;
+}
+</style>

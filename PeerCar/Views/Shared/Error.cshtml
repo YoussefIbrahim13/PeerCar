@@ -1,0 +1,71 @@
+﻿@model ErrorViewModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<!-- Hero Section with Background -->
+<div class="hero-section position-relative mb-5">
+    <div class="hero-overlay"></div>
+    <div class="container position-relative py-5">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto text-center text-white">
+                <h1 class="display-3 fw-bold mb-4 animate__animated animate__fadeInDown">Oops!</h1>
+                <p class="lead fs-4 mb-4 animate__animated animate__fadeInUp">We encountered an error processing your request</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Error Content Section -->
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card border-0 shadow-sm">
+                <div class="card-body p-4 p-md-5">
+                    <div class="text-center mb-4">
+                        <div class="error-icon mb-3">
+                            <i class="bi bi-exclamation-triangle-fill text-danger fs-1"></i>
+                        </div>
+                        <h4 class="card-title fw-bold mb-3">An error occurred</h4>
+                        <p class="text-muted">We're sorry, but something went wrong. Please try again or contact support if the problem persists.</p>
+                    </div>
+                    
+                    @if (Model.ShowRequestId)
+                    {
+                        <div class="alert alert-secondary">
+                            <div class="d-flex align-items-center">
+                                <i class="bi bi-info-circle me-2"></i>
+                                <div>
+                                    <strong>Request ID:</strong> <code>@Model.RequestId</code>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    
+                    @if (System.Diagnostics.Debugger.IsAttached || Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
+                    {
+                        <div class="mt-4">
+                            <h5 class="fw-semibold mb-3">Development Mode</h5>
+                            <div class="alert alert-warning">
+                                <div class="d-flex">
+                                    <i class="bi bi-exclamation-circle-fill fs-4 me-3"></i>
+                                    <div>
+                                        <p class="mb-2">Detailed error information is available because the application is running in Development mode.</p>
+                                        <p class="mb-0"><strong>Warning:</strong> The Development environment shouldn't be enabled for deployed applications as it can display sensitive information to end users.</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <p>To enable local debugging, set the <code>ASPNETCORE_ENVIRONMENT</code> environment variable to <code>Development</code> and restart the application.</p>
+                        </div>
+                    }
+                    
+                    <div class="d-flex justify-content-center mt-4">
+                        <a href="/" class="btn btn-primary px-4">
+                            <i class="bi bi-house-door me-2"></i>Return to Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

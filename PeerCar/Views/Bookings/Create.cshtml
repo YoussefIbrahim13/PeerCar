@@ -1,0 +1,129 @@
+﻿@model CarRentalMVC.Models.BookingViewModel
+
+@{
+    ViewData["Title"] = "Create Booking";
+    var pricePerDay = Model.PricePerDay ?? 0;
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <!-- Car Image -->
+                <div class="bg-light position-relative" style="height:320px;">
+                    @if (!string.IsNullOrEmpty(Model.CarImagePath)) {
+                        <img src="@Url.Content(Model.CarImagePath)" alt="Car Image" class="w-100 h-100 object-fit-cover rounded-0 border-bottom" style="object-fit:cover;" />
+                    } else {
+                        <div class="d-flex align-items-center justify-content-center h-100 w-100 text-muted fs-4">
+                            <i class="bi bi-image me-2"></i> No Image Available
+                        </div>
+                    }
+                </div>
+                <div class="card-body p-5">
+                    <h2 class="text-center fw-bold mb-1">@Model.CarBrand @Model.CarModel</h2>
+                    <div class="text-center mb-4">
+                        <span class="badge bg-secondary fs-6 me-2"><i class="bi bi-calendar3"></i> @Model.CarYear</span>
+                        <span class="badge bg-info text-dark fs-6"><i class="bi bi-geo-alt"></i> @Model.CarLocation</span>
+                    </div>
+                    <hr class="mb-4">
+                    @if (ViewBag.FormError != null)
+                    {
+                        <div class="alert alert-danger">@ViewBag.FormError</div>
+                    }
+                    @if (!ViewData.ModelState.IsValid)
+                    {
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                                {
+                                    <li>@error.ErrorMessage</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+                    @* تم إخفاء رسالة التنبيه الخاصة بـ CardPaymentMessage بناءً على طلب العميل *@
+                    @* <div class="alert alert-warning">@TempData["CardPaymentMessage"]</div> *@
+                    <form asp-action="Create" method="post">
+                        <input type="hidden" asp-for="CarId" />
+                        <input type="hidden" asp-for="RenterId" />
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label asp-for="StartDate" class="form-label fw-semibold"><i class="bi bi-calendar-date me-1"></i>Start Date</label>
+                                <input asp-for="StartDate" type="date" class="form-control" id="StartDate" required />
+                                <span asp-validation-for="StartDate" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="EndDate" class="form-label fw-semibold"><i class="bi bi-calendar-date me-1"></i>End Date</label>
+                                <input asp-for="EndDate" type="date" class="form-control" id="EndDate" required />
+                                <span asp-validation-for="EndDate" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="TotalPrice" class="form-label fw-semibold"><i class="bi bi-currency-dollar me-1"></i>Total Price</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="text" class="form-control" id="TotalPrice" name="TotalPrice" value="@Model.TotalPrice" readonly />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label fw-semibold"><i class="bi bi-telephone me-1"></i>Car Owner Phone</label>
+                                <div class="form-control bg-light">
+                                    @(Model.OwnerPhone ?? "Unknown")
+                                </div>
+                            </div>
+                        </div>
+                        <div class="alert alert-info d-flex align-items-center mt-4">
+                            <i class="bi bi-info-circle-fill me-2 fs-4"></i>
+                            <div>
+                                <strong>Booking Info:</strong> Total price is calculated based on the selected dates and the car's daily rate of $@Model.PricePerDay.
+                            </div>
+                        </div>
+                        <div class="d-grid gap-2 mt-5">
+                            <button type="submit" name="paymentMethod" value="PayOnReceipt" class="btn btn-lg btn-warning fw-bold mb-2">
+                                <i class="bi bi-cash-coin me-2"></i>Confirm Booking (Pay Upon Receipt)
+                            </button>
+                            <button type="submit" name="paymentMethod" value="Card" class="btn btn-lg btn-primary fw-bold mb-2">
+                                <i class="bi bi-credit-card-2-front me-2"></i>Confirm Booking (Pay by Card)
+                            </button>
+                            <a asp-controller="Cars" asp-action="Details" asp-route-id="@Model.CarId" class="btn btn-outline-secondary btn-lg">
+                                <i class="bi bi-arrow-left me-2"></i>Back to Car
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const startDateInput = document.getElementById('StartDate');
+            const endDateInput = document.getElementById('EndDate');
+            const totalPriceInput = document.getElementById('TotalPrice');
+            const dailyRate = @pricePerDay;
+            const today = new Date();
+            const yyyy = today.getFullYear();
+            const mm = String(today.getMonth() + 1).padStart(2, '0');
+            const dd = String(today.getDate()).padStart(2, '0');
+            const todayStr = `${yyyy}-${mm}-${dd}`;
+            startDateInput.min = todayStr;
+            startDateInput.addEventListener('change', function () {
+                endDateInput.min = this.value;
+                calculateTotalPrice();
+            });
+            endDateInput.addEventListener('change', calculateTotalPrice);
+            function calculateTotalPrice() {
+                if (startDateInput.value && endDateInput.value) {
+                    const start = new Date(startDateInput.value);
+                    const end = new Date(endDateInput.value);
+                    const days = Math.floor((end - start) / (1000 * 60 * 60 * 24)) + 1;
+                    const total = days > 0 ? (days * dailyRate).toFixed(2) : "0.00";
+                    totalPriceInput.value = total;
+                } else {
+                    totalPriceInput.value = "0.00";
+                }
+            }
+        });
+    </script>
+}

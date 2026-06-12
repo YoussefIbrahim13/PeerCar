@@ -1,0 +1,191 @@
+@model CarRentalMVC.Models.EditProfileViewModel
+@{
+    ViewData["Title"] = "Edit Profile";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+                    <h4 class="card-title mb-4">Edit Profile</h4>
+                    <form asp-action="EditProfile" method="post" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+                        <div class="accordion" id="editProfileAccordion">
+                            <!-- Section 1: Basic Info -->
+                            <div class="accordion-item mb-3">
+                                <h2 class="accordion-header" id="headingBasicInfo">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBasicInfo" aria-expanded="true" aria-controls="collapseBasicInfo">
+                                        <i class="bi bi-person-lines-fill me-2"></i>Basic Information
+                                    </button>
+                                </h2>
+                                <div id="collapseBasicInfo" class="accordion-collapse collapse show" aria-labelledby="headingBasicInfo" data-bs-parent="#editProfileAccordion">
+                                    <div class="accordion-body">
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label asp-for="FullName" class="form-label fw-semibold">Full Name</label>
+                                                <input asp-for="FullName" class="form-control" placeholder="Enter your full name" />
+                                                <span asp-validation-for="FullName" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label asp-for="PhoneNumber" class="form-label">Phone Number</label>
+                                                <div class="input-group">
+                                                    <span class="input-group-text">+20</span>
+                                                    <input asp-for="PhoneNumber" type="text" class="form-control" placeholder="1xxxxxxxxx" pattern="^1[0-9]{9}$" maxlength="10" minlength="10" value="@(Model.PhoneNumber != null && Model.PhoneNumber.StartsWith("+20") ? Model.PhoneNumber.Substring(3) : Model.PhoneNumber)" oninput="this.value = this.value.replace(/[^0-9]/g, ''); updatePhonePreview(this.value);" />
+                                                </div>
+                                                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                                                <div class="form-text">Enter a valid Egyptian number (10 digits starting with 1, e.g., 1001234567). +20 will be added automatically.</div>
+                                                <div id="phonePreview" style="display:none; color:gray; font-size:0.9em;"></div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label asp-for="Email" class="form-label">Email</label>
+                                                <input asp-for="Email" class="form-control" placeholder="example@gmail.com"
+                                                       pattern="^[a-zA-Z0-9._%+-]+@@gmail.com$"
+                                                       title="Only Gmail addresses are allowed." required />
+                                                <span asp-validation-for="Email" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Section 2: Change Password -->
+                            <div class="accordion-item mb-3">
+                                <h2 class="accordion-header" id="headingPassword">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePassword" aria-expanded="false" aria-controls="collapsePassword">
+                                        <i class="bi bi-key me-2"></i>Change Password
+                                    </button>
+                                </h2>
+                                <div id="collapsePassword" class="accordion-collapse collapse" aria-labelledby="headingPassword" data-bs-parent="#editProfileAccordion">
+                                    <div class="accordion-body">
+                                        <div class="row g-3">
+                                            <div class="col-md-4">
+                                                <label asp-for="CurrentPassword" class="form-label">Current Password</label>
+                                                <div class="input-group">
+                                                    <input asp-for="CurrentPassword" class="form-control" type="password" id="currentPasswordInput" />
+                                                    <button class="btn btn-outline-secondary" type="button" id="toggleCurrentPassword">
+                                                        <i class="bi bi-eye" id="toggleCurrentPasswordIcon"></i>
+                                                    </button>
+                                                </div>
+                                                <span asp-validation-for="CurrentPassword" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label asp-for="NewPassword" class="form-label">New Password</label>
+                                                <div class="input-group">
+                                                    <input asp-for="NewPassword" class="form-control" type="password" id="newPasswordInput" />
+                                                    <button class="btn btn-outline-secondary" type="button" id="toggleNewPassword">
+                                                        <i class="bi bi-eye" id="toggleNewPasswordIcon"></i>
+                                                    </button>
+                                                </div>
+                                                <span asp-validation-for="NewPassword" class="text-danger"></span>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label asp-for="ConfirmPassword" class="form-label">Confirm New Password</label>
+                                                <div class="input-group">
+                                                    <input asp-for="ConfirmPassword" class="form-control" type="password" id="confirmPasswordInput" />
+                                                    <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword">
+                                                        <i class="bi bi-eye" id="toggleConfirmPasswordIcon"></i>
+                                                    </button>
+                                                </div>
+                                                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Section 3: Profile Picture -->
+                            <div class="accordion-item mb-3">
+                                <h2 class="accordion-header" id="headingProfilePic">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseProfilePic" aria-expanded="false" aria-controls="collapseProfilePic">
+                                        <i class="bi bi-image me-2"></i>Profile Picture
+                                    </button>
+                                </h2>
+                                <div id="collapseProfilePic" class="accordion-collapse collapse" aria-labelledby="headingProfilePic" data-bs-parent="#editProfileAccordion">
+                                    <div class="accordion-body">
+                                        <div class="mb-3 text-center">
+                                            <img id="profileImagePreview" src="@((!string.IsNullOrEmpty(ViewBag.ProfileImageUrl) ? Url.Content("~/images/profiles/" + ViewBag.ProfileImageUrl) : Url.Content("~/images/profiles/default.png")))" asp-append-version="true" class="rounded-circle border shadow" style="width: 120px; height: 120px; object-fit: cover;" alt="Profile Picture" />
+                                            <button type="button" id="removeProfileBtn" class="btn btn-outline-danger ms-3">
+                                                <i class="bi bi-trash"></i> Remove Photo
+                                            </button>
+                                            <div class="mt-2 text-muted small" id="serverProfileFilename">Server filename: <strong>@(ViewBag.ProfileImageUrl ?? "(null)")</strong></div>
+                                        </div>
+                                        <input type="file" asp-for="ProfileImage" class="form-control" accept="image/*" onchange="previewProfileImage(this)" />
+                                        <span asp-validation-for="ProfileImage" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 mt-3">Save Changes</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+      function updatePhonePreview(val) {
+        const preview = document.getElementById("phonePreview");
+        if (/^1[0-9]{9}$/.test(val)) {
+          preview.style.display = "block";
+          preview.textContent = "Preview: +20" + val;
+        } else {
+          preview.style.display = "none";
+          preview.textContent = "";
+        }
+      }
+      function previewProfileImage(input) {
+        if (input.files && input.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            document.getElementById('profileImagePreview').src = e.target.result;
+          };
+          reader.readAsDataURL(input.files[0]);
+        }
+      }
+            // Remove profile image via fetch POST using antiforgery token
+            document.getElementById('removeProfileBtn')?.addEventListener('click', function() {
+                if (!confirm('Are you sure you want to remove your profile picture?')) return;
+                const tokenInput = document.querySelector('input[name="__RequestVerificationToken"]');
+                const token = tokenInput ? tokenInput.value : '';
+                fetch('@Url.Action("RemoveProfileImage", "Account")', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'RequestVerificationToken': token
+                    },
+                    credentials: 'same-origin'
+                })
+                .then(res => {
+                    if (res.ok) location.reload();
+                    else alert('Failed to remove profile image.');
+                })
+                .catch(() => alert('Failed to remove profile image.'));
+            });
+      document.getElementById('toggleCurrentPassword').addEventListener('click', function () {
+        const input = document.getElementById('currentPasswordInput');
+        const icon = document.getElementById('toggleCurrentPasswordIcon');
+        const isPassword = input.type === 'password';
+        input.type = isPassword ? 'text' : 'password';
+        icon.classList.toggle('bi-eye');
+        icon.classList.toggle('bi-eye-slash');
+      });
+      document.getElementById('toggleNewPassword').addEventListener('click', function () {
+        const input = document.getElementById('newPasswordInput');
+        const icon = document.getElementById('toggleNewPasswordIcon');
+        const isPassword = input.type === 'password';
+        input.type = isPassword ? 'text' : 'password';
+        icon.classList.toggle('bi-eye');
+        icon.classList.toggle('bi-eye-slash');
+      });
+      document.getElementById('toggleConfirmPassword').addEventListener('click', function () {
+        const input = document.getElementById('confirmPasswordInput');
+        const icon = document.getElementById('toggleConfirmPasswordIcon');
+        const isPassword = input.type === 'password';
+        input.type = isPassword ? 'text' : 'password';
+        icon.classList.toggle('bi-eye');
+        icon.classList.toggle('bi-eye-slash');
+      });
+    </script>
+}

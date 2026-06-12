@@ -1,0 +1,71 @@
+@model IEnumerable<CarRentalMVC.Models.User>
+@{
+    ViewBag.Title = "Deleted Users";
+    int page = ViewBag.Page;
+    int pageSize = ViewBag.PageSize;
+    int total = ViewBag.Total;
+    string search = ViewBag.Search as string ?? string.Empty;
+}
+<h2>Deleted User Accounts</h2>
+<form method="get" class="mb-3">
+    <input type="text" name="search" value="@search" placeholder="Search by name or email" class="form-control" style="width:300px;display:inline-block;" />
+    <button type="submit" class="btn btn-primary">Search</button>
+</form>
+@foreach (var user in Model)
+{
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-danger text-white">
+            <strong>@user.Name</strong> &lt;@user.Email&gt; | Registered: @user.DateRegistered.ToShortDateString()
+        </div>
+        <div class="card-body">
+            <h6 class="fw-bold">Owned Cars:</h6>
+            @if (user.OwnedCars != null && user.OwnedCars.Any())
+            {
+                <ul>
+                @foreach (var car in user.OwnedCars)
+                {
+                    <li>@car.Brand @car.Model (@car.Year) - @car.Location</li>
+                }
+                </ul>
+            }
+            else { <span class="text-muted">No cars owned.</span> }
+
+            <h6 class="fw-bold mt-3">Bookings:</h6>
+            @if (user.Bookings != null && user.Bookings.Any())
+            {
+                <ul>
+                @foreach (var booking in user.Bookings)
+                {
+                    <li>@booking.Car?.Brand @booking.Car?.Model: @booking.StartDate.ToShortDateString() to @booking.EndDate.ToShortDateString() [@booking.Status]</li>
+                }
+                </ul>
+            }
+            else { <span class="text-muted">No bookings.</span> }
+
+            <h6 class="fw-bold mt-3">Reviews:</h6>
+            @if (user.Reviews != null && user.Reviews.Any())
+            {
+                <ul>
+                @foreach (var review in user.Reviews)
+                {
+                    <li><span class="text-secondary">@review.Date.ToShortDateString()</span>: @review.Comment</li>
+                }
+                </ul>
+            }
+            else { <span class="text-muted">No reviews.</span> }
+        </div>
+    </div>
+}
+@if (total > pageSize)
+{
+    <nav>
+        <ul class="pagination">
+            @for (int i = 1; i <= Math.Ceiling((double)total / pageSize); i++)
+            {
+                <li class="page-item @(i == page ? "active" : "")">
+                    <a class="page-link" href="?page=@i&search=@search">@i</a>
+                </li>
+            }
+        </ul>
+    </nav>
+}

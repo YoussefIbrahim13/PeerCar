@@ -1,0 +1,30 @@
+@model IEnumerable<CarRentalMVC.Models.Review>
+@{
+    ViewData["Title"] = "Review Moderation";
+}
+<div class="container mt-4">
+    <h1>Review Moderation</h1>
+    <table class="table table-bordered table-hover mt-3">
+        <thead class="table-light">
+            <tr>
+                <th>ID</th>
+                <th>Car</th>
+                <th>User</th>
+                <th>Comment</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var review in Model)
+        {
+            <tr>
+                <td>@review.Id</td>
+                <td>@(review.Car != null ? $"#{review.Car.Id} - {review.Car.Brand} {review.Car.Model}" : "-")</td>
+                <td>@review.User?.UserName</td>
+                <td>@review.Comment</td>
+                <td>@review.Date.ToString("yyyy-MM-dd")</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
