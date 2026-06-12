@@ -1,0 +1,164 @@
+﻿.chat-wrapper {
+    height: 80vh;
+    background: radial-gradient(circle at top right, #eef2f3, #8e9eab);
+    padding: 20px;
+    border-radius: 30px;
+}
+
+.chat-container {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 25px;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow: hidden;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+}
+
+.chat-header {
+    background: #0d6efd;
+    color: white;
+    padding: 20px;
+}
+
+.avatar-status {
+    position: relative;
+    width: 45px;
+    height: 45px;
+}
+
+    .avatar-status img {
+        width: 100%;
+        border-radius: 50%;
+        background: white;
+    }
+
+.status-dot {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 12px;
+    height: 12px;
+    background: #2ecc71;
+    border: 2px solid white;
+    border-radius: 50%;
+}
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background: rgba(248, 249, 250, 0.5);
+}
+
+.message {
+    max-width: 80%;
+    padding: 12px 18px;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    position: relative;
+    animation: fadeIn 0.3s ease;
+}
+
+.assistant-msg {
+    align-self: flex-start;
+    background: white;
+    color: #333;
+    border-bottom-left-radius: 2px;
+}
+
+.user-msg {
+    align-self: flex-end;
+    background: #0d6efd;
+    color: white;
+    border-bottom-right-radius: 2px;
+}
+
+.time {
+    display: block;
+    font-size: 0.7rem;
+    margin-top: 5px;
+    opacity: 0.6;
+}
+
+.chat-input-area {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+#userInput:focus {
+    box-shadow: none;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+/* chatbot.css */
+
+.chat-messages {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background: rgba(248, 249, 250, 0.5);
+    /* 🚩 السطرين دول هيظبطوا اتجاه الشات بالكامل */
+    direction: rtl;
+    text-align: right;
+}
+
+.message {
+    max-width: 80%;
+    padding: 12px 18px;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    position: relative;
+    animation: fadeIn 0.3s ease;
+    /* 🚩 السطر ده بيمنع لخبطة العربي مع الإنجليزي والأرقام */
+    unicode-bidi: plaintext;
+}
+
+/* عشان نضمن إن رسائل اليوزر تفضل على اليمين والمساعد على الشمال في الـ RTL */
+.assistant-msg {
+    align-self: flex-start;
+    background: white;
+    color: #333;
+    border-bottom-left-radius: 2px;
+}
+
+.user-msg {
+    align-self: flex-end;
+    background: #0d6efd;
+    color: white;
+    border-bottom-right-radius: 2px;
+    text-align: right; /* نضمن إن كلام اليوزر برضه يمين */
+}
+/* chatbot.css */
+
+.message .text a {
+    color: #004fb1; /* لون اللينك */
+    text-decoration: underline;
+    font-weight: bold;
+    word-break: break-all; /* عشان اللينك الطويل ميكسرش الـ Bubble */
+}
+
+/* لو الرسالة من المساعد، خلي اللينك أزرق واضح */
+.assistant-msg .text a {
+    color: #0d6efd;
+}
+
+/* لو الرسالة من اليوزر (في حالة نادرة)، خلي اللينك أبيض */
+.user-msg .text a {
+    color: #ffffff;
+}

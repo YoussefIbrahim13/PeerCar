@@ -1,0 +1,68 @@
+﻿@model AdminArchiveViewModel
+
+<div class="container py-4">
+    <h2 class="fw-bold mb-4"><i class="bi bi-archive me-2"></i>System Archive (Deleted Items)</h2>
+
+    <ul class="nav nav-pills mb-4" id="archiveTabs" role="tablist">
+        <li class="nav-item">
+            <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#users">Users (@Model.DeletedUsers.Count())</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#cars">Cars (@Model.DeletedCars.Count())</button>
+        </li>
+        <li class="nav-item">
+            <button class="nav-link" data-bs-toggle="pill" data-bs-target="#bookings">Bookings (@Model.DeletedBookings.Count())</button>
+        </li>
+    </ul>
+
+    <div class="tab-content border rounded-4 p-4 shadow-sm bg-white">
+        <div class="tab-pane fade show active" id="users">
+            <table class="table align-middle">
+                <thead><tr><th>Name</th><th>Email</th><th>Deletion Date</th></tr></thead>
+                <tbody>
+                    @foreach (var u in Model.DeletedUsers)
+                    {
+                        <tr>
+                            <td>@u.FullName</td>
+                            <td><span class="text-danger small">@u.Email</span></td>
+                            <td>@u.LastActive?.ToString("g")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tab-pane fade" id="cars">
+            <table class="table align-middle">
+                <thead><tr><th>Car</th><th>Owner</th><th>Status</th></tr></thead>
+                <tbody>
+                    @foreach (var c in Model.DeletedCars)
+                    {
+                        <tr>
+                            <td>@c.Brand @c.Model (@c.Year)</td>
+                            <td>@c.Owner?.FullName</td>
+                            <td><span class="badge bg-secondary">Deleted</span></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="tab-pane fade" id="bookings">
+            <table class="table align-middle">
+                <thead><tr><th>Reference</th><th>Renter</th><th>Car</th><th>Status</th></tr></thead>
+                <tbody>
+                    @foreach (var b in Model.DeletedBookings)
+                    {
+                        <tr class="table-light">
+                            <td>#@b.Id.ToString().Substring(0, 8)</td>
+                            <td>@b.Renter?.FullName</td>
+                            <td>@b.Car?.Brand @b.Car?.Model</td>
+                            <td><span class="badge bg-dark">@b.Status</span></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

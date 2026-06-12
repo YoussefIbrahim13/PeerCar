@@ -1,0 +1,214 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Peer_Car.Domain.Entities
+@using Peer_Car.Domain.Enums
+@model IEnumerable<User>
+
+@inject UserManager<User> UserManager
+
+@{
+    ViewData["Title"] = "Manage Users";
+}
+
+@* Hero Section - Admin Style *@
+<div class="hero-section position-relative mb-5 bg-primary text-white py-5 shadow-sm">
+    <div class="container position-relative text-center">
+        <h1 class="display-4 fw-bold mb-2 animate__animated animate__fadeInDown">User Management</h1>
+        <p class="lead mb-0 animate__animated animate__fadeInUp">Administer user accounts, roles, and platform permissions</p>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-lg rounded-4">
+                <div class="card-body p-4">
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4 gap-3">
+                        <h4 class="fw-bold mb-0 text-dark">Registered Users</h4>
+                        <div class="btn-group shadow-sm">
+                            <a asp-action="AddUser" class="btn btn-primary rounded-pill px-4">
+                                <i class="bi bi-person-plus-fill me-2"></i>Add New User
+                            </a>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive rounded-3">
+                        <table class="table table-hover align-middle border-top">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="ps-3 text-muted small text-uppercase fw-bold">Profile</th>
+                                    <th class="text-muted small text-uppercase fw-bold">Full Name</th>
+                                    <th class="text-muted small text-uppercase fw-bold">Email</th>
+                                    <th class="text-muted small text-uppercase fw-bold">Role</th>
+                                    <th class="text-muted small text-uppercase fw-bold">Status</th>
+                                    <th class="text-end pe-3 text-muted small text-uppercase fw-bold">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var user in Model)
+                                {
+                                    <tr>
+                                        <td class="ps-3">
+                                            @* 🟢 تطبيق المنطق الجوكر لحل مشكلة الصور المكسورة *@
+                                            @{
+                                                var uImg = user.ProfileImageUrl;
+                                                string fPath = "/images/profiles/default.png"; // القيمة الافتراضية
+
+                                                if (!string.IsNullOrEmpty(uImg) && uImg != "default.png")
+                                                {
+                                                    if (uImg.StartsWith("/images"))
+                                                    {
+                                                        fPath = uImg; // المسار كامل
+                                                    }
+                                                    else
+                                                    {
+                                                        fPath = "/images/profiles/" + uImg.TrimStart('/'); // اسم الملف فقط
+                                                    }
+                                                }
+                                            }
+                                            <img src="@fPath"
+                                                 class="rounded-circle border shadow-sm"
+                                                 style="width:45px; height:45px; object-fit:cover; background-color: #f8f9fa;"
+                                                 alt="Profile"
+                                                 onerror="this.onerror=null;this.src='/images/profiles/default.png';" />
+                                        </td>
+                                        <td>
+                                            <div class="fw-bold text-dark">@user.FullName</div>
+                                            <small class="text-muted">Registered: @user.DateRegistered.ToString("MMM dd, yyyy")</small>
+                                        </td>
+                                        <td class="text-secondary small">@user.Email</td>
+                                        <td>
+                                            @{
+                                                var roleClass = user.Role == UserRole.Admin ? "danger" : "info text-dark";
+                                            }
+                                            <span class="badge rounded-pill bg-@roleClass px-3 py-2">
+                                                <i class="bi @(user.Role == UserRole.Admin ? "bi-shield-lock" : "bi-person") me-1"></i> @user.Role
+                                            </span>
+                                        </td>
+                                        <td>
+                                            @{
+                                                var statusClass = user.Status switch
+                                                {
+                                                    UserStatus.Active => "success",
+                                                    UserStatus.Suspended => "danger",
+                                                    UserStatus.PendingVerification => "warning text-dark",
+                                                    _ => "secondary"
+                                                };
+                                            }
+                                            <span class="badge rounded-pill bg-@statusClass px-3 py-2 small fw-bold">@user.Status</span>
+                                        </td>
+                                        <td class="text-end pe-3">
+                                            <div class="btn-group shadow-sm">
+                                                <button type="button" class="btn btn-sm btn-light border dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    Manage
+                                                </button>
+                                                <ul class="dropdown-menu dropdown-menu-end shadow border-0 py-2">
+                                                    <li class="dropdown-header text-uppercase small fw-bold">Update Status</li>
+                                                    @foreach (var status in Enum.GetValues<UserStatus>())
+                                                    {
+                                                        <li>
+                                                            <form asp-action="UpdateUserStatus" asp-route-userId="@user.Id" asp-route-status="@status" method="post">
+                                                                <button type="submit" class="dropdown-item py-2 @(user.Status == status ? "active bg-primary" : "")">
+                                                                    <i class="bi bi-dot me-1"></i> @status
+                                                                </button>
+                                                            </form>
+                                                        </li>
+                                                    }
+                                                    <li><hr class="dropdown-divider"></li>
+                                                    <li class="dropdown-header text-uppercase small fw-bold">User Actions</li>
+                                                    <li>
+                                                        <a class="dropdown-item text-primary py-2" asp-action="UserDetails" asp-route-id="@user.Id">
+                                                            <i class="bi bi-eye me-2"></i>View History & Details
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <form asp-action="DeleteUser" asp-route-userId="@user.Id" method="post" onsubmit="return confirm('Danger: Are you sure you want to Archive/Delete this user?');">
+                                                            @Html.AntiForgeryToken()
+                                                            <button type="submit" class="dropdown-item text-danger py-2">
+                                                                <i class="bi bi-trash me-2"></i>Delete User
+                                                            </button>
+                                                        </form>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Quick Access Services Section *@
+<div class="container mb-5">
+    <div class="row g-4">
+        <div class="col-md-4">
+            <div class="service-card card h-100 shadow-sm border-0 text-center p-4">
+                <div class="service-icon mb-3 bg-info-subtle text-info mx-auto">
+                    <i class="bi bi-journal-text fs-2"></i>
+                </div>
+                <h5 class="fw-bold">Reservations</h5>
+                <p class="text-muted small">Full audit log of all user bookings and rental history.</p>
+                <a asp-action="UserReservations" class="btn btn-outline-info rounded-pill px-4 mt-auto">View All</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="service-card card h-100 shadow-sm border-0 text-center p-4">
+                <div class="service-icon mb-3 bg-success-subtle text-success mx-auto">
+                    <i class="bi bi-car-front fs-2"></i>
+                </div>
+                <h5 class="fw-bold">Fleet Manager</h5>
+                <p class="text-muted small">Approve new vehicle submissions and manage current fleet.</p>
+                <a asp-action="Cars" class="btn btn-outline-success rounded-pill px-4 mt-auto">Manage Fleet</a>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="service-card card h-100 shadow-sm border-0 text-center p-4">
+                <div class="service-icon mb-3 bg-warning-subtle text-warning mx-auto">
+                    <i class="bi bi-graph-up-arrow fs-2"></i>
+                </div>
+                <h5 class="fw-bold">System Dashboard</h5>
+                <p class="text-muted small">Live analytics, revenue reports, and growth statistics.</p>
+                <a asp-action="Dashboard" class="btn btn-outline-warning rounded-pill px-4 mt-auto">Go to Dashboard</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .rounded-4 {
+
+        border-radius: 1.25rem !important;
+    }
+    .service-card {
+        transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
+        border-radius: 1.5rem;
+    }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+        }
+
+    .service-icon {
+        width: 64px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+    }
+
+    .table thead th {
+        font-size: 0.75rem;
+        letter-spacing: 0.8px;
+        padding: 1.25rem 0.5rem;
+    }
+
+    .dropdown-item:hover {
+        background-color: #f8f9fa;
+    }
+</style>

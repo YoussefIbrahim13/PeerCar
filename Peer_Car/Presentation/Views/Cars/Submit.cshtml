@@ -1,0 +1,117 @@
+﻿@using Peer_Car.Application.ViewModels
+@model CarViewModel
+
+@{
+    ViewData["Title"] = "Submit Your Car";
+}
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-4 p-md-5">
+                    <div class="text-center mb-4">
+                        <i class="bi bi-car-front text-primary display-4"></i>
+                        <h2 class="fw-bold mt-2">Submit Your Car</h2>
+                        <p class="text-muted">Fill in the details to list your car on PeerCar</p>
+                    </div>
+
+                    <form asp-controller="Cars" asp-action="Submit" method="post" enctype="multipart/form-data" id="submitForm">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4"></div>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Brand" class="form-label fw-bold">Brand</label>
+                                <input asp-for="Brand" class="form-control form-control-lg" placeholder="e.g. Toyota" />
+                                <span asp-validation-for="Brand" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Model" class="form-label fw-bold">Model</label>
+                                <input asp-for="Model" class="form-control form-control-lg" placeholder="e.g. Corolla" />
+                                <span asp-validation-for="Model" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Year" class="form-label fw-bold">Year</label>
+                                <input asp-for="Year" class="form-control form-control-lg" type="number" placeholder="2024" />
+                                <span asp-validation-for="Year" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="PricePerDay" class="form-label fw-bold">Price Per Day (SAR)</label>
+                                <input asp-for="PricePerDay" class="form-control form-control-lg" type="number" step="0.01" />
+                                <span asp-validation-for="PricePerDay" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-12 mb-3">
+                                <label asp-for="Location" class="form-label fw-bold">Location</label>
+                                <input asp-for="Location" class="form-control form-control-lg" placeholder="City or Area" />
+                                <span asp-validation-for="Location" class="text-danger small"></span>
+                            </div>
+
+                            <hr class="my-4">
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold text-primary"><i class="bi bi-image me-1"></i> Car Image</label>
+                                <input type="file" name="CarImage" class="form-control" accept="image/*" required id="carImage" />
+                                <div class="form-text">JPG, PNG (Max 5MB)</div>
+                                <div id="imagePreview" class="mt-2" style="display:none;">
+                                    <img id="previewImg" src="" alt="Preview" class="img-thumbnail" style="max-height:150px;" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold text-primary"><i class="bi bi-file-earmark-pdf me-1"></i> Ownership Document</label>
+                                <input type="file" name="CarDocument" class="form-control" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" required id="carDocument" />
+                                <div class="form-text">PDF or Image (Max 10MB)</div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100 mt-4 shadow-sm py-3 fw-bold" id="submitBtn">
+                            <span id="submitText">Submit for Approval</span>
+                            <span id="submitSpinner" style="display:none;">
+                                <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                                Processing...
+                            </span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        // الـ JavaScript بتاعك ممتاز، حافظنا عليه مع تحسين بسيط في عرض التنبيهات
+        document.getElementById('carImage').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('Image file size must be less than 5MB.');
+                    this.value = '';
+                    return;
+                }
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('previewImg').src = e.target.result;
+                    document.getElementById('imagePreview').style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        document.getElementById('submitForm').addEventListener('submit', function() {
+            const submitBtn = document.getElementById('submitBtn');
+            const submitText = document.getElementById('submitText');
+            const submitSpinner = document.getElementById('submitSpinner');
+            submitBtn.disabled = true;
+            submitText.style.display = 'none';
+            submitSpinner.style.display = 'inline';
+        });
+    </script>
+}

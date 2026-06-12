@@ -1,0 +1,134 @@
+﻿@using Peer_Car.Application.ViewModels
+@model UserCarViewModel
+
+@{
+    ViewData["Title"] = "My Fleet";
+}
+
+<div class="container mt-5">
+    <div class="d-flex justify-content-between align-items-center mb-5">
+        <div>
+            <h2 class="fw-bold mb-1">My Cars</h2>
+            <p class="text-muted">Manage your vehicles and track their status</p>
+        </div>
+        <a asp-action="Submit" class="btn btn-primary btn-lg shadow-sm">
+            <i class="bi bi-plus-lg me-2"></i>Add New Car
+        </a>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 mb-5">
+        <div class="card-header bg-success text-white py-3 rounded-top-4">
+            <h5 class="mb-0 fw-bold"><i class="bi bi-check-circle-fill me-2"></i>Approved & Active</h5>
+        </div>
+        <div class="card-body p-0">
+            @if (Model.ApprovedCars != null && Model.ApprovedCars.Any())
+            {
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead class="bg-light">
+                            <tr>
+                                <th class="ps-4">Car</th>
+                                <th>Year</th>
+                                <th>Price</th>
+                                <th class="text-end pe-4">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var car in Model.ApprovedCars)
+                            {
+                                <tr>
+                                    <td class="ps-4">
+                                        <div class="d-flex align-items-center">
+                                            @if (!string.IsNullOrEmpty(car.ImagePath)) {
+                                                <img src="@car.ImagePath" class="rounded-3 me-3" style="width: 60px; height: 40px; object-fit: cover;" />
+                                            }
+                                            <span class="fw-bold">@car.Brand @car.Model</span>
+                                        </div>
+                                    </td>
+                                    <td>@car.Year</td>
+                                    <td class="text-success fw-bold">@car.PricePerDay SAR/day</td>
+                                    <td class="text-end pe-4">
+                                        <a asp-action="Details" asp-route-id="@car.Id" class="btn btn-outline-primary btn-sm">View</a>
+                                        <a asp-action="Edit" asp-route-id="@car.Id" class="btn btn-outline-warning btn-sm">Edit</a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <i class="bi bi-car-front text-muted display-4"></i>
+                    <p class="text-muted mt-2">No approved cars yet.</p>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-header bg-info text-white py-3 rounded-top-4">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-hourglass-split me-2"></i>Pending Review</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.PendingSubmissions != null && Model.PendingSubmissions.Any())
+                    {
+                        @foreach (var sub in Model.PendingSubmissions)
+                        {
+                            <div class="d-flex align-items-center justify-content-between border-bottom pb-3 mb-3 last-child-no-border">
+                                <div>
+                                    <h6 class="fw-bold mb-1">@sub.CarBrand @sub.CarModel</h6>
+                                    <small class="text-muted">Submitted on @sub.SubmissionDate.ToString("MMM dd, yyyy")</small>
+                                </div>
+                                <span class="badge bg-light text-info border border-info">In Review</span>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-center text-muted py-4">No pending submissions.</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-header bg-danger text-white py-3 rounded-top-4">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-exclamation-triangle-fill me-2"></i>Rejected</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.RejectedSubmissions != null && Model.RejectedSubmissions.Any())
+                    {
+                        @foreach (var sub in Model.RejectedSubmissions)
+                        {
+                            <div class="border-bottom pb-3 mb-3">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h6 class="fw-bold mb-0">@sub.CarBrand @sub.CarModel</h6>
+                                    <a asp-action="EditRejected" asp-route-id="@sub.CarId" class="btn btn-warning btn-sm">
+                                        <i class="bi bi-pencil-square"></i> Fix & Resubmit
+                                    </a>
+                                </div>
+                                <div class="bg-light p-2 rounded small text-danger">
+                                    <strong>Reason:</strong> @sub.RejectionReason
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-center text-muted py-4">No rejected applications.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .rounded-4 { border-radius: 1rem !important; }
+    .last-child-no-border:last-child { border-bottom: none !important; margin-bottom: 0 !important; }
+</style>

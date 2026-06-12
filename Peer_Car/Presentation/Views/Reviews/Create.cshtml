@@ -1,0 +1,126 @@
+﻿@using Peer_Car.Domain.Entities
+@using Peer_Car.Domain.Enums
+@model Review
+
+@{
+    ViewData["Title"] = "Rate Your Experience";
+    var showForm = false;
+    var errorMessage = "";
+
+    // منطق التحقق المعدل
+    if (ViewBag.TargetId == null || ViewBag.BookingId == null)
+    {
+        errorMessage = "No car is associated with this review. Please access the form from your completed bookings.";
+    }
+    else if (ViewBag.AlreadyReviewed == true)
+    {
+        errorMessage = "You have already shared your thoughts on this trip!";
+    }
+    else if (ViewBag.BookingStatus != null && ViewBag.BookingStatus.ToString() != "Completed")
+    {
+        errorMessage = "You can only leave a review after your journey is completed.";
+    }
+    else
+    {
+        showForm = true;
+    }
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="card-header bg-primary py-4 text-center text-white border-0">
+                    @if (ViewBag.TargetImage != null)
+                    {
+                        <img src="@ViewBag.TargetImage" class="rounded-circle border border-3 border-white mb-3 shadow" 
+                             style="width:110px; height:110px; object-fit:cover; background:#fff;" />
+                    }
+                    <h3 class="fw-bold mb-0">How was your trip?</h3>
+                    <p class="mb-0 opacity-75">@ViewBag.TargetName</p>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    @if (!string.IsNullOrEmpty(errorMessage))
+                    {
+                        <div class="text-center py-4">
+                            <i class="bi bi-exclamation-octagon text-danger display-4 mb-3"></i>
+                            <h5 class="fw-bold text-dark">Oops!</h5>
+                            <p class="text-muted mb-4">@errorMessage</p>
+                            <a asp-controller="Bookings" asp-action="MyBookings" class="btn btn-primary rounded-pill px-4">
+                                <i class="bi bi-arrow-left me-2"></i>Back to My Bookings
+                            </a>
+                        </div>
+                    }
+                    else if (showForm)
+                    {
+                        @* 🚀 التعديل هنا: أضفنا asp-route-bookingId ليطابق ميثود الـ POST في الكنترولر *@
+                        <form asp-action="Create" asp-route-bookingId="@ViewBag.BookingId" method="post" class="needs-validation" novalidate>
+                            @Html.AntiForgeryToken()
+                            
+                            @* استخدام asp-for يضمن الربط الصحيح مع الموديل *@
+                            <input type="hidden" asp-for="TargetId" value="@ViewBag.TargetId" />
+                            <input type="hidden" asp-for="BookingId" value="@ViewBag.BookingId" />
+                            <input type="hidden" asp-for="TargetType" value="@ReviewTargetType.Car" />
+
+                            <div class="text-center mb-5">
+                                <label class="form-label d-block fw-bold text-secondary mb-3">Overall Rating</label>
+                                <div class="star-rating fs-2">
+                                    <input type="radio" id="star5" asp-for="Rating" value="5" required /><label for="star5" class="bi bi-star-fill"></label>
+                                    <input type="radio" id="star4" asp-for="Rating" value="4" /><label for="star4" class="bi bi-star-fill"></label>
+                                    <input type="radio" id="star3" asp-for="Rating" value="3" /><label for="star3" class="bi bi-star-fill"></label>
+                                    <input type="radio" id="star2" asp-for="Rating" value="2" /><label for="star2" class="bi bi-star-fill"></label>
+                                    <input type="radio" id="star1" asp-for="Rating" value="1" /><label for="star1" class="bi bi-star-fill"></label>
+                                </div>
+                                <span asp-validation-for="Rating" class="text-danger small"></span>
+                            </div>
+
+                            <div class="mb-4">
+                                <label asp-for="Comment" class="form-label fw-bold text-secondary">Share more details</label>
+                                <textarea asp-for="Comment" class="form-control rounded-3" 
+                                          placeholder="How was the car condition? The host's communication?" 
+                                          style="height: 140px;"></textarea>
+                                <span asp-validation-for="Comment" class="text-danger small"></span>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm py-3">
+                                    Submit My Review
+                                </button>
+                                <a asp-controller="Bookings" asp-action="MyBookings" class="btn btn-link text-muted text-decoration-none small">
+                                    Cancel
+                                </a>
+                            </div>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .rounded-4 { border-radius: 1.5rem !important; }
+    
+    .star-rating {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: center;
+    }
+    .star-rating input { display: none; }
+    .star-rating label {
+        color: #ddd;
+        cursor: pointer;
+        padding: 0 5px;
+        transition: color 0.2s;
+    }
+    .star-rating input:checked ~ label,
+    .star-rating label:hover,
+    .star-rating label:hover ~ label {
+        color: #ffc107;
+    }
+</style>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

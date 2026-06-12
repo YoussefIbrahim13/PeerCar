@@ -1,0 +1,97 @@
+﻿@using Peer_Car.Domain.Entities
+@model Review
+
+@{
+    ViewData["Title"] = "Edit My Review";
+}
+
+<div class="hero-section position-relative mb-5 bg-dark text-white py-5 shadow-sm">
+    <div class="container position-relative text-center">
+        <h1 class="display-4 fw-bold mb-2 animate__animated animate__fadeInDown">Update Your Feedback</h1>
+        <p class="lead mb-0 animate__animated animate__fadeInUp text-primary-emphasis">Modify your rating for @(Model.Car?.Brand ?? "this vehicle")</p>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="bg-primary py-1"></div>
+
+                <div class="card-body p-4 p-md-5">
+                    <div class="text-center mb-4">
+                        <div class="icon-box bg-primary-subtle text-primary d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style="width: 60px; height: 60px;">
+                            <i class="bi bi-pencil-square fs-3"></i>
+                        </div>
+                        <h4 class="fw-bold text-dark">Edit Review Details</h4>
+                    </div>
+
+                    <form asp-action="Edit" method="post" class="needs-validation" novalidate>
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small mb-4"></div>
+                        
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="CarId" />
+                        <input type="hidden" asp-for="BookingId" />
+
+                        <div class="text-center mb-5">
+                            <label class="form-label d-block fw-bold text-secondary mb-3 small text-uppercase">Update Rating</label>
+                            <div class="star-rating fs-2">
+                                <input type="radio" id="star5" name="Rating" value="5" @(Model.Rating == 5 ? "checked" : "") required /><label for="star5" class="bi bi-star-fill"></label>
+                                <input type="radio" id="star4" name="Rating" value="4" @(Model.Rating == 4 ? "checked" : "") /><label for="star4" class="bi bi-star-fill"></label>
+                                <input type="radio" id="star3" name="Rating" value="3" @(Model.Rating == 3 ? "checked" : "") /><label for="star3" class="bi bi-star-fill"></label>
+                                <input type="radio" id="star2" name="Rating" value="2" @(Model.Rating == 2 ? "checked" : "") /><label for="star2" class="bi bi-star-fill"></label>
+                                <input type="radio" id="star1" name="Rating" value="1" @(Model.Rating == 1 ? "checked" : "") /><label for="star1" class="bi bi-star-fill"></label>
+                            </div>
+                            <span asp-validation-for="Rating" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Comment" class="form-label fw-bold small text-uppercase text-secondary">Your Comment</label>
+                            <textarea asp-for="Comment" class="form-control rounded-3" 
+                                      placeholder="Share your updated experience..." 
+                                      style="height: 150px;"></textarea>
+                            <span asp-validation-for="Comment" class="text-danger small"></span>
+                        </div>
+
+                        <div class="d-grid gap-3">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm py-3">
+                                <i class="bi bi-check-circle me-2"></i>Save Changes
+                            </button>
+                            <a asp-action="Index" class="btn btn-link text-muted text-decoration-none small">
+                                Cancel and Go Back
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .rounded-4 { border-radius: 1.5rem !important; }
+    
+    /* Star Rating Logic */
+    .star-rating {
+        display: flex;
+        flex-direction: row-reverse;
+        justify-content: center;
+    }
+    .star-rating input { display: none; }
+    .star-rating label {
+        color: #ddd;
+        cursor: pointer;
+        padding: 0 5px;
+        transition: color 0.2s;
+    }
+    .star-rating input:checked ~ label,
+    .star-rating label:hover,
+    .star-rating label:hover ~ label {
+        color: #ffc107;
+    }
+</style>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

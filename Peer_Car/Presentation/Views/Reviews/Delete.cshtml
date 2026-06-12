@@ -1,0 +1,90 @@
+﻿@using Peer_Car.Domain.Entities
+@using Peer_Car.Domain.Enums
+@model Review
+
+@{
+    ViewData["Title"] = "Delete Review Confirmation";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="bg-danger py-2"></div>
+                
+                <div class="card-body p-4 p-md-5">
+                    <div class="text-center mb-4">
+                        <div class="icon-box bg-danger-subtle text-danger d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style="width: 80px; height: 80px;">
+                            <i class="bi bi-exclamation-triangle display-4"></i>
+                        </div>
+                        <h3 class="fw-bold text-dark">Delete Review?</h3>
+                        <p class="text-muted">This action is permanent and cannot be undone. Are you sure you want to proceed?</p>
+                    </div>
+
+                    <div class="p-4 bg-light rounded-4 mb-4 border border-dashed">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="fw-bold mb-0 text-primary">
+                                <i class="bi bi-car-front-fill me-1"></i>
+                                @(Model.Car != null ? $"{Model.Car.Brand} {Model.Car.Model}" : "Car Details Not Available")
+                            </h6>
+                            <span class="badge bg-white text-muted border rounded-pill px-3">
+                                @Model.CreatedAt.ToString("MMM dd, yyyy")
+                            </span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <div class="text-warning mb-2">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    <i class="bi bi-star@(i <= Model.Rating ? "-fill" : "")"></i>
+                                }
+                            </div>
+                            <p class="mb-0 italic text-secondary border-start border-3 ps-3 py-1">
+                                "@Model.Comment"
+                            </p>
+                        </div>
+
+                        <div class="small">
+                            <span class="text-muted small text-uppercase fw-bold">Reviewer:</span>
+                            <span class="text-dark fw-semibold ms-1">@(Model.User?.FullName ?? "Unknown User")</span>
+                        </div>
+                    </div>
+
+                    <form asp-action="Delete" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="Id" />
+                        
+                        <div class="d-grid gap-3">
+                            <button type="submit" class="btn btn-danger btn-lg rounded-pill fw-bold shadow-sm py-3">
+                                <i class="bi bi-trash-fill me-2"></i>Permanently Delete
+                            </button>
+                            
+                            <a asp-action="Index" class="btn btn-outline-secondary btn-lg rounded-pill fw-bold">
+                                No, Keep This Review
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <p class="text-center mt-4 text-muted small">
+                <i class="bi bi-shield-lock me-1"></i> Admin Action: Review Management
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+    .rounded-4 { border-radius: 1.5rem !important; }
+    .bg-danger-subtle { background-color: #f8d7da !important; }
+    .border-dashed { border-style: dashed !important; border-width: 2px !important; }
+    /* أنيميشن خفيف للأيقونة التحذيرية */
+    .icon-box i {
+        animation: pulse 1.5s infinite;
+    }
+    @@keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.1); }
+        100% { transform: scale(1); }
+    }
+</style>

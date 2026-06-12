@@ -1,0 +1,211 @@
+﻿@using Peer_Car.Application.ViewModels
+@model LoginViewModel
+
+@{
+    ViewData["Title"] = "Login";
+}
+
+<style>
+    /* تنسيق الفاصل الزمني (Divider) */
+    .divider-container {
+        position: relative;
+        text-align: center;
+        margin: 1.5rem 0;
+    }
+
+        .divider-container::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: #dee2e6;
+            z-index: 1;
+        }
+
+    .divider-text {
+        position: relative;
+        background-color: #fff;
+        padding: 0 15px;
+        color: #6c757d;
+        font-size: 0.85rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        z-index: 2;
+    }
+    /* تحسين شكل زرار جوجل */
+    /* زرار جوجل الجديد */
+    .btn-google {
+        background-color: #ffffff;
+        border: 1px solid #dadce0;
+        color: #3c4043;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.2s ease-in-out;
+        position: relative;
+    }
+
+        .btn-google:hover {
+            background-color: #f8f9fa;
+            border-color: #d2d4d7;
+            box-shadow: 0 1px 3px 0 rgba(60,64,67,0.30), 0 4px 8px 3px rgba(60,64,67,0.15) !important;
+            transform: translateY(-1px);
+        }
+
+    .google-icon {
+        width: 20px;
+        height: 20px;
+        margin-right: 12px;
+    }
+</style>
+
+<div class="hero-section position-relative mb-5 bg-dark text-white py-5 shadow-sm">
+    <div class="container position-relative text-center py-4">
+        <h1 class="display-3 fw-bold mb-2 animate__animated animate__fadeInDown">Welcome Back</h1>
+        <p class="lead fs-4 animate__animated animate__fadeInUp opacity-75">Sign in to your PeerCar account to start your journey</p>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-8">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="bg-primary py-1"></div>
+
+                <div class="card-body p-4 p-md-5">
+                    <div class="text-center mb-4">
+                        <div class="icon-box bg-primary-subtle text-primary d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style="width: 60px; height: 60px;">
+                            <i class="bi bi-person-lock fs-2"></i>
+                        </div>
+                        <h4 class="fw-bold text-dark">Account Login</h4>
+                    </div>
+
+                    <form asp-controller="Account" asp-action="Login" method="post">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2 small mb-4"></div>
+
+                        <div class="mb-4">
+                            <label asp-for="Email" class="form-label fw-bold small text-uppercase text-secondary">Email Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-envelope text-muted"></i></span>
+                                <input asp-for="Email" class="form-control form-control-lg border-start-0 fs-6" placeholder="name@example.com" />
+                            </div>
+                            <span asp-validation-for="Email" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="d-flex justify-content-between">
+                                <label asp-for="Password" class="form-label fw-bold small text-uppercase text-secondary">Password</label>
+                                <a asp-action="ForgotPassword" asp-controller="Account" class="link-primary small text-decoration-none">Forgot?</a>
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-key text-muted"></i></span>
+                                <input asp-for="Password" class="form-control form-control-lg border-start-0 border-end-0 fs-6" type="password" id="passwordInput" autocomplete="current-password" />
+                                <button type="button" class="btn btn-light border border-start-0" id="togglePassword" tabindex="-1">
+                                    <i class="bi bi-eye text-muted" id="togglePasswordIcon"></i>
+                                </button>
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="form-check form-switch">
+                                <input asp-for="RememberMe" class="form-check-input" type="checkbox" />
+                                <label asp-for="RememberMe" class="form-check-label text-muted small">Keep me logged in</label>
+                            </div>
+                        </div>
+
+                        <div class="d-grid mb-4">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill fw-bold shadow-sm py-3">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>Sign In
+                            </button>
+                        </div>
+                    </form>
+
+                    @* --- جزء التسجيل بجوجل (External Login) --- *@
+                    <div class="divider-container">
+                        <span class="divider-text">Or continue with</span>
+                    </div>
+
+                    <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnUrl="@ViewData["ReturnUrl"]" method="post">
+                        @Html.AntiForgeryToken()
+                        <div class="d-grid mb-4">
+                            <button type="submit" name="provider" value="Google" class="btn btn-google btn-lg rounded-pill fw-bold py-3">
+                                <img src="https://www.gstatic.com/images/branding/product/1x/gsa_512dp.png"
+                                     class="google-icon" alt="Google Logo">
+                                <span class="fs-6">Sign in with Google</span>
+                            </button>
+                        </div>
+                    </form>
+                    @* -------------------------------------- *@
+
+                    <div class="text-center">
+                        <p class="text-muted small mb-0">Don't have an account? <a asp-action="Register" class="text-primary fw-bold text-decoration-none">Create One Now</a></p>
+                    </div>
+
+                    @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                    {
+                        if (error.ErrorMessage.Contains("Resend confirmation email"))
+                        {
+                            <div class="alert alert-warning mt-4 text-center small border-0 shadow-sm">
+                                <i class="bi bi-info-circle me-1"></i> @Html.Raw(error.ErrorMessage)
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="/" class="text-muted small text-decoration-none"><i class="bi bi-arrow-left me-1"></i> Back to Homepage</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast-container position-fixed top-0 end-0 p-3">
+    @if (TempData["ToastSuccess"] != null)
+    {
+        <div class="toast align-items-center text-bg-success border-0 show shadow-lg" role="alert" id="toastSuccess">
+            <div class="d-flex">
+                <div class="toast-body"><i class="bi bi-check-circle me-2"></i>@TempData["ToastSuccess"]</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    }
+    @if (TempData["ToastError"] != null)
+    {
+        <div class="toast align-items-center text-bg-danger border-0 show shadow-lg" role="alert" id="toastError">
+            <div class="d-flex">
+                <div class="toast-body"><i class="bi bi-exclamation-triangle me-2"></i>@TempData["ToastError"]</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Password Toggle Logic
+            const passwordInput = document.getElementById('passwordInput');
+            const togglePassword = document.getElementById('togglePassword');
+            const toggleIcon = document.getElementById('togglePasswordIcon');
+
+            togglePassword.addEventListener('click', () => {
+                const type = passwordInput.type === 'password' ? 'text' : 'password';
+                passwordInput.type = type;
+                toggleIcon.classList.toggle('bi-eye');
+                toggleIcon.classList.toggle('bi-eye-slash');
+            });
+
+            // Auto-hide toasts
+            setTimeout(() => {
+                const toasts = document.querySelectorAll('.toast');
+                toasts.forEach(t => t.classList.remove('show'));
+            }, 5000);
+        });
+    </script>
+}

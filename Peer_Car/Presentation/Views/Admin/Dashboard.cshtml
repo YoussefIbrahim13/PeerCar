@@ -1,0 +1,184 @@
+﻿@using Peer_Car.Domain.Entities
+@using Peer_Car.Domain.Enums
+@model Peer_Car.Application.ViewModels.AdminDashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card bg-dark text-white border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="card-body p-4 p-md-5" style="background: linear-gradient(45deg, #1a1a1a, #333);">
+                    <div class="d-flex align-items-center">
+                        <div class="flex-grow-1">
+                            <h2 class="display-6 fw-bold mb-1">PeerCar Control Center</h2>
+                            <p class="lead mb-0 opacity-75">Welcome back, Admin. Here's what's happening today.</p>
+                        </div>
+                        <div class="d-none d-md-block">
+                            <i class="bi bi-shield-check display-1 opacity-25"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-md-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100 rounded-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="icon-bg bg-primary-subtle rounded-circle p-3">
+                            <i class="bi bi-people-fill text-primary fs-4"></i>
+                        </div>
+                        <span class="badge bg-success-subtle text-success">+@ViewBag.NewUsersToday New</span>
+                    </div>
+                    <h6 class="text-muted mb-1">Total Users</h6>
+                    <h3 class="fw-bold mb-0">@ViewBag.TotalUsers</h3>
+                    <a asp-controller="Admin" asp-action="Users" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100 rounded-4">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="icon-bg bg-success-subtle rounded-circle p-3">
+                            <i class="bi bi-car-front-fill text-success fs-4"></i>
+                        </div>
+                        <span class="text-muted small">@ViewBag.AvailableCars Available</span>
+                    </div>
+                    <h6 class="text-muted mb-1">Total Cars</h6>
+                    <h3 class="fw-bold mb-0">@ViewBag.TotalCars</h3>
+                    <a asp-controller="Admin" asp-action="Cars" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100 rounded-4">
+                <div class="card-body border-start border-warning border-4">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-muted mb-1">Pending Submissions</h6>
+                            <h3 class="fw-bold mb-0">@ViewBag.PendingSubmissions</h3>
+                        </div>
+                        <i class="bi bi-file-earmark-medical fs-1 text-warning opacity-50"></i>
+                    </div>
+                       <a asp-controller="Admin" asp-action="CarSubmissions" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3">
+            <div class="card border-0 shadow-sm h-100 rounded-4 bg-primary text-white">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <h6 class="text-white-50 mb-1">Platform Bookings</h6>
+                            <h3 class="fw-bold mb-0">@ViewBag.TotalBookings</h3>
+                        </div>
+                        <i class="bi bi-calendar-check fs-1 opacity-50"></i>
+                    </div>
+                    <a asp-controller="Admin" asp-action="Bookings" class="stretched-link"></a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-header bg-white py-3">
+                    <h5 class="fw-bold mb-0">Quick Actions</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group list-group-flush">
+                        <a asp-controller="Admin" asp-action="AddUser" class="list-group-item list-group-item-action border-0 py-3 px-0">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-light p-2 rounded me-3"><i class="bi bi-person-plus"></i></div>
+                                <div>Add New User Account</div>
+                            </div>
+                        </a>
+                        <a asp-controller="Admin" asp-action="CarSubmissions" class="list-group-item list-group-item-action border-0 py-3 px-0">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-light p-2 rounded me-3"><i class="bi bi-card-checklist text-warning"></i></div>
+                                <div>Review Pending Submissions (@ViewBag.PendingSubmissions)</div>
+                            </div>
+                         </a>
+                        <a asp-controller="Admin" asp-action="Bookings" asp-route-status="Pending" class="list-group-item list-group-item-action border-0 py-3 px-0">
+                            <div class="d-flex align-items-center">
+                                <div class="bg-light p-2 rounded me-3"><i class="bi bi-alarm text-info"></i></div>
+                                <div>Manage Pending Bookings</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 h-100">
+                <div class="card-header bg-white py-3 d-flex justify-content-between align-items-center">
+                    <h5 class="fw-bold mb-0">Recent Activity</h5>
+                    <a asp-controller="Admin" asp-action="Bookings" class="btn btn-sm btn-link text-decoration-none">View All</a>
+                </div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle mb-0">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="ps-4">Vehicle</th>
+                                    <th>Customer</th>
+                                    <th>Status</th>
+                                    <th class="text-end pe-4">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var booking in Model.RecentBookings.Take(5))
+                                {
+                                    <tr>
+                                        <td class="ps-4">
+                                            <div class="fw-bold">@booking.Car?.Brand @booking.Car?.Model</div>
+                                            <small class="text-muted">@booking.StartDate.ToString("MMM dd")</small>
+                                        </td>
+                                        <td>
+                                            <div class="small fw-semibold">@booking.Renter?.FullName</div>
+                                            <div class="small text-muted" style="font-size: 0.75rem;">@booking.Renter?.Email</div>
+                                        </td>
+                                        <td>
+                                            @{
+                                                var badgeClass = booking.Status switch {
+                                                    BookingStatus.Pending => "warning",
+                                                    BookingStatus.Confirmed => "success",
+                                                    BookingStatus.Cancelled => "danger",
+                                                    BookingStatus.Completed => "info",
+                                                    _ => "secondary"
+                                                };
+                                            }
+                                            <span class="badge rounded-pill bg-@badgeClass px-2">@booking.Status</span>
+                                        </td>
+                                        <td class="text-end pe-4">
+                                            <a asp-controller="Admin" asp-action="BookingDetails" asp-route-id="@booking.Id" class="btn btn-sm btn-light">
+                                                <i class="bi bi-chevron-right"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .icon-bg { width: 48px; height: 48px; display: flex; align-items: center; justify-content: center; }
+    .card { transition: all 0.3s; }
+    .card:hover { transform: translateY(-3px); }
+    .rounded-4 { border-radius: 1rem !important; }
+</style>

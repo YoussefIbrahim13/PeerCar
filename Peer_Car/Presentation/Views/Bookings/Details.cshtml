@@ -1,0 +1,170 @@
+﻿@using Peer_Car.Domain.Entities
+@using Peer_Car.Domain.Enums
+@using Microsoft.AspNetCore.Identity
+@model Booking
+
+@inject UserManager<User> UserManager
+
+@{
+    ViewData["Title"] = "Booking Details";
+
+    var currentUserIdString = UserManager.GetUserId(User);
+    Guid currentUserId = currentUserIdString != null ? Guid.Parse(currentUserIdString) : Guid.Empty;
+
+    bool isOwner = Model.Car?.OwnerId == currentUserId;
+    bool isRenter = Model.RenterId == currentUserId;
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                @* 1. Header *@
+                <div class="card-header bg-primary text-white py-3 border-0">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-bold">
+                            <i class="bi bi-receipt me-2"></i>Booking Reference: #@Model.Id.ToString().Substring(0, 8).ToUpper()
+                        </h5>
+                        @{
+                            var statusClass = Model.Status switch
+                            {
+                                BookingStatus.Confirmed => "bg-success text-white",
+                                BookingStatus.Pending => "bg-warning text-dark",
+                                BookingStatus.Cancelled => "bg-danger text-white",
+                                _ => "bg-info text-white" // لحالة الـ Completed
+                            };
+                        }
+                        <span class="badge rounded-pill px-3 py-2 @statusClass shadow-sm">
+                            <i class="bi bi-info-circle me-1"></i> @Model.Status
+                        </span>
+                    </div>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    @* 2. المعلومات الأساسية *@
+                    <div class="row align-items-center mb-5">
+                        <div class="col-md-5 mb-3 mb-md-0">
+                            @* ✅ تصليح الصورة: نستخدم / واحدة ونشيل أي زيادة من الداتابيز *@
+                            <img src="/@Model.Car?.ImagePath?.TrimStart('/')" class="img-fluid rounded-4 shadow-sm"
+                                 style="max-height:250px; width:100%; object-fit:cover;"
+                                 onerror="this.src='/images/cars/default-car.png'" />
+                        </div>
+                        <div class="col-md-7">
+                            <h3 class="fw-bold mb-2">@Model.Car?.Brand @Model.Car?.Model</h3>
+                            <p class="text-muted mb-3 small"><i class="bi bi-geo-alt me-1"></i> @Model.Car?.Location | <i class="bi bi-calendar3 me-1"></i> @Model.Car?.Year</p>
+
+                            <div class="p-3 bg-light rounded-4 border-start border-4 shadow-sm @(isOwner ? "border-primary" : "border-info")">
+                                <span class="d-block small text-muted text-uppercase fw-bold mb-1">@(isOwner ? "Renter Details" : "Car Owner")</span>
+                                <h6 class="fw-bold text-dark mb-1">@(isOwner ? Model.Renter?.FullName : Model.Car?.Owner?.FullName)</h6>
+                                <p class="mb-0 small text-muted"><i class="bi bi-telephone me-1"></i> @(isOwner ? Model.Renter?.PhoneNumber : Model.Car?.Owner?.PhoneNumber)</p>
+                                <p class="mb-0 small text-muted"><i class="bi bi-envelope me-1"></i> @(isOwner ? Model.Renter?.Email : Model.Car?.Owner?.Email)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    @* 3. Rental Summary *@
+                    <div class="row mb-5">
+                        <div class="col-md-6 mb-3 mb-md-0">
+                            <h6 class="fw-bold mb-3 text-uppercase small text-muted">Trip Dates</h6>
+                            <div class="p-3 border rounded-4 bg-white shadow-sm">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-muted small">Pickup:</span>
+                                    <span class="fw-bold">@Model.StartDate.ToString("MMM dd, yyyy")</span>
+                                </div>
+                                <div class="d-flex justify-content-between">
+                                    <span class="text-muted small">Return:</span>
+                                    <span class="fw-bold">@Model.EndDate.ToString("MMM dd, yyyy")</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <h6 class="fw-bold mb-3 text-uppercase small text-muted">Financial Summary</h6>
+                            <div class="p-3 border rounded-4 bg-primary text-white shadow-sm">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="small">Total Price</span>
+                                    <h4 class="mb-0 fw-bold">@Model.TotalPrice.ToString("N2") SAR</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    @* 4. Rental Progress (تم تصليح المنطق هنا عشان يظهر Completed صح) *@
+                    <h6 class="fw-bold mb-3 text-uppercase small text-muted">Rental Progress</h6>
+                    <div class="list-group shadow-sm border-0 mb-5 rounded-4 overflow-hidden">
+                        <div class="list-group-item d-flex justify-content-between align-items-center py-3 border-0">
+                            <span><i class="bi bi-shield-check me-2 text-primary"></i> 1. Owner Approval</span>
+                            <span class="text-success fw-bold small">Completed</span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center py-3 border-0 border-top">
+                            <span><i class="bi bi-key me-2 text-primary"></i> 2. Keys Handover</span>
+                            <span class="@(Model.IsKeyHandedOver ? "text-success" : "text-muted") fw-bold small">
+                                @(Model.IsKeyHandedOver ? "Handed Over" : "Pending")
+                            </span>
+                        </div>
+                        <div class="list-group-item d-flex justify-content-between align-items-center py-3 border-0 border-top">
+                            <span><i class="bi bi-arrow-return-left me-2 text-primary"></i> 3. Car Return</span>
+                            <span class="@(Model.Status.ToString() == "Completed" ? "text-success" : "text-muted") fw-bold small">
+                                @(Model.Status.ToString() == "Completed" ? "Done" : "Pending")
+                            </span>
+                        </div>
+                    </div>
+
+                    @* 🛠️ 5. Action Buttons *@
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-between mt-5 pt-3 border-top">
+                        <a asp-action="@(isOwner ? "MyCarsBookings" : "MyBookings")" class="btn btn-outline-secondary btn-lg px-4 rounded-pill">
+                            <i class="bi bi-arrow-left me-2"></i>Back
+                        </a>
+
+                        <div class="d-flex gap-2">
+                            @* زراير المالك *@
+                            @if (isOwner)
+                            {
+                                if (Model.Status == BookingStatus.Pending)
+                                {
+                                    <form asp-action="ApproveBooking" asp-route-id="@Model.Id" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-primary btn-lg px-4 rounded-pill shadow-sm">Approve Booking</button>
+                                    </form>
+                                }
+                                if (Model.Status == BookingStatus.Confirmed && !Model.IsKeyHandedOver)
+                                {
+                                    <form asp-action="ConfirmPickup" asp-route-id="@Model.Id" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-success btn-lg px-4 rounded-pill shadow-sm">Confirm Key Handover</button>
+                                    </form>
+                                }
+                                @* زرار إنهاء الرحلة للمالك يظهر لو استلم المفاتيح بس الحالة لسه مش Completed *@
+                                if (Model.Status == BookingStatus.Confirmed && Model.IsKeyHandedOver)
+                                {
+                                    <form asp-action="ConfirmReturn" asp-route-id="@Model.Id" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-dark btn-lg px-4 rounded-pill shadow-sm">Confirm Return & Finish</button>
+                                    </form>
+                                }
+                            }
+
+                            @* زراير المستأجر *@
+                            @if (isRenter)
+                            {
+                                if (Model.Status == BookingStatus.Confirmed && Model.IsKeyHandedOver)
+                                {
+                                    <form asp-action="RequestReturn" asp-route-id="@Model.Id" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-info btn-lg px-4 rounded-pill shadow-sm text-white">I've Returned the Car</button>
+                                    </form>
+                                }
+                                if (Model.Status == BookingStatus.Pending)
+                                {
+                                    <form asp-action="Cancel" asp-route-id="@Model.Id" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-outline-danger btn-lg px-4 rounded-pill">Cancel Request</button>
+                                    </form>
+                                }
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

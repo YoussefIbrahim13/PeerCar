@@ -1,0 +1,105 @@
+﻿@model Peer_Car.Application.ViewModels.CreateUserViewModel
+@{
+    ViewData["Title"] = "Add New User";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card border-0 shadow-lg rounded-4">
+                <div class="card-body p-4">
+                    <h3 class="fw-bold mb-4"><i class="bi bi-person-plus me-2"></i>Add New User</h3>
+                    
+                    <form asp-action="AddUser" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="FirstName" class="form-label">First Name</label>
+                                <input asp-for="FirstName" class="form-control rounded-pill" placeholder="First name" />
+                                <span asp-validation-for="FirstName" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="LastName" class="form-label">Last Name</label>
+                                <input asp-for="LastName" class="form-control rounded-pill" placeholder="Last name" />
+                                <span asp-validation-for="LastName" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label">Email Address</label>
+                            <input asp-for="Email" class="form-control rounded-pill" placeholder="name@example.com" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        @* 👁️ الجزء المعدل: باسورد مع علامة العين *@
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <input asp-for="Password" type="password" id="passwordInput"
+                                       class="form-control border-end-0 rounded-start-pill" placeholder="Create a password" />
+                                <button class="btn btn-outline-secondary border-start-0 rounded-end-pill px-3"
+                                        type="button" id="togglePassword">
+                                    <i class="bi bi-eye-slash" id="eyeIcon"></i>
+                                </button>
+                            </div>
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4 form-check ms-1">
+                            <input asp-for="IsAdmin" class="form-check-input" />
+                            <label asp-for="IsAdmin" class="form-check-label text-muted">Grant Admin Privileges</label>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-sm">Create Account</button>
+                            <a asp-action="Users" class="btn btn-light rounded-pill">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // 🛠️ جافا سكريبت لتبديل رؤية الباسورد
+        const togglePassword = document.querySelector('#togglePassword');
+        const passwordInput = document.querySelector('#passwordInput');
+        const eyeIcon = document.querySelector('#eyeIcon');
+
+        togglePassword.addEventListener('click', function () {
+            // تبديل نوع الـ input بين password و text
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            
+            // تبديل شكل الأيقونة
+            this.classList.toggle('active');
+            eyeIcon.classList.toggle('bi-eye');
+            eyeIcon.classList.toggle('bi-eye-slash');
+        });
+    </script>
+    
+    @* عشان الـ Validation يفضل شغال *@
+    <partial name="_ValidationScriptsPartial" />
+}
+
+<style>
+    /* لمسة جمالية للزرار */
+    #togglePassword {
+        border-color: #dee2e6;
+        background-color: #fff;
+    }
+
+        #togglePassword:hover {
+            background-color: #f8f9fa;
+            color: #0d6efd;
+        }
+
+    #passwordInput:focus {
+        border-color: #86b7fe;
+        box-shadow: none;
+    }
+</style>

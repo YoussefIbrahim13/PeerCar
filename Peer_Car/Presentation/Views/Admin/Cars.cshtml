@@ -1,0 +1,124 @@
+﻿@using Peer_Car.Domain.Entities
+@using Peer_Car.Domain.Enums
+@model IEnumerable<Car>
+
+@{
+    ViewData["Title"] = "Manage Cars";
+}
+
+<div class="hero-section position-relative mb-5 bg-dark text-white py-5 shadow-sm">
+    <div class="container position-relative text-center">
+        <h1 class="display-4 fw-bold mb-2 animate__animated animate__fadeInDown">Car Management</h1>
+        <p class="lead mb-0 animate__animated animate__fadeInUp text-primary">Administer and monitor all vehicles registered on the platform</p>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-12">
+            <div class="card border-0 shadow-lg rounded-4">
+                <div class="card-body p-4 p-md-5">
+                    
+                    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+                        <h4 class="fw-bold mb-0">Registered Vehicles</h4>
+                        <div class="d-flex gap-2">
+                         <a asp-controller="Admin" asp-action="CarSubmissions" class="btn btn-outline-warning rounded-pill px-3 shadow-sm">
+                                 <i class="bi bi-file-earmark-check me-2"></i>Pending Submissions
+                               </a>
+                           
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle border-top">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th class="ps-3">Vehicle</th>
+                                    <th>Owner</th>
+                                    <th>Price</th>
+                                    <th>Status</th>
+                                    <th>Submission</th>
+                                    <th class="text-end pe-3">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var car in Model)
+                                {
+                                    <tr>
+                                        <td class="ps-3">
+                                            <div class="d-flex align-items-center">
+                                                <div class="car-icon me-3 bg-primary-subtle text-primary rounded-circle">
+                                                    <i class="bi bi-car-front"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bold text-dark">@car.Brand @car.Model</div>
+                                                    <small class="text-muted">Year: @car.Year</small>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="small fw-semibold text-dark">@(car.Owner?.FullName ?? "N/A")</div>
+                                            <div class="small text-muted">@car.Owner?.Email</div>
+                                        </td>
+                                        <td class="fw-bold text-success">@car.PricePerDay <small class="text-muted">SAR</small></td>
+                                        <td>
+                                            @{
+                                                var availClass = car.AvailabilityStatus switch {
+                                                    CarAvailabilityStatus.Available => "bg-success",
+                                                    CarAvailabilityStatus.Rented => "bg-warning text-dark",
+                                                    CarAvailabilityStatus.Maintenance => "bg-danger",
+                                                    _ => "bg-info"
+                                                };
+                                            }
+                                            <span class="badge rounded-pill @availClass px-3 py-2">@car.AvailabilityStatus</span>
+                                        </td>
+                                        <td>
+                                            @{
+                                                var subClass = car.SubmissionStatus switch {
+                                                    CarSubmissionStatus.Approved => "bg-success-subtle text-success border border-success",
+                                                    CarSubmissionStatus.Pending => "bg-warning-subtle text-warning border border-warning",
+                                                    _ => "bg-danger-subtle text-danger border border-danger"
+                                                };
+                                            }
+                                            <span class="badge rounded-pill @subClass px-3 py-2">@car.SubmissionStatus</span>
+                                        </td>
+                                        <td class="text-end pe-3">
+                                            <div class="d-flex gap-2 justify-content-end">
+                                                <a asp-area="" asp-controller="Cars" asp-action="Details" asp-route-id="@car.Id" class="btn btn-sm btn-outline-info rounded-circle shadow-sm" title="Details">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                               
+                                               <form asp-controller="Cars" asp-action="Delete" asp-route-id="@car.Id" method="post" onsubmit="return confirm('Danger: Are you sure? This will remove the vehicle completely.');">
+                                               @Html.AntiForgeryToken()
+                                                   <button type="submit" class="btn btn-sm btn-outline-danger rounded-circle shadow-sm">
+                                                   <i class="bi bi-trash"></i>
+                                                  </button>
+                                                </form>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .car-icon {
+        width: 42px; height: 42px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.2rem;
+    }
+    .rounded-4 { border-radius: 1.25rem !important; }
+    .table thead th { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px; padding: 1rem 0.5rem; }
+</style>
+
+@section Scripts {
+    <script>
+        console.log("PeerCar Admin Management - Cars loaded.");
+    </script>
+}

@@ -1,0 +1,90 @@
+﻿@using Peer_Car.Domain.Entities
+@using Peer_Car.Domain.Enums
+@model Booking
+
+@{
+    ViewData["Title"] = "Admin | Booking Audit";
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                
+                @* الهيدر - عرض الحالة فقط *@
+                <div class="card-header bg-dark text-white py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-bold">Booking Reference: #@Model.Id.ToString().Substring(0, 8).ToUpper()</h5>
+                        @{
+                            var statusClass = Model.Status switch {
+                                BookingStatus.Completed => "success",
+                                BookingStatus.Cancelled => "danger",
+                                BookingStatus.Pending => "warning text-dark",
+                                _ => "primary"
+                            };
+                        }
+                        <span class="badge rounded-pill bg-@statusClass shadow-sm px-3">
+                            @Model.Status
+                        </span>
+                    </div>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    @* بيانات العربية والمستأجر *@
+                    <div class="row g-4 mb-5 border-bottom pb-4">
+                        <div class="col-md-6 border-end">
+                            <h6 class="fw-bold text-uppercase text-primary small mb-3">Vehicle Details</h6>
+                            <p class="mb-1"><strong>Model:</strong> @Model.Car?.Brand @Model.Car?.Model</p>
+                            <p class="mb-1"><strong>Year:</strong> @Model.Car?.Year</p>
+                            <p class="mb-0 text-muted small"><strong>Owner ID:</strong> @Model.Car?.OwnerId</p>
+                        </div>
+
+                        <div class="col-md-6 ps-md-4">
+                            <h6 class="fw-bold text-uppercase text-info small mb-3">Renter Details</h6>
+                            <p class="mb-1"><strong>Name:</strong> @Model.Renter?.FullName</p>
+                            <p class="mb-1"><strong>Email:</strong> @Model.Renter?.Email</p>
+                            <p class="mb-0"><strong>Total Paid:</strong> <span class="text-success fw-bold">@Model.TotalPrice.ToString("N2") SAR</span></p>
+                        </div>
+                    </div>
+
+                    @* 🔍 مراقبة حالة التسليم (بدون أزرار) *@
+                    <div class="p-4 bg-light rounded-4 border mb-4">
+                        <h6 class="fw-bold mb-4 text-center text-muted text-uppercase small">Handover Progress Tracking</h6>
+                        <div class="row text-center g-3">
+                            <div class="col-6">
+                                <div class="p-3 border rounded-3 bg-white">
+                                    <i class="bi bi-key fs-3 @(Model.IsCarReceivedByUser ? "text-success" : "text-muted")"></i>
+                                    <p class="small mb-0 mt-2">Picked Up</p>
+                                    <span class="badge @(Model.IsCarReceivedByUser ? "bg-success" : "bg-secondary")">
+                                        @(Model.IsCarReceivedByUser ? "Confirmed" : "Waiting")
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="p-3 border rounded-3 bg-white">
+                                    <i class="bi bi-arrow-return-left fs-3 @(Model.IsCarReturnedByUser ? "text-info" : "text-muted")"></i>
+                                    <p class="small mb-0 mt-2">Returned</p>
+                                    <span class="badge @(Model.IsCarReturnedByUser ? "bg-info" : "bg-secondary")">
+                                        @(Model.IsCarReturnedByUser ? "Confirmed" : "Waiting")
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <a asp-action="Bookings" class="btn btn-secondary px-5 rounded-pill shadow-sm">
+                            <i class="bi bi-arrow-left me-2"></i>Back to Bookings List
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .rounded-4 { border-radius: 1.25rem !important; }
+    .card { border: none; }
+    .badge { font-weight: 500; }
+</style>

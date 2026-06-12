@@ -1,0 +1,122 @@
+﻿@using Peer_Car.Application.ViewModels
+@model IEnumerable<IGrouping<string, CarSubmissionViewModel>>
+
+@{
+    ViewData["Title"] = "Pending Car Submissions";
+}
+
+<div class="container mt-5 mb-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold mb-0 text-dark">
+            <i class="bi bi-clock-history me-2 text-warning"></i>Pending Submissions
+        </h2>
+        <span class="badge bg-secondary">Total Users: @Model.Count()</span>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="card border-0 shadow-sm rounded-4 p-5 text-center">
+            <i class="bi bi-check2-all text-success display-1"></i>
+            <h3 class="mt-3 text-muted">All caught up!</h3>
+            <p>There are no pending submissions at the moment.</p>
+        </div>
+    }
+    else
+    {
+        foreach (var group in Model)
+        {
+            <div class="card shadow-sm border-0 rounded-4 mb-4 overflow-hidden">
+                <div class="card-header bg-light border-bottom py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="bi bi-person-circle me-2 text-primary"></i>
+                            <strong>@group.Key</strong>
+                            <span class="text-muted ms-2 small">(@group.First().SubmittedByEmail)</span>
+                        </div>
+                        <span class="badge bg-primary rounded-pill">@group.Count() request(s)</span>
+                    </div>
+                </div>
+                
+                <div class="list-group list-group-flush">
+                    @foreach (var sub in group)
+                    {
+                        <div class="list-group-item p-3">
+                            <div class="row align-items-center">
+                                <div class="col-md-6">
+                                    <div class="d-flex align-items-center">
+                                        @if (!string.IsNullOrEmpty(sub.CarImagePath))
+                                        {
+                                            <img src="@sub.CarImagePath" class="rounded me-3" style="width: 50px; height: 50px; object-fit: cover;" />
+                                        }
+                                        <div>
+                                            @* لاحظ التعديل هنا ليتناسب مع الـ ViewModel المفلطح *@
+                                            <h6 class="mb-0 fw-bold">@sub.CarBrand @sub.CarModel</h6>
+                                            <small class="text-muted">Year: @sub.CarYear | Submitted: @sub.SubmissionDate.ToShortDateString()</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                                    <a asp-action="SubmissionDetails" asp-route-id="@sub.Id" class="btn btn-sm btn-outline-info px-3">
+                                        <i class="bi bi-eye"></i> Details
+                                    </a>
+                                    
+                                    <form asp-action="Approve" asp-route-id="@sub.Id" method="post" class="d-inline">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-sm btn-success px-3">
+                                            <i class="bi bi-check-lg"></i> Approve
+                                        </button>
+                                    </form>
+
+                                    <button class="btn btn-sm btn-danger px-3" data-bs-toggle="modal" data-bs-target="#rejectModal-@sub.Id">
+                                        <i class="bi bi-x-lg"></i> Reject
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="modal fade" id="rejectModal-@sub.Id" tabindex="-1" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content border-0 shadow">
+                                        <form asp-action="Reject" asp-route-id="@sub.Id" method="post">
+                                            @Html.AntiForgeryToken()
+                                            <div class="modal-header bg-danger text-white border-0">
+                                                <h5 class="modal-title">Reject Submission</h5>
+                                                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                                            </div>
+                                            <div class="modal-body p-4">
+                                                <div class="mb-3">
+                                                    <label for="reason-@sub.Id" class="form-label fw-bold">Reason for rejection</label>
+                                                    <textarea name="reason" id="reason-@sub.Id" class="form-control" rows="3" required placeholder="Tell the user why..."></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer border-0">
+                                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancel</button>
+                                                <button type="submit" class="btn btn-danger px-4">Confirm Reject</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    }
+</div>
+
+@section Scripts {
+    <script>
+        // حافظنا على الـ Script بتاعك لأنه بيعالج مشكلة الـ Backdrop في الـ Modals المتداخلة
+        document.addEventListener('show.bs.modal', function (event) {
+            var zIndex = 1040 + (10 * document.querySelectorAll('.modal.show').length);
+            event.target.style.zIndex = zIndex;
+            setTimeout(function () {
+                var modalBackdrop = document.querySelector('.modal-backdrop:not(.modal-stack)');
+                if (modalBackdrop) {
+                    modalBackdrop.style.zIndex = zIndex - 1;
+                    modalBackdrop.classList.add('modal-stack');
+                }
+            }, 0);
+        });
+    </script>
+}

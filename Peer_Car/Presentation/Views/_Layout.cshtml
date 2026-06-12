@@ -1,0 +1,28 @@
+﻿<li class="nav-item dropdown">
+    <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown">
+        <i class="bi bi-gear-fill me-1"></i> Admin
+    </a>
+    <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3">
+        <li>
+            <a class="dropdown-item" asp-controller="Admin" asp-action="Dashboard">
+                <i class="bi bi-speedometer2 me-2"></i>Dashboard
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item" asp-controller="Admin" asp-action="Users">
+                <i class="bi bi-people me-2"></i>Users
+            </a>
+        </li>
+        <li>
+            <a class="dropdown-item" asp-controller="Admin" asp-action="Cars">
+                <i class="bi bi-car-front me-2"></i>Cars
+            </a>
+        </li>
+        <li><hr class="dropdown-divider"></li>
+        <li>
+            <a class="dropdown-item" asp-controller="Admin" asp-action="CarSubmissions">
+                <i class="bi bi-file-earmark-check me-2"></i>Car Submissions
+            </a>
+        </li>
+    </ul>
+</li>

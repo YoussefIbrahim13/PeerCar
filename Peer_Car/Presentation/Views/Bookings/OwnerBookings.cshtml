@@ -1,0 +1,97 @@
+﻿@model IEnumerable<Peer_Car.Domain.Entities.Car>
+@using Peer_Car.Domain.Enums
+
+@{
+    ViewData["Title"] = "My Cars Management";
+}
+
+<div class="container my-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <h2 class="fw-bold"><i class="bi bi-speedometer2 me-2 text-primary"></i>Owner Dashboard</h2>
+            <p class="text-muted">Manage bookings for each of your vehicles</p>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">You haven't added any cars yet.</div>
+    }
+    else
+    {
+        <div class="accordion shadow-sm" id="carsAccordion">
+            @foreach (var car in Model)
+            {
+                <div class="accordion-item mb-3 border rounded-3 overflow-hidden">
+                    <h2 class="accordion-header" id="heading-@car.Id">
+                        <button class="accordion-button collapsed bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@car.Id">
+                            <div class="d-flex align-items-center w-100">
+                                <img src="@car.ImagePath" class="rounded-2 me-3" style="width:60px; height:40px; object-fit:cover;" />
+                                <div>
+                                    <span class="fw-bold d-block">@car.Brand @car.Model (@car.Year)</span>
+                                    <small class="text-muted">@car.Bookings.Count() total reservations</small>
+                                </div>
+                                <div class="ms-auto me-3">
+                                    <span class="badge bg-primary rounded-pill">View Bookings</span>
+                                </div>
+                            </div>
+                        </button>
+                    </h2>
+                    <div id="collapse-@car.Id" class="accordion-collapse collapse" data-bs-parent="#carsAccordion">
+                        <div class="accordion-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0 align-middle">
+                                    <thead class="table-light small text-uppercase">
+                                        <tr>
+                                            <th class="ps-4">Renter</th>
+                                            <th>Dates</th>
+                                            <th>Total Price</th>
+                                            <th>Status</th>
+                                            <th class="text-end pe-4">Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var booking in car.Bookings.OrderByDescending(b => b.CreatedAt))
+                                        {
+                                            <tr>
+                                                <td class="ps-4">
+                                                    <div class="fw-bold">@booking.Renter?.FullName</div>
+                                                    <div class="small text-muted">@booking.Renter?.Email</div>
+                                                </td>
+                                                <td>
+                                                    <div class="small">@booking.StartDate.ToShortDateString() - @booking.EndDate.ToShortDateString()</div>
+                                                </td>
+                                                <td class="fw-bold text-success">@booking.TotalPrice.ToString("N2") SAR</td>
+                                                <td>
+                                                    <span class="badge rounded-pill bg-@(booking.Status == BookingStatus.Confirmed ? "success" : "warning text-dark")">
+                                                        @booking.Status
+                                                    </span>
+                                                </td>
+                                                <td class="text-end pe-4">
+                                                    <a asp-action="Details" asp-route-id="@booking.Id" class="btn btn-sm btn-outline-dark">
+                                                        Manage <i class="bi bi-arrow-right ms-1"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        }
+                                        @if (!car.Bookings.Any())
+                                        {
+                                            <tr>
+                                                <td colspan="5" class="text-center py-4 text-muted">No bookings found for this car yet.</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+<style>
+    .accordion-button:not(.collapsed) { background-color: #e7f1ff; color: #0d6efd; }
+    .accordion-item { border: 1px solid #dee2e6 !important; }
+</style>

@@ -1,0 +1,213 @@
+﻿@using Peer_Car.Application.ViewModels
+@model EditProfileViewModel
+
+@{
+    ViewData["Title"] = "Edit Profile";
+}
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-lg rounded-4">
+                <div class="card-body p-4 p-md-5">
+                    <div class="text-center mb-4">
+                        <h2 class="fw-bold">Account Settings</h2>
+                        <p class="text-muted">Update your personal information and security settings</p>
+                    </div>
+
+                    @* تم إضافة enctype للسماح برفع ملفات الصور *@
+                    <form asp-controller="Account" asp-action="EditProfile" method="post" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4"></div>
+
+                        <div class="accordion border-0 shadow-sm rounded-3 overflow-hidden" id="editProfileAccordion">
+
+                            @* 1. Basic Information *@
+                            <div class="accordion-item border-0 border-bottom">
+                                <h2 class="accordion-header" id="headingBasicInfo">
+                                    <button class="accordion-button fw-bold py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBasicInfo">
+                                        <i class="bi bi-person-badge-fill me-2 text-primary"></i> Basic Information
+                                    </button>
+                                </h2>
+                                <div id="collapseBasicInfo" class="accordion-collapse collapse show" data-bs-parent="#editProfileAccordion">
+                                    <div class="accordion-body p-4">
+                                        <div class="row g-3">
+                                            <div class="col-md-6">
+                                                <label asp-for="FullName" class="form-label fw-semibold">Full Name</label>
+                                                <input asp-for="FullName" class="form-control form-control-lg" />
+                                                <span asp-validation-for="FullName" class="text-danger small"></span>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label asp-for="PhoneNumber" class="form-label fw-semibold">Phone Number</label>
+                                                <div class="input-group input-group-lg">
+                                                    <span class="input-group-text bg-light text-muted">+20</span>
+                                                    <input asp-for="PhoneNumber" type="text" class="form-control" placeholder="1xxxxxxxxx" maxlength="10"
+                                                           oninput="this.value = this.value.replace(/[^0-9]/g, ''); updatePhonePreview(this.value);" />
+                                                </div>
+                                                <div id="phonePreview" class="small mt-1 text-primary fw-bold" style="display:none;"></div>
+                                                <span asp-validation-for="PhoneNumber" class="text-danger small"></span>
+                                            </div>
+                                            <div class="col-12">
+                                                <label asp-for="Email" class="form-label fw-semibold">Gmail Address</label>
+                                                <input asp-for="Email" class="form-control form-control-lg" readonly />
+                                                <div class="form-text small">Email cannot be changed after verification.</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @* 2. Profile Photo *@
+                            <div class="accordion-item border-0 border-bottom">
+                                <h2 class="accordion-header" id="headingProfilePic">
+                                    <button class="accordion-button collapsed fw-bold py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseProfilePic">
+                                        <i class="bi bi-camera-fill me-2 text-primary"></i> Profile Photo
+                                    </button>
+                                </h2>
+                                <div id="collapseProfilePic" class="accordion-collapse collapse" data-bs-parent="#editProfileAccordion">
+                                    <div class="accordion-body p-4 text-center">
+                                        <div class="mb-4 position-relative d-inline-block">
+                                            <img id="profileImagePreview" src="@(string.IsNullOrEmpty(Model.ProfileImageUrl) || Model.ProfileImageUrl == "default.png" ? "/images/profiles/default.png" : "/images/profiles/" + Model.ProfileImageUrl)"
+                                                 class="rounded-circle border shadow-sm" style="width: 150px; height: 150px; object-fit: cover;" />
+                                            <button type="button" id="removeProfileBtn" class="btn btn-danger btn-sm rounded-circle position-absolute bottom-0 end-0 shadow">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </div>
+                                        <div class="col-md-8 mx-auto">
+                                            <input type="file" asp-for="ProfileImage" class="form-control" accept="image/*" onchange="previewProfileImage(this)" />
+                                            <div class="form-text small mt-2">Recommended: Square image, max 2MB.</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @* 🛡️ 3. Identity Verification (القسم الجديد) *@
+                            <div class="accordion-item border-0 border-bottom">
+                                <h2 class="accordion-header" id="headingIdentity">
+                                    <button class="accordion-button collapsed fw-bold py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseIdentity">
+                                        <i class="bi bi-shield-check-fill me-2 text-primary"></i> Identity Verification
+                                    </button>
+                                </h2>
+                                <div id="collapseIdentity" class="accordion-collapse collapse" data-bs-parent="#editProfileAccordion">
+                                    <div class="accordion-body p-4">
+                                        <p class="text-muted small mb-4">Upload your ID and License to speed up your booking process. Documents are kept secure.</p>
+
+                                        <div class="row g-4">
+                                            @* National ID Section *@
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-semibold small text-uppercase">National ID (Front)</label>
+                                                @if (!string.IsNullOrEmpty(Model.NationalIdFrontUrl))
+                                                {
+                                                    <div class="mb-2">
+                                                        <img src="/images/profiles/@Model.NationalIdFrontUrl" class="rounded border shadow-sm" style="height: 70px; width: 110px; object-fit: cover;" />
+                                                    </div>
+                                                }
+                                                <input type="file" asp-for="IdFrontFile" class="form-control form-control-sm" accept="image/*" />
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-semibold small text-uppercase">National ID (Back)</label>
+                                                @if (!string.IsNullOrEmpty(Model.NationalIdBackUrl))
+                                                {
+                                                    <div class="mb-2"><img src="@Model.NationalIdBackUrl" class="rounded border shadow-sm" style="height: 70px; width: 110px; object-fit: cover;" /></div>
+                                                }
+                                                <input type="file" asp-for="IdBackFile" class="form-control form-control-sm" accept="image/*" />
+                                            </div>
+
+                                            @* License Section *@
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-semibold small text-uppercase">Driving License (Front)</label>
+                                                @if (!string.IsNullOrEmpty(Model.LicenseFrontUrl))
+                                                {
+                                                    <div class="mb-2"><img src="@Model.LicenseFrontUrl" class="rounded border shadow-sm" style="height: 70px; width: 110px; object-fit: cover;" /></div>
+                                                }
+                                                <input type="file" asp-for="LicenseFrontFile" class="form-control form-control-sm" accept="image/*" />
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label fw-semibold small text-uppercase">Driving License (Back)</label>
+                                                @if (!string.IsNullOrEmpty(Model.LicenseBackUrl))
+                                                {
+                                                    <div class="mb-2"><img src="@Model.LicenseBackUrl" class="rounded border shadow-sm" style="height: 70px; width: 110px; object-fit: cover;" /></div>
+                                                }
+                                                <input type="file" asp-for="LicenseBackFile" class="form-control form-control-sm" accept="image/*" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @* 4. Security & Password *@
+                            <div class="accordion-item border-0">
+                                <h2 class="accordion-header" id="headingSecurity">
+                                    <button class="accordion-button collapsed fw-bold py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSecurity">
+                                        <i class="bi bi-shield-lock-fill me-2 text-primary"></i> Security & Password
+                                    </button>
+                                </h2>
+                                <div id="collapseSecurity" class="accordion-collapse collapse" data-bs-parent="#editProfileAccordion">
+                                    <div class="accordion-body p-4">
+                                        <div class="d-flex align-items-center justify-content-between bg-light p-3 rounded-3 border">
+                                            <div>
+                                                <h6 class="fw-bold mb-1">Change Account Password</h6>
+                                                <p class="text-muted small mb-0">For your security, we will send a password reset link to your Gmail.</p>
+                                            </div>
+                                            <div class="ms-3">
+                                                <a asp-action="ForgotPassword" asp-controller="Account" class="btn btn-outline-primary btn-sm rounded-pill px-4">
+                                                    Change Password
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-5">
+                            <button type="submit" class="btn btn-primary btn-lg w-100 rounded-pill shadow-sm fw-bold">Update My Profile</button>
+                            <a asp-action="MyAccount" class="btn btn-link w-100 text-muted text-decoration-none mt-2">Cancel and Go Back</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        function updatePhonePreview(val) {
+            const preview = document.getElementById("phonePreview");
+            if (/^1[0-9]{9}$/.test(val)) {
+                preview.style.display = "block";
+                preview.textContent = "Ready: +20 " + val;
+            } else { preview.style.display = "none"; }
+        }
+
+        function previewProfileImage(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) { document.getElementById('profileImagePreview').src = e.target.result; };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        document.getElementById('removeProfileBtn')?.addEventListener('click', function() {
+            if (confirm('Are you sure you want to remove your photo?')) {
+                const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+                fetch('@Url.Action("RemoveProfileImage", "Account")', {
+                    method: 'POST',
+                    headers: { 'RequestVerificationToken': token }
+                })
+                .then(res => {
+                    if (res.ok) {
+                        location.reload();
+                    } else {
+                        alert('Something went wrong. Please try again.');
+                    }
+                });
+            }
+        });
+    </script>
+}

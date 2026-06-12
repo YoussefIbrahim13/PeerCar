@@ -1,0 +1,110 @@
+﻿@using Peer_Car.Application.ViewModels
+@model UserProfileViewModel
+
+@{
+    ViewData["Title"] = "User Profile";
+    // التحقق من البيانات بشكل أكثر أماناً
+    var isOwner = Model.Role == "Owner";
+    var hasEmail = !string.IsNullOrWhiteSpace(Model.Email);
+    var hasPhone = !string.IsNullOrWhiteSpace(Model.PhoneNumber);
+    var verified = Model.EmailConfirmed;
+}
+
+<div class="profile-header position-relative mb-5" style="background: linear-gradient(135deg, #0d6efd 0%, #212529 100%); min-height: 250px;">
+    <div class="container position-relative z-2 py-5 text-center">
+        <div class="avatar-wrapper position-relative d-inline-block mb-3">
+            <img src="@(string.IsNullOrEmpty(Model.ProfileImageUrl) ? "/images/profiles/default.png" : Model.ProfileImageUrl)" 
+                 class="rounded-circle shadow-lg border border-4 border-white" 
+                 style="width: 150px; height: 150px; object-fit: cover; background: #fff;" 
+                 alt="Profile Picture" />
+            @if (verified) {
+                <span class="position-absolute bottom-0 end-0 bg-white rounded-circle p-1 shadow-sm" style="transform: translate(-10%, -10%);">
+                    <i class="bi bi-patch-check-fill text-primary fs-4"></i>
+                </span>
+            }
+        </div>
+        <h2 class="fw-bold text-white mb-1">@Model.FullName</h2>
+        <span class="badge bg-light text-dark shadow-sm px-3 py-2 rounded-pill fw-bold text-uppercase" style="letter-spacing: 1px;">
+            <i class="bi bi-shield-shaded me-1"></i> @Model.Role
+        </span>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-sm rounded-4 mb-5 mt-n4">
+                <div class="card-body p-4 text-center">
+                    <div class="row g-3">
+                        @if (hasEmail) {
+                            <div class="col-md-6">
+                                <div class="p-3 border rounded-3 bg-light">
+                                    <small class="text-muted d-block text-uppercase fw-bold" style="font-size: 0.7rem;">Email Address</small>
+                                    <span class="fw-semibold text-dark">@Model.Email</span>
+                                </div>
+                            </div>
+                        }
+                        @if (hasPhone) {
+                            <div class="col-md-6">
+                                <div class="p-3 border rounded-3 bg-light">
+                                    <small class="text-muted d-block text-uppercase fw-bold" style="font-size: 0.7rem;">Phone Number</small>
+                                    <span class="fw-semibold text-dark">@Model.PhoneNumber</span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            @if (isOwner) {
+                <div class="cars-section">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="fw-bold mb-0">Owned Vehicles</h4>
+                        <span class="badge bg-primary rounded-pill">@Model.Cars?.Count Total</span>
+                    </div>
+
+                    @if (Model.Cars != null && Model.Cars.Any()) {
+                        <div class="row g-4">
+                            @foreach (var car in Model.Cars) {
+                                <div class="col-md-6">
+                                    <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden card-hover">
+                                        <div class="position-relative">
+                                            <img src="@(string.IsNullOrEmpty(car.ImagePath) ? "/images/cars/default-car.jpg" : car.ImagePath)" 
+                                                 class="card-img-top" 
+                                                 style="height: 180px; object-fit: cover;" 
+                                                 alt="@car.Brand" />
+                                            <div class="position-absolute top-0 end-0 m-2">
+                                                <span class="badge bg-dark bg-opacity-75">@car.Year</span>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <h5 class="fw-bold mb-1">@car.Brand @car.Model</h5>
+                                            <p class="text-success fw-bold mb-3">@car.PricePerDay SAR <small class="text-muted">/ Day</small></p>
+                                            <a asp-controller="Cars" asp-action="Details" asp-route-id="@car.Id" 
+                                               class="btn btn-outline-primary w-100 rounded-pill fw-bold">
+                                                View Listing
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                    } else {
+                        <div class="alert alert-light border-dashed text-center py-5 rounded-4">
+                            <i class="bi bi-car-front display-4 text-muted mb-3 d-block"></i>
+                            <p class="text-muted">This owner hasn't listed any cars yet.</p>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+<style>
+    .profile-header { border-radius: 0 0 3rem 3rem; }
+    .card-hover { transition: transform 0.3s ease; }
+    .card-hover:hover { transform: translateY(-5px); }
+    .mt-n4 { margin-top: -3rem !important; }
+    .border-dashed { border-style: dashed !important; border-width: 2px !important; }
+</style>

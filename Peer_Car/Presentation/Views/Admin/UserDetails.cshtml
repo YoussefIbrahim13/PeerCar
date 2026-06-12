@@ -1,0 +1,40 @@
+﻿@model Peer_Car.Domain.Entities.User
+@{
+    ViewData["Title"] = "User Details - " + Model.FullName;
+}
+
+<div class="container py-5">
+    <div class="card shadow border-0 rounded-4">
+        <div class="card-header bg-white py-3">
+            <h4 class="mb-0 fw-bold">User Profile: @Model.FullName</h4>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4 text-center border-end">
+                    <img src="@(string.IsNullOrEmpty(Model.ProfileImageUrl) ? "/images/profiles/default.png" : Model.ProfileImageUrl)"
+                         class="rounded-circle shadow mb-3" style="width:150px; height:150px; object-fit:cover;" />
+                    <h5 class="fw-bold">@Model.FullName</h5>
+                    <p class="text-muted">@Model.Email</p>
+                    <span class="badge bg-primary">@Model.Role</span>
+                </div>
+                <div class="col-md-8">
+                    <h5 class="fw-bold mb-3">Activity Summary</h5>
+                    <div class="row g-3">
+                        <div class="col-6">
+                            <div class="p-3 bg-light rounded shadow-sm text-center">
+                                <div class="h4 fw-bold">@Model.OwnedCars.Count</div>
+                                <div class="small text-muted">Cars Owned</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="p-3 bg-light rounded shadow-sm text-center">
+                                <div class="h4 fw-bold">@Model.Bookings.Count</div>
+                                <div class="small text-muted">Total Bookings</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

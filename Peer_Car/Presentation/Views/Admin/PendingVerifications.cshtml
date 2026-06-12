@@ -1,0 +1,106 @@
+﻿@using Peer_Car.Domain.Entities
+@model IEnumerable<User>
+
+@{
+    ViewData["Title"] = "Identity Verification";
+}
+
+<div class="container mt-4">
+    @* الهيدر مع عدّاد للطلبات المعلقة *@
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold mb-0">
+            <i class="bi bi-shield-lock me-2 text-primary"></i>Identity Verification Requests
+        </h3>
+        <span class="badge bg-primary rounded-pill px-3 py-2">@Model.Count() Pending Review</span>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="bg-primary text-white">
+                    <tr>
+                        <th class="ps-4 py-3">User Details</th>
+                        <th class="py-3">National ID Documents</th>
+                        <th class="py-3">Driving License</th>
+                        <th class="text-center py-3">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
+                    {
+                        <tr>
+                            <td class="ps-4">
+                                <div class="fw-bold text-dark">@user.FullName</div>
+                                <div class="small text-muted">@user.Email</div>
+                                <div class="small text-muted" style="font-size: 0.75rem;">
+                                    <i class="bi bi-clock me-1"></i>Joined: @user.DateRegistered.ToString("dd MMM yyyy")
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="d-flex gap-2">
+                                    @* 🚩 التعديل الجوهري هنا: استخدام Url.Content لضمان مسار سليم 🚩 *@
+                                    <a href="@Url.Content("~/" + user.NationalIdFrontUrl?.TrimStart('/'))" target="_blank" class="btn btn-sm btn-outline-primary shadow-sm">
+                                        <i class="bi bi-image me-1"></i> Front ID
+                                    </a>
+                                    <a href="@Url.Content("~/" + user.NationalIdBackUrl?.TrimStart('/'))" target="_blank" class="btn btn-sm btn-outline-primary shadow-sm">
+                                        <i class="bi bi-image me-1"></i> Back ID
+                                    </a>
+                                </div>
+                            </td>
+
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <a href="@Url.Content("~/" + user.LicenseFrontUrl?.TrimStart('/'))" target="_blank" class="btn btn-sm btn-outline-info shadow-sm">
+                                        <i class="bi bi-card-text me-1"></i> License F
+                                    </a>
+                                    <a href="@Url.Content("~/" + user.LicenseBackUrl?.TrimStart('/'))" target="_blank" class="btn btn-sm btn-outline-info shadow-sm">
+                                        <i class="bi bi-card-text me-1"></i> License B
+                                    </a>
+                                </div>
+                            </td>
+
+                            <td class="text-center pe-4">
+                                <div class="d-flex justify-content-center gap-2">
+                                    <form asp-action="ApproveUser" asp-route-userId="@user.Id" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-success btn-sm rounded-pill px-3 shadow-sm"
+                                                onclick="return confirm('Are you sure you want to APPROVE this user identity?')">
+                                            <i class="bi bi-check2-circle me-1"></i> Approve
+                                        </button>
+                                    </form>
+
+                                    <form asp-action="RejectUser" asp-route-userId="@user.Id" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn btn-danger btn-sm rounded-pill px-3 shadow-sm"
+                                                onclick="return confirm('Are you sure you want to REJECT this user identity?')">
+                                            <i class="bi bi-x-circle me-1"></i> Reject
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="4" class="text-center py-5">
+                                <div class="text-muted">
+                                    <i class="bi bi-check-all fs-1 d-block mb-2 text-success opacity-50"></i>
+                                    <p class="mb-0 fw-bold">All caught up!</p>
+                                    <p class="small">No pending identity verification requests at the moment.</p>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+    </script>
+}

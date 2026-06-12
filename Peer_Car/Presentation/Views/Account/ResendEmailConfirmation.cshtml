@@ -1,0 +1,62 @@
+﻿@{
+    ViewData["Title"] = "Resend Confirmation Email";
+}
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center py-5">
+        <div class="col-md-6 col-lg-5">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                <div class="bg-info py-1"></div>
+                
+                <div class="card-body p-4 p-md-5">
+                    <div class="text-center mb-4">
+                        <div class="icon-box bg-info-subtle text-info d-inline-flex align-items-center justify-content-center rounded-circle mb-3" style="width: 70px; height: 70px;">
+                            <i class="bi bi-envelope-exclamation-fill fs-2"></i>
+                        </div>
+                        <h3 class="fw-bold text-dark">Missed the Email?</h3>
+                        <p class="text-muted small">Enter your Gmail address below, and we'll send you a new activation link.</p>
+                    </div>
+
+                    <form asp-controller="Account" asp-action="ResendEmailConfirmation" method="post">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="All" class="text-danger small mb-3"></div>
+
+                        <div class="mb-4">
+                            <label for="email" class="form-label fw-bold small text-uppercase text-secondary">Email Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light border-end-0"><i class="bi bi-envelope-at text-muted"></i></span>
+                                <input type="email" id="email" name="email" class="form-control form-control-lg border-start-0 fs-6" 
+                                       placeholder="example@gmail.com" required />
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-3">
+                            <button type="submit" class="btn btn-info text-white btn-lg rounded-pill fw-bold shadow-sm py-3 fs-6">
+                                <i class="bi bi-send me-2"></i>Resend Activation Link
+                            </button>
+                            
+                            <a asp-action="Login" class="btn btn-link text-decoration-none text-muted small">
+                                <i class="bi bi-arrow-left me-1"></i> Back to Login
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="alert alert-light border shadow-sm rounded-3 mt-4 text-center py-2">
+                <p class="mb-0 small text-muted">
+                    <i class="bi bi-info-circle me-1"></i> 
+                    Check your <strong>Spam</strong> folder if you don't see it within 2 minutes.
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .rounded-4 { border-radius: 1.5rem !important; }
+    .bg-info-subtle { background-color: #e1f5fe !important; }
+    .btn-info { background-color: #0dcaf0; border: none; }
+    .btn-info:hover { background-color: #0baccc; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(13, 202, 240, 0.3) !important; }
+    .input-group:focus-within { box-shadow: 0 0 0 0.25rem rgba(13, 202, 240, 0.15); border-radius: 0.375rem; }
+</style>

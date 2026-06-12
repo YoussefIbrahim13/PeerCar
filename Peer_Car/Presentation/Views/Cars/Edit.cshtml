@@ -1,0 +1,109 @@
+﻿@using Peer_Car.Domain.Entities
+@using Peer_Car.Domain.Enums
+@model Car
+
+@{
+    ViewData["Title"] = "Edit Car";
+}
+
+<div class="hero-section position-relative mb-5 bg-warning text-dark py-5 shadow-sm">
+    <div class="container position-relative">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto text-center">
+                <h1 class="display-4 fw-bold mb-3">Edit Car Details</h1>
+                <p class="lead mb-0">Update information for <span class="fw-bold">@Model.Brand @Model.Model</span></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mb-5">
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="card border-0 shadow-lg">
+                <div class="card-body p-4 p-md-5">
+                    <h4 class="card-title fw-bold mb-4 text-secondary">
+                        <i class="bi bi-pencil-square me-2"></i>Car Information
+                    </h4>
+
+                    <form asp-controller="Cars" asp-action="Edit" method="post" enctype="multipart/form-data">
+                        <input type="hidden" asp-for="Id" />
+                        @* نحتفظ ببيانات المالك والتاريخ عشان ميتغيروش وقت التعديل *@
+                        <input type="hidden" asp-for="OwnerId" />
+                        <input type="hidden" asp-for="CreatedAt" />
+                        
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-4"></div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Brand" class="form-label fw-semibold">Brand</label>
+                                <input asp-for="Brand" class="form-control" placeholder="e.g. Toyota" />
+                                <span asp-validation-for="Brand" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Model" class="form-label fw-semibold">Model</label>
+                                <input asp-for="Model" class="form-control" placeholder="e.g. Corolla" />
+                                <span asp-validation-for="Model" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Year" class="form-label fw-semibold">Year</label>
+                                <input asp-for="Year" class="form-control" type="number" />
+                                <span asp-validation-for="Year" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="PricePerDay" class="form-label fw-semibold">Price Per Day (SAR)</label>
+                                <input asp-for="PricePerDay" class="form-control" />
+                                <span asp-validation-for="PricePerDay" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="AvailabilityStatus" class="form-label fw-semibold">Availability Status</label>
+                                <select asp-for="AvailabilityStatus" asp-items="Html.GetEnumSelectList<CarAvailabilityStatus>()" class="form-select"></select>
+                                <span asp-validation-for="AvailabilityStatus" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="Location" class="form-label fw-semibold">Location</label>
+                                <input asp-for="Location" class="form-control" placeholder="Enter city" />
+                                <span asp-validation-for="Location" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <hr class="my-4">
+
+                        <div class="row align-items-center mb-4">
+                            @if (!string.IsNullOrEmpty(Model.ImagePath))
+                            {
+                                <div class="col-md-4 text-center">
+                                    <label class="form-label d-block fw-bold">Current Image</label>
+                                    <img src="@Model.ImagePath" alt="Car Image" class="img-thumbnail shadow-sm" style="max-height:150px; object-fit:cover;" />
+                                </div>
+                            }
+                            <div class="@(string.IsNullOrEmpty(Model.ImagePath) ? "col-12" : "col-md-8")">
+                                <label class="form-label fw-semibold">Update Car Image</label>
+                                <input type="file" name="CarImage" class="form-control" accept="image/*" />
+                                <div class="form-text mt-2 text-muted">Upload a new photo to replace the current one.</div>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mt-5 border-top pt-4">
+                            <a asp-action="Index" class="btn btn-link text-decoration-none text-muted">
+                                <i class="bi bi-arrow-left me-2"></i>Back to Gallery
+                            </a>
+                            <button type="submit" class="btn btn-success btn-lg px-5 shadow-sm">
+                                <i class="bi bi-check-circle me-2"></i>Save Changes
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}

@@ -1,0 +1,84 @@
+﻿@using Peer_Car.Domain.Entities
+@model IEnumerable<Review>
+
+@if (Model != null && Model.Any())
+{
+    <div class="row g-4">
+        @foreach (var review in Model)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="review-card card h-100 border-0 shadow-sm rounded-4 overflow-hidden">
+                    <div class="card-header bg-white border-0 pt-4 px-4 pb-0">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="text-warning">
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    <i class="bi bi-star@(i <= review.Rating ? "-fill" : "")"></i>
+                                }
+                            </div>
+                            <span class="badge bg-light text-muted small rounded-pill px-3">
+                                <i class="bi bi-calendar3 me-1"></i> @review.CreatedAt.ToString("MMM dd, yyyy")
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="card-body px-4 pt-3">
+                        <h6 class="fw-bold text-primary mb-2">
+                             <i class="bi bi-car-front-fill me-1"></i> @review.Car?.Brand @review.Car?.Model
+                        </h6>
+                        
+                        <p class="card-text text-muted mb-0" style="font-size: 0.95rem; line-height: 1.6;">
+                            @if (!string.IsNullOrEmpty(review.Comment) && review.Comment.Length > 120)
+                            {
+                                @(review.Comment.Substring(0, 117) + "...")
+                            }
+                            else
+                            {
+                                @review.Comment
+                            }
+                        </p>
+                    </div>
+
+                    <div class="card-footer bg-white border-0 px-4 pb-4 pt-0">
+                        <hr class="opacity-10 mb-3">
+                        <div class="d-flex align-items-center">
+                            <div class="avatar-circle-sm bg-primary-subtle text-primary me-2">
+                                @(review.User?.FullName?.Substring(0, 1).ToUpper() ?? "U")
+                            </div>
+                            <div class="small">
+                                <div class="fw-bold text-dark">@review.User?.FullName</div>
+                                <div class="text-muted" style="font-size: 0.75rem;">Verified Renter</div>
+                            </div>
+                            <a asp-controller="Reviews" asp-action="Details" asp-route-id="@review.Id" 
+                               class="btn btn-sm btn-link ms-auto text-decoration-none p-0">
+                                Details <i class="bi bi-arrow-right small"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="col-12 text-center py-5">
+        <div class="p-5 bg-light rounded-4 border border-dashed">
+            <i class="bi bi-chat-square-quote display-4 text-muted opacity-25 d-block mb-3"></i>
+            <h5 class="text-muted">No reviews available yet.</h5>
+            <p class="small text-secondary">Be the first to share your experience!</p>
+        </div>
+    </div>
+}
+
+<style>
+    .rounded-4 { border-radius: 1.25rem !important; }
+    .review-card { transition: all 0.3s ease; border: 1px solid rgba(0,0,0,0.05) !important; }
+    .review-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.08) !important; }
+    .avatar-circle-sm {
+        width: 32px; height: 32px; border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        font-weight: bold; font-size: 0.8rem;
+    }
+    .border-dashed { border-style: dashed !important; border-width: 2px !important; }
+</style>

@@ -1,0 +1,218 @@
+﻿@using Peer_Car.Application.ViewModels
+@model BookingViewModel
+
+@{
+    ViewData["Title"] = "Confirm Your Booking";
+
+    // تأمين تحويل السعر لرقم عشري عشان الـ JavaScript يقرأه صح
+    var pricePerDayValue = Convert.ToDecimal(Model.PricePerDay);
+    var pricePerDayJs = pricePerDayValue.ToString("F2", System.Globalization.CultureInfo.InvariantCulture);
+}
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden">
+                @* الهيدر: صورة العربية *@
+                <div class="bg-light position-relative" style="height:320px;">
+                    @if (!string.IsNullOrEmpty(Model.CarImagePath))
+                    {
+                        <img src="@Model.CarImagePath" alt="Car Image" class="w-100 h-100" style="object-fit:cover;" />
+                    }
+                    else
+                    {
+                        <div class="d-flex align-items-center justify-content-center h-100 w-100 text-muted fs-4">
+                            <i class="bi bi-image me-2"></i> No Image Available
+                        </div>
+                    }
+                    <div class="position-absolute bottom-0 start-0 w-100 p-4" style="background: linear-gradient(transparent, rgba(0,0,0,0.8));">
+                        <h2 class="text-white fw-bold mb-0">@Model.CarBrand @Model.CarModel</h2>
+                        <p class="text-white-50 mb-0"><i class="bi bi-geo-alt me-1"></i>@Model.CarLocation</p>
+                    </div>
+                </div>
+
+                <div class="card-body p-4 p-md-5">
+                    @* ملخص الأخطاء *@
+                    <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+                    @if (ViewBag.FormError != null)
+                    {
+                        <div class="alert alert-danger shadow-sm">
+                            <i class="bi bi-exclamation-octagon me-2"></i>@ViewBag.FormError
+                        </div>
+                    }
+
+                    @* ⚠️ ملاحظة: تم إضافة enctype="multipart/form-data" للسماح برفع الصور *@
+                    <form asp-controller="Bookings" asp-action="Create" method="post" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+
+                        <input type="hidden" asp-for="CarId" />
+                        <input type="hidden" asp-for="RenterId" />
+                        <input type="hidden" asp-for="PricePerDay" />
+                        <input type="hidden" asp-for="RequiresDocuments" />
+
+                        @* قسم اختيار التواريخ *@
+                        <div class="row g-4 mb-4">
+                            <div class="col-md-6">
+                                <label asp-for="StartDate" class="form-label fw-bold small text-uppercase">Pickup Date</label>
+                                <input asp-for="StartDate" type="date" class="form-control form-control-lg border-2" id="StartDate" required />
+                                <span asp-validation-for="StartDate" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="EndDate" class="form-label fw-bold small text-uppercase">Return Date</label>
+                                <input asp-for="EndDate" type="date" class="form-control form-control-lg border-2" id="EndDate" required />
+                                <span asp-validation-for="EndDate" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        @* 🛡️ قسم توثيق الهوية - يظهر فقط في أول حجز *@
+                        @if (Model.RequiresDocuments)
+                        {
+                            <div class="card border-0 bg-light mb-4 rounded-4 shadow-sm border-start border-warning border-4">
+                                <div class="card-body p-4">
+                                    <h5 class="fw-bold text-dark mb-3">
+                                        <i class="bi bi-shield-lock-fill text-warning me-2"></i> Identity Verification
+                                    </h5>
+                                    <p class="text-muted small mb-4">For security, please upload photos of your card and driver's license to complete your first reservation on the platform</p>
+
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <label asp-for="IdFrontFile" class="form-label small fw-bold text-uppercase">National ID (Front)</label>
+                                            <input asp-for="IdFrontFile" type="file" class="form-control border-2" accept="image/*" required />
+                                            <span asp-validation-for="IdFrontFile" class="text-danger small"></span>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label asp-for="IdBackFile" class="form-label small fw-bold text-uppercase">National ID (Back)</label>
+                                            <input asp-for="IdBackFile" type="file" class="form-control border-2" accept="image/*" required />
+                                            <span asp-validation-for="IdBackFile" class="text-danger small"></span>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label asp-for="LicenseFrontFile" class="form-label small fw-bold text-uppercase">Driving License (Front)</label>
+                                            <input asp-for="LicenseFrontFile" type="file" class="form-control border-2" accept="image/*" required />
+                                            <span asp-validation-for="LicenseFrontFile" class="text-danger small"></span>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label asp-for="LicenseBackFile" class="form-label small fw-bold text-uppercase">Driving License (Back)</label>
+                                            <input asp-for="LicenseBackFile" type="file" class="form-control border-2" accept="image/*" required />
+                                            <span asp-validation-for="LicenseBackFile" class="text-danger small"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+                        @* حساب السعر *@
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <label class="form-label fw-bold small text-uppercase text-muted">Daily Rate</label>
+                                <div class="input-group input-group-lg">
+                                    <span class="input-group-text bg-white border-2 border-end-0">SAR</span>
+                                    <input type="text" class="form-control border-2 border-start-0 bg-light" value="@pricePerDayValue.ToString("N2")" readonly />
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="TotalPriceDisplay" class="form-label fw-bold small text-uppercase text-primary">Total Amount</label>
+                                <div class="input-group input-group-lg">
+                                    <span class="input-group-text bg-primary text-white border-primary">SAR</span>
+                                    <input type="text" class="form-control border-2 border-primary fw-bold" id="TotalPriceDisplay" value="@Convert.ToDecimal(Model.TotalPrice).ToString("N2")" readonly />
+                                    <input type="hidden" asp-for="TotalPrice" id="TotalPriceHidden" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info border-0 bg-light mt-4 rounded-4 d-flex align-items-center border-start border-primary border-4">
+                            <i class="bi bi-info-circle-fill text-primary fs-4 me-3"></i>
+                            <div class="small text-dark">
+                                <strong>Note:</strong> Total price includes all fees. Cancellation is free up to 24 hours before the pickup date.
+                            </div>
+                        </div>
+
+                        <div class="mt-5 d-grid gap-3">
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <button type="submit" name="paymentMethod" value="PayOnReceipt" class="btn btn-outline-dark btn-lg w-100 py-3 fw-bold rounded-pill">
+                                        <i class="bi bi-cash-stack me-2"></i> Pay on Receipt
+                                    </button>
+                                </div>
+                                <div class="col-md-6">
+                                    <button type="submit" name="paymentMethod" value="Card" class="btn btn-primary btn-lg w-100 py-3 fw-bold shadow rounded-pill">
+                                        <i class="bi bi-credit-card-2-front me-2"></i> Pay by Card
+                                    </button>
+                                </div>
+                            </div>
+                            <a asp-controller="Cars" asp-action="Details" asp-route-id="@Model.CarId" class="btn btn-link text-muted text-decoration-none text-center">
+                                <i class="bi bi-arrow-left me-1"></i> Back to Car Details
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const startDateInput = document.getElementById('StartDate');
+            const endDateInput = document.getElementById('EndDate');
+            const totalPriceDisplay = document.getElementById('TotalPriceDisplay');
+            const totalPriceHidden = document.getElementById('TotalPriceHidden');
+
+            const dailyRate = parseFloat('@pricePerDayJs');
+
+            const today = new Date().toISOString().split('T')[0];
+            startDateInput.min = today;
+
+            startDateInput.addEventListener('change', function () {
+                endDateInput.min = this.value;
+                if (endDateInput.value && endDateInput.value < this.value) {
+                    endDateInput.value = this.value;
+                }
+                calculateTotalPrice();
+            });
+
+            endDateInput.addEventListener('change', calculateTotalPrice);
+
+            function calculateTotalPrice() {
+                if (startDateInput.value && endDateInput.value) {
+                    const start = new Date(startDateInput.value);
+                    const end = new Date(endDateInput.value);
+
+                    const diffTime = end - start;
+                    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+
+                    if (diffDays > 0) {
+                        const total = (diffDays * dailyRate).toFixed(2);
+                        totalPriceDisplay.value = total;
+                        totalPriceHidden.value = total;
+                    } else {
+                        totalPriceDisplay.value = dailyRate.toFixed(2);
+                        totalPriceHidden.value = dailyRate.toFixed(2);
+                    }
+                }
+            }
+        });
+    </script>
+}
+
+<style>
+    .rounded-4 {
+        border-radius: 1.25rem !important;
+    }
+
+    .form-control-lg {
+        padding: 0.8rem 1rem;
+        font-size: 1.05rem;
+    }
+
+    .btn-lg {
+        font-size: 1.1rem;
+    }
+</style>

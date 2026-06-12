@@ -1,0 +1,127 @@
+﻿@using Peer_Car.Domain.Entities
+@model IEnumerable<User>
+
+@{
+    ViewData["Title"] = "Deleted User Accounts";
+    int page = ViewBag.Page ?? 1;
+    int pageSize = ViewBag.PageSize ?? 10;
+    int total = ViewBag.Total ?? 0;
+    string search = ViewBag.Search as string ?? string.Empty;
+}
+
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold text-danger mb-1"><i class="bi bi-person-x-fill me-2"></i>Deleted User Accounts</h2>
+            <p class="text-muted">Archives of users who have deactivated or been removed from the platform.</p>
+        </div>
+        <div class="text-end">
+            <span class="badge bg-danger rounded-pill px-3 py-2">Total Deleted: @total</span>
+        </div>
+    </div>
+
+    <div class="card border-0 shadow-sm rounded-4 mb-4">
+        <div class="card-body">
+            <form method="get" asp-action="DeletedUsers" class="row g-2">
+                <div class="col-md-10">
+                    <div class="input-group">
+                        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
+                        <input type="text" name="search" value="@search" placeholder="Search by name or email..." class="form-control border-start-0" />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-danger w-100 rounded-pill">Search Archive</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="text-center py-5">
+            <i class="bi bi-archive text-muted display-1"></i>
+            <h4 class="text-muted mt-3">The archive is empty.</h4>
+        </div>
+    }
+    else
+    {
+        @foreach (var user in Model)
+        {
+            <div class="card mb-4 border-0 shadow-sm rounded-4 overflow-hidden">
+                <div class="card-header bg-danger bg-opacity-10 border-0 py-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="fw-bold text-danger">
+                            <i class="bi bi-person-circle me-1"></i> @user.FullName 
+                            <span class="text-muted fw-normal small ms-2">&lt;@user.Email&gt;</span>
+                        </div>
+                        <div class="small text-muted">
+                            <i class="bi bi-clock-history me-1"></i> Registered: @user.DateRegistered.ToString("MMM dd, yyyy")
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row">
+                        <div class="col-md-4 border-end">
+                            <h6 class="fw-bold mb-3 text-secondary"><i class="bi bi-car-front me-2"></i>Owned Cars</h6>
+                            @if (user.OwnedCars != null && user.OwnedCars.Any())
+                            {
+                                <ul class="list-unstyled small">
+                                    @foreach (var car in user.OwnedCars)
+                                    {
+                                        <li class="mb-2"><i class="bi bi-dot"></i> @car.Brand @car.Model (@car.Year)</li>
+                                    }
+                                </ul>
+                            }
+                            else { <p class="text-muted small italic">No vehicles registered.</p> }
+                        </div>
+
+                        <div class="col-md-4 border-end">
+                            <h6 class="fw-bold mb-3 text-secondary"><i class="bi bi-calendar-check me-2"></i>History of Bookings</h6>
+                            @if (user.Bookings != null && user.Bookings.Any())
+                            {
+                                <ul class="list-unstyled small">
+                                    @foreach (var booking in user.Bookings.Take(3)) // عرض آخر 3 بس
+                                    {
+                                        <li class="mb-2 text-truncate">
+                                            <i class="bi bi-dot"></i> @booking.Car?.Brand: @booking.StartDate.ToShortDateString()
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                            else { <p class="text-muted small italic">No previous bookings.</p> }
+                        </div>
+
+                        <div class="col-md-4 text-center d-flex align-items-center justify-content-center">
+                            <form asp-action="RestoreUser" asp-route-id="@user.Id" method="post">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="btn btn-outline-success rounded-pill px-4" onclick="return confirm('Restore this user account?')">
+                                    <i class="bi bi-arrow-counterclockwise me-1"></i> Restore Account
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (total > pageSize)
+        {
+            <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                    @for (int i = 1; i <= Math.Ceiling((double)total / pageSize); i++)
+                    {
+                        <li class="page-item @(i == page ? "active" : "")">
+                            <a class="page-link shadow-sm mx-1 rounded" href="?page=@i&search=@search">@i</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        }
+    }
+</div>
+
+<style>
+    .rounded-4 { border-radius: 1rem !important; }
+    .bg-danger-subtle { background-color: #f8d7da; }
+    .pagination .active .page-link { background-color: #dc3545; border-color: #dc3545; }
+</style>

@@ -1,0 +1,160 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using Peer_Car.Domain.Entities
+@using Peer_Car.Domain.Enums
+@model IEnumerable<User>
+
+@inject UserManager<User> UserManager
+
+@{
+    ViewData["Title"] = "User Reservations Activity";
+}
+
+<div class="container py-5">
+    @* العنوان الرئيسي *@
+    <div class="text-center mb-5">
+        <h2 class="fw-bold display-6 mb-2">
+            <i class="bi bi-person-lines-fill text-primary me-2"></i>User Reservations Activity
+        </h2>
+        <p class="text-muted">Monitor all customer bookings and transaction history across the platform.</p>
+    </div>
+
+    <div class="row g-4">
+        @foreach (var user in Model)
+        {
+            var rawPath = user.ProfileImageUrl;
+            string finalPath = "/images/profiles/default.png";
+            
+            
+            
+               
+
+                if (!string.IsNullOrEmpty(rawPath) && rawPath != "default.png")
+                {
+                    var cleanPath = rawPath.Replace("\\", "/").Replace("wwwroot", "").TrimStart('~').TrimStart('/');
+                    if (cleanPath.Contains("images/profiles/"))
+                    {
+                        finalPath = "/" + cleanPath.Substring(cleanPath.IndexOf("images/"));
+                    }
+                    else
+                    {
+                        finalPath = "/images/profiles/" + cleanPath;
+                    }
+                }
+            
+
+            <div class="col-12">
+                <div class="card border-0 shadow-sm rounded-4 p-3 mb-2">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="position-relative">
+                            <img src="@finalPath" 
+                                 alt="Profile" 
+                                 class="rounded-circle border shadow-sm me-3" 
+                                 style="width:60px; height:60px; object-fit:cover;"
+                                 onerror="this.onerror=null;this.src='/images/profiles/default.png';">
+                        </div>
+                        <div class="d-flex flex-column">
+                            <span class="fw-bold fs-5 text-dark">@user.FullName</span>
+                            <span class="text-muted small">@user.Email</span>
+                        </div>
+                        <div class="ms-auto d-none d-md-block">
+                            <span class="badge bg-light text-dark border">User ID: @user.Id.ToString().Substring(0, 8)</span>
+                        </div>
+                    </div>
+
+                    <div class="accordion accordion-flush border rounded-3 overflow-hidden" id="accordion-@user.Id">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header">
+                                <button class="accordion-button collapsed fw-bold py-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-@user.Id">
+                                    <i class="bi bi-journal-bookmark-fill me-2 text-primary"></i> 
+                                    Reservations List (@(user.Bookings?.Count() ?? 0))
+                                </button>
+                            </h2>
+                            <div id="collapse-@user.Id" class="accordion-collapse collapse" data-bs-parent="#accordion-@user.Id">
+                                <div class="accordion-body p-0">
+                                    @if (user.Bookings != null && user.Bookings.Any())
+                                    {
+                                        <div class="table-responsive">
+                                            <table class="table table-hover align-middle mb-0">
+                                                <thead class="bg-light text-muted">
+                                                    <tr>
+                                                        <th class="ps-3 small text-uppercase fw-bold">Car</th>
+                                                        <th class="small text-uppercase fw-bold">Period</th>
+                                                        <th class="small text-uppercase fw-bold">Amount</th>
+                                                        <th class="small text-uppercase fw-bold text-center">Status</th>
+                                                        <th class="text-end pe-3 small text-uppercase fw-bold">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var booking in user.Bookings.OrderByDescending(b => b.StartDate))
+                                                    {
+                                                        <tr>
+                                                            <td class="ps-3">
+                                                                <div class="fw-bold text-dark">@(booking.Car?.Brand ?? "N/A") @booking.Car?.Model</div>
+                                                                <small class="text-muted">Ref: #@booking.Id.ToString().Substring(0, 5)</small>
+                                                            </td>
+                                                            <td>
+                                                                <div class="small text-dark">@booking.StartDate.ToString("MMM dd") - @booking.EndDate.ToString("MMM dd, yyyy")</div>
+                                                            </td>
+                                                            <td>
+                                                                <span class="fw-bold text-success">@booking.TotalPrice.ToString("N2") <small>SAR</small></span>
+                                                            </td>
+                                                            <td class="text-center">
+                                                                @{
+                                                                    var statusClass = booking.Status switch {
+                                                                        BookingStatus.Confirmed => "success",
+                                                                        BookingStatus.Pending => "warning text-dark",
+                                                                        BookingStatus.Cancelled => "danger",
+                                                                        BookingStatus.Completed => "info",
+                                                                        _ => "secondary"
+                                                                    };
+                                                                }
+                                                                <span class="badge rounded-pill bg-@statusClass shadow-sm px-3 py-1">
+                                                                    @booking.Status
+                                                                </span>
+                                                            </td>
+                                                            <td class="text-end pe-3">
+                                                                <a asp-controller="Admin"
+                                                                   asp-action="BookingDetails"
+                                                                   asp-route-id="@booking.Id"
+                                                                   class="btn btn-sm btn-outline-primary rounded-pill px-3">
+                                                                    <i class="bi bi-search me-1"></i> Review
+                                                                </a>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="p-4 text-center text-muted border-top">
+                                            <i class="bi bi-folder2-open display-6 mb-2"></i>
+                                            <p class="mb-0">No reservation history for this user yet.</p>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .rounded-4 { border-radius: 1.25rem !important; }
+    .accordion-button:not(.collapsed) { background-color: #f8f9fa; color: #0d6efd; box-shadow: none; }
+    .accordion-button:focus { box-shadow: none; border-color: rgba(0,0,0,.125); }
+    .table thead th { font-size: 0.7rem; letter-spacing: 0.5px; padding: 12px 8px; }
+    .card:hover { transition: 0.3s; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.05) !important; }
+</style>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Admin Dashboard: User Reservations Loaded Successfully.");
+        });
+    </script>
+}
