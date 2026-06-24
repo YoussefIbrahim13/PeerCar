@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Peer_Car")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+35ac60c1d27a0a3cd3e612f19f46741ceb9902eb")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+06d00998e89e46d51a0674852e5ca7b57ff97e72")]
 [assembly: System.Reflection.AssemblyProductAttribute("Peer_Car")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Peer_Car")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
