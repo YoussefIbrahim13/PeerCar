@@ -45,22 +45,19 @@
 <div align="center">
 
 ### 🏠 Landing Page
-<img src=<>/>
-
-<br/><br/>
-
+<img src="https://github.com/user-attachments/assets/6bc1ddc8-3217-4ae4-9556-625fce04f97f" alt="PeerCar Landing Page" width="800"/>
 ### 🛠️ Admin Dashboard
-<img src="docs/screenshots/admin-dashboard.png" alt="Admin Dashboard" width="800"/>
+<img src="<img width="1623" height="942" alt="image" src="https://github.com/user-attachments/assets/7889d954-34c0-4b57-8837-e55edabc7d9a" alt="Admin Dashboard" width="800"/>
 
 <br/><br/>
 
 ### 💬 Real-Time Chat
-<img src="docs/screenshots/realtime-chat.gif" alt="Real-Time Chat Demo" width="800"/>
+<img src="<img width="1901" height="956" alt="image" src="https://github.com/user-attachments/assets/977adeff-9161-40b3-88b1-297dd20bf053" alt="Real-Time Chat Demo" width="800"/>
 
 <br/><br/>
 
 ### 🚗 Car Listings & Booking Flow
-<img src="docs/screenshots/car-listings.png" alt="Car Listings" width="800"/>
+<img src="<img width="1734" height="946" alt="image" src="https://github.com/user-attachments/assets/77bdb100-adef-4024-b8cb-6d4c94aa8a62" alt="Car Listings" width="800"/>
 
 </div>
 
