@@ -1,69 +1,80 @@
-🚗 PeerCar
+<div align="center">
 
-A Premium Peer-to-Peer Car Rental Platform
+# 🚗 PeerCar
 
-Connecting car owners and renters through a secure, verified, and real-time rental experience.
+### A Peer-to-Peer Car Rental Platform
 
-📖 Overview
+*Connecting car owners and renters through a secure, verified, and real-time rental experience.*
 
-PeerCar is an enterprise-grade peer-to-peer car rental platform built on ASP.NET Core 8 MVC, engineered around a layered Domain → Application → Infrastructure → Presentation architecture (Clean Architecture).
+[![.NET](https://img.shields.io/badge/.NET-8.0-512BD4?style=flat-square&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
+[![ASP.NET Core MVC](https://img.shields.io/badge/ASP.NET%20Core-MVC-512BD4?style=flat-square&logo=dotnet&logoColor=white)](https://learn.microsoft.com/aspnet/core/)
+[![SQL Server](https://img.shields.io/badge/SQL%20Server-2019%2B-CC2927?style=flat-square&logo=microsoftsqlserver&logoColor=white)](https://www.microsoft.com/sql-server)
+[![Entity Framework Core](https://img.shields.io/badge/EF%20Core-8.0-512BD4?style=flat-square&logo=dotnet&logoColor=white)](https://learn.microsoft.com/ef/core/)
+[![SignalR](https://img.shields.io/badge/SignalR-Real--time-00B7C3?style=flat-square&logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/apps/aspnet/signalr)
+[![Bootstrap](https://img.shields.io/badge/Bootstrap-5-7952B3?style=flat-square&logo=bootstrap&logoColor=white)](https://getbootstrap.com/)
+[![OAuth 2.0](https://img.shields.io/badge/OAuth%202.0-Google-4285F4?style=flat-square&logo=google&logoColor=white)](https://developers.google.com/identity/protocols/oauth2)
+[![License](https://img.shields.io/badge/License-Unspecified-lightgrey?style=flat-square)](#-license)
 
-It models the full lifecycle of a real-world rental marketplace:
+</div>
 
-Vehicle onboarding & admin approval workflows
+---
 
-Identity/document verification pipelines
+## 📖 Overview
 
-Date-based booking with comprehensive status, payment, and refund tracking
+**PeerCar** is an enterprise-grade peer-to-peer car rental platform built on **ASP.NET Core 8 MVC**, engineered around a layered **Domain → Application → Infrastructure → Presentation** architecture. It models the full lifecycle of a real-world rental marketplace — vehicle onboarding and admin approval, identity/document verification, date-based booking with payment and refund tracking, real-time owner–renter communication, and an AI-assisted support channel — all behind role-based authentication with Google OAuth and email-based account workflows.
 
-Real-time owner-renter communication via WebSockets
+---
 
-AI-assisted customer support
+## ✨ Features
 
-Secure role-based authentication with Google OAuth and email workflows.
+- 🚙 **Car Listings** — owners submit cars with photos and ownership documents for admin review
+- 📅 **Booking Workflow** — date-based bookings with full lifecycle tracking (`Pending → Confirmed → Completed/Cancelled`), key handover, and return confirmation
+- ✅ **Admin Approval System** — cars and identity/license documents pass through a `Pending → Approved/Rejected` moderation pipeline before going live
+- 🪪 **Identity Verification** — renters/owners upload National ID and driver's license (front & back); admins verify before granting full marketplace access
+- 💳 **Payments** — booking payments with granular status tracking (Pending, Paid, Succeeded, Failed, Refunded) and refund support
+- ⭐ **Reviews & Ratings** — users can review both cars and counterparties (owners/renters) after a completed booking
+- 💬 **Real-Time Chat** — in-app owner–renter messaging powered by **SignalR** (`ChatHub`)
+- 🤖 **AI Chatbot Assistant** — an in-app assistant (`/chatbot`) that proxies requests to an external AI microservice
+- 🔐 **Authentication** — ASP.NET Core Identity (email/password) plus **Google OAuth** sign-in
+- 📧 **Email Notifications** — password reset and email confirmation flows via SMTP
+- ⚙️ **Background Services** — automatic booking expiration and booking-status workers running as hosted services
+- 🛠️ **Admin Dashboard** — centralized management of users, car submissions, bookings, and an activity archive
 
-✨ Features
+---
 
-🚙 Car Listings — Owners submit cars with detailed specs, photos, and ownership documents for admin review.
+## 📸 Screenshots & Demo
 
-📅 Booking Workflow — Date-based bookings with full lifecycle tracking (Pending → Confirmed → Completed/Cancelled), key handover, and return confirmation.
+<div align="center">
 
-✅ Admin Approval System — Cars and identity/license documents pass through a Pending → Approved/Rejected moderation pipeline before going live.
+### 🏠 Landing Page
+<img src="docs/screenshots/landing-page.png" alt="PeerCar Landing Page" width="800"/>
 
-🪪 Identity Verification — Renters and owners upload National ID and driver's license (front & back); admins verify details before granting full marketplace access.
+<br/><br/>
 
-💳 Payments — Booking payments with granular status tracking (Pending, Paid, Succeeded, Failed, Refunded) and automated refund support.
+### 🛠️ Admin Dashboard
+<img src="docs/screenshots/admin-dashboard.png" alt="Admin Dashboard" width="800"/>
 
-⭐ Reviews & Ratings — Users can review both cars and counterparties (owners/renters) after a completed booking.
+<br/><br/>
 
-💬 Real-Time Chat — In-app owner-renter messaging powered by SignalR (ChatHub).
+### 💬 Real-Time Chat
+<img src="docs/screenshots/realtime-chat.gif" alt="Real-Time Chat Demo" width="800"/>
 
-🤖 AI Chatbot Assistant — An in-app assistant (/chatbot) that proxies requests to an external AI microservice.
+<br/><br/>
 
-🔐 Authentication — ASP.NET Core Identity (email/password) plus Google OAuth 2.0 sign-in.
+### 🚗 Car Listings & Booking Flow
+<img src="docs/screenshots/car-listings.png" alt="Car Listings" width="800"/>
 
-📧 Email Notifications — Password reset and email confirmation flows handled asynchronously via SMTP.
+</div>
 
-⚙️ Background Services — Automatic booking expiration and booking-status workers running as hosted services.
+> 💡 **Note:** Replace the placeholder paths above with your own image/GIF files (e.g. inside a `docs/screenshots/` folder in the repo root) once available. Recommended width: `800px` for consistent rendering across GitHub's light and dark themes.
 
-🛠️ Admin Dashboard — Centralized management of users, car submissions, bookings, and platform activity archives.
+---
 
-📸 Screenshots & Demo
+## 🏗️ Architecture
 
-🏠 Landing Page
+The solution follows a **Clean / Layered Architecture** inside a single ASP.NET Core MVC project:
 
-🛠️ Admin Dashboard
-
-💬 Real-Time Chat
-
-🚗 Car Listings & Booking Flow
-
-💡 Note: Replace the placeholder paths above with your actual image/GIF files (e.g., inside a docs/screenshots/ folder in the repository root). Recommended width is 800px for consistent rendering across GitHub's light and dark themes.
-
-🏗️ Architecture
-
-The solution follows a Clean / Layered Architecture inside a single ASP.NET Core MVC project:
-
+```
 Peer_Car/
 ├── Domain/              # Entities, enums, and core interfaces (no external dependencies)
 │   ├── Entities/         # Car, Booking, Payment, Review, User, CarSubmission...
@@ -83,84 +94,45 @@ Peer_Car/
 │   └── Views/                # Razor views per controller
 ├── Migrations/           # EF Core migrations
 └── Program.cs            # App startup & DI configuration
+```
 
+### 🧰 Tech Stack
 
-🧰 Tech Stack
+| Layer | Technology |
+|---|---|
+| **Framework** | ASP.NET Core MVC (.NET 8) |
+| **Database** | SQL Server (via EF Core 8) |
+| **Auth** | ASP.NET Core Identity + Google OAuth 2.0 |
+| **Real-time** | SignalR |
+| **Frontend** | Razor Views + Bootstrap 5 |
+| **AI Integration** | External chat microservice (configurable URL) |
+| **Email** | SMTP (Gmail by default) |
 
-Layer
+---
 
-Technology / Framework
+## 🚀 Getting Started
 
-Description
+### Prerequisites
 
-Framework
+- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- SQL Server (LocalDB, Express, or full SQL Server)
+- A Google OAuth Client ID/Secret *(optional — only needed for "Sign in with Google")*
+- An SMTP account, e.g. a Gmail account with an App Password *(optional — only needed for email confirmation / password reset)*
 
-ASP.NET Core MVC (.NET 8)
+### 1️⃣ Clone the repository
 
-Core web framework
-
-Database
-
-SQL Server (via EF Core 8)
-
-Relational database mapping & migrations
-
-Auth
-
-ASP.NET Core Identity + Google OAuth 2.0
-
-Secure user management and external logins
-
-Real-time
-
-SignalR
-
-WebSockets wrapper for instant messaging
-
-Frontend
-
-Razor Views + Bootstrap 5
-
-Clean, responsive, and dynamic UI rendering
-
-AI Integration
-
-External AI Microservice
-
-Proxied conversational assistant endpoint
-
-Email
-
-SMTP (Gmail Secure App SMTP)
-
-Transactional and verification emails
-
-🚀 Getting Started
-
-Prerequisites
-
-.NET 8 SDK or higher
-
-SQL Server (LocalDB, Express, or full SQL Server instance)
-
-Google OAuth Client ID/Secret (Optional — only needed for "Sign in with Google")
-
-SMTP Account e.g., Gmail with an App Password (Optional — only needed for email confirmations)
-
-1️⃣ Clone the repository
-
+```bash
 git clone https://github.com/YoussefIbrahim13/PeerCar.git
 cd PeerCar
+```
 
+### 2️⃣ Configure secrets
 
-2️⃣ Configure secrets
+> ⚠️ **Security Notice:** Never commit real credentials to `appsettings.json`. Use the .NET [Secret Manager](https://learn.microsoft.com/aspnet/core/security/app-secrets) for local development instead:
 
-⚠️ Security Notice: Never commit real credentials or keys to appsettings.json. Use the .NET Secret Manager for local development instead:
-
+```bash
 cd Peer_Car
 dotnet user-secrets init
-
-# Configure database and external services
 dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=.;Database=PeerCarDb;Trusted_Connection=True;MultipleActiveResultSets=true;TrustServerCertificate=True"
 dotnet user-secrets set "EmailSettings:SmtpServer" "smtp.gmail.com"
 dotnet user-secrets set "EmailSettings:Port" "587"
@@ -170,89 +142,77 @@ dotnet user-secrets set "EmailSettings:Password" "your-app-password"
 dotnet user-secrets set "Authentication:Google:ClientId" "your-google-client-id"
 dotnet user-secrets set "Authentication:Google:ClientSecret" "your-google-client-secret"
 dotnet user-secrets set "AiServiceUrl" "http://localhost:8000/ai/v1/chat"
+```
 
+| Key | Description |
+|---|---|
+| `ConnectionStrings:DefaultConnection` | SQL Server connection string |
+| `EmailSettings:*` | SMTP settings used for transactional emails |
+| `Authentication:Google:ClientId/ClientSecret` | Google OAuth credentials for "Sign in with Google" |
+| `AiServiceUrl` | Base URL of the AI chat microservice powering `/chatbot` |
 
-Secret Key
+### 3️⃣ Apply database migrations
 
-Description
-
-ConnectionStrings:DefaultConnection
-
-Your local or remote SQL Server connection string.
-
-EmailSettings:*
-
-SMTP setup parameters for transactional platform notifications.
-
-Authentication:Google:*
-
-OAuth API credentials configured in Google Cloud Console.
-
-AiServiceUrl
-
-The active HTTP URL endpoint for the AI assistant chatbot.
-
-3️⃣ Apply database migrations
-
+```bash
 cd Peer_Car
 dotnet ef database update
+```
 
+### 4️⃣ Run the application
 
-4️⃣ Run the application
-
+```bash
 dotnet run
+```
 
+The app will be available at `https://localhost:5001` (or the port shown in the console). The database is seeded on first run via `DbInitializer`.
 
-The application will boot up and be accessible locally at https://localhost:5001 (or whichever port is assigned by the console output). The database seeds automatically on its first initialization via DbInitializer.
+---
 
-👤 User Roles
+## 👤 User Roles
 
-Role
+| Role | Description |
+|---|---|
+| 🧍 `Renter` | Browses and books available cars |
+| 🚘 `Owner` | Lists/submits cars for rent, manages their bookings |
+| 🛡️ `Admin` | Approves car submissions and document verification, manages users and the platform |
 
-Permissions & Responsibilities
+---
 
-🧍 Renter
+## 🔒 Security Note
 
-Search/filter active cars, upload identity documents, and book rentals.
+> ⚠️ **Important:** This repository's `appsettings.json` previously contained **live SMTP credentials** committed directly to source control.
+>
+> If you've forked or cloned this repo with that file present:
+> 1. **Rotate the email account's app password immediately.**
+> 2. **Purge the secret from git history** using [`git filter-repo`](https://github.com/newren/git-filter-repo) or the [BFG Repo-Cleaner](https://rtyley.github.io/bfg-repo-cleaner/).
+> 3. **Migrate all future configuration** to user secrets, environment variables, or a managed secret store (e.g. Azure Key Vault).
 
-🚘 Owner
+---
 
-List personal cars, manage booking requests, track return handovers.
+## 🗺️ Roadmap
 
-🛡️ Admin
+- [ ] Containerize with Docker / docker-compose (app + SQL Server)
+- [ ] CI/CD pipeline (build, test, lint, deploy)
+- [ ] Migrate sensitive config to environment variables / secret manager for production
+- [ ] Add automated test coverage for `Application/Services`
+- [ ] Add JWT-secured API endpoints for a future mobile client
 
-Moderates car submittals, reviews identity verification, oversees users and platform metrics.
+---
 
-🔒 Security Note
-
-[!WARNING]
-Important Historical Warning:
-This repository's appsettings.json previously contained live SMTP credentials committed directly to source control. If you have forked or cloned this repository with that file present:
-
-Rotate your email account's app password immediately.
-
-Purge the secret from git history using git filter-repo or the BFG Repo-Cleaner.
-
-Migrate all future configuration secrets securely via User Secrets or environment variables.
-
-🗺️ Roadmap
-
-[ ] Containerize application with Docker & docker-compose (App + SQL Server)
-
-[ ] Implement CI/CD pipeline (build, test, lint, deploy)
-
-[ ] Migrate production configuration to Azure Key Vault or AWS Secrets Manager
-
-[ ] Expand automated unit/integration test coverage for Application/Services
-
-[ ] Add JWT-secured RESTful API endpoints for a future mobile client
-
-🤝 Contributing
+## 🤝 Contributing
 
 Contributions, issues, and feature requests are welcome! Feel free to open an issue or submit a pull request.
 
-📄 License
+---
 
-No license file is currently included in this repository. Add a LICENSE file (e.g., MIT) if you intend others to use, modify, or contribute to this project.
+## 📄 License
+
+No license file is currently included in this repository. Add a `LICENSE` file (e.g. MIT) if you intend others to use or contribute to this project.
+
+---
+
+<div align="center">
 
 Built with ❤️ using ASP.NET Core
+
+</div>
