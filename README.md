@@ -1,5 +1,3 @@
-<img width="1076" height="940" alt="image" src="https://github.com/user-attachments/assets/456da667-f888-47a2-b1fd-cd78237b2273" /><div align="center">
-
 # 🚗 PeerCar
 
 ### A Peer-to-Peer Car Rental Platform
@@ -47,7 +45,7 @@
 <div align="center">
 
 ### 🏠 Landing Page
-<img src=![Uploading image.png…]()/>
+<img src=<img width="1076" height="940" alt="image" src="https://github.com/user-attachments/assets/456da667-f888-47a2-b1fd-cd78237b2273" /><div align="center">/>
 
 <br/><br/>
 
