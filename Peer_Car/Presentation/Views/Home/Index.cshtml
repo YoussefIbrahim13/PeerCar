@@ -22,9 +22,7 @@
                 <span class="pc-pill animate__animated animate__fadeInDown">
                     <span class="tag">New</span> AI trip assistant is live <i class="bi bi-arrow-right-short"></i>
                 </span>
-                <h1 class="mt-4 mb-4 animate__animated animate__fadeInUp">
-                    Drive the car you <span class="text-gradient">actually want.</span>
-                </h1>
+                <h1 class="mt-4 mb-4" data-split>Drive the car you <span class="text-gradient">actually want.</span></h1>
                 <p class="lead mb-4 animate__animated animate__fadeInUp" style="animation-delay:.1s">
                     PeerCar connects you with verified local owners. Book in minutes, pick up nearby, and hit the road — no rental counter required.
                 </p>
@@ -50,7 +48,7 @@
                             </select>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-lg px-4">
+                    <button type="submit" class="btn btn-primary btn-lg px-4" data-magnetic>
                         <i class="bi bi-search me-1"></i> Search
                     </button>
                 </form>
@@ -62,30 +60,75 @@
                 </div>
             </div>
 
-            <div class="col-lg-5 d-none d-lg-block">
-                <div class="pc-hero-visual animate__animated animate__zoomIn" style="animation-delay:.2s">
-                    <div class="pc-hero-card" data-tilt="10">
-                        <div class="d-flex justify-content-between align-items-center mb-2">
-                            <span class="pc-pill"><i class="bi bi-lightning-charge-fill text-warning"></i> Instant booking</span>
-                            <span class="small text-white-50">Today</span>
+            <div class="col-lg-5">
+                <div class="pc-hero-visual" data-parallax="18">
+                    <div class="pc-stage" data-tilt="8">
+                        <div class="d-flex justify-content-between align-items-center position-relative z-1">
+                            <span class="pc-pill"><i class="bi bi-lightning-charge-fill" style="color:var(--pc-accent)"></i> Instant booking</span>
+                            <span class="pc-live"><span class="dot"></span>Live</span>
                         </div>
-                        <div class="pc-hero-car my-3"><i class="bi bi-car-front-fill"></i></div>
-                        <div class="pc-road"></div>
-                        <div class="d-flex justify-content-between align-items-end">
+
+                        <div class="pc-scene" aria-hidden="true">
+                            <div class="pc-speed"><span></span><span></span><span></span><span></span><span></span></div>
+                            <svg class="pc-car-svg" viewBox="0 0 420 170" role="img">
+                                <defs>
+                                    <linearGradient id="pcBody" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0" stop-color="#e4ff6a" />
+                                        <stop offset=".5" stop-color="#c8f031" />
+                                        <stop offset="1" stop-color="#86b51b" />
+                                    </linearGradient>
+                                    <linearGradient id="pcGlass" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0" stop-color="#3a4030" />
+                                        <stop offset="1" stop-color="#0d0e0b" />
+                                    </linearGradient>
+                                    <linearGradient id="pcBeam" x1="0" x2="1">
+                                        <stop offset="0" stop-color="#fff9d6" stop-opacity=".55" />
+                                        <stop offset="1" stop-color="#fff9d6" stop-opacity="0" />
+                                    </linearGradient>
+                                </defs>
+                                <ellipse class="pc-car-shadow" cx="205" cy="152" rx="175" ry="8" />
+                                <g class="pc-car-body">
+                                    <polygon class="pc-beam" points="386,96 600,62 600,140" fill="url(#pcBeam)" />
+                                    <path d="M24,118 C18,104 22,92 40,88 L112,80 C134,60 168,46 214,45 C252,45 282,58 306,76 L356,84 C378,88 390,98 390,110 L390,118 C390,122 387,124 383,124 L340,124 A34,34 0 0 0 272,124 L136,124 A34,34 0 0 0 68,124 L30,124 C26,124 24,122 24,118 Z" fill="url(#pcBody)" />
+                                    <path d="M124,80 C142,63 170,53 208,52 L210,80 Z" fill="url(#pcGlass)" />
+                                    <path d="M220,52 C250,53 274,63 294,78 L220,80 Z" fill="url(#pcGlass)" />
+                                    <path d="M48,100 L380,100" stroke="#0e100a" stroke-opacity=".22" stroke-width="3" />
+                                    <path d="M214,84 L214,118" stroke="#0e100a" stroke-opacity=".25" stroke-width="1.5" />
+                                    <rect x="226" y="88" width="16" height="3.5" rx="1.75" fill="#0e100a" fill-opacity=".45" />
+                                    <path d="M370,90 L388,95 L386,101 L368,97 Z" fill="#fff9d6" />
+                                    <rect class="pc-tail" x="25" y="92" width="11" height="6" rx="2" fill="#ff5b23" />
+                                </g>
+                                <g class="pc-wheel" style="transform-origin:102px 124px">
+                                    <circle cx="102" cy="124" r="27" fill="#0e100a" />
+                                    <circle cx="102" cy="124" r="17" fill="#23261c" stroke="#c8f031" stroke-width="2" />
+                                    <path d="M102,108 L102,140 M86,124 L118,124 M91,113 L113,135 M113,113 L91,135" stroke="#c8f031" stroke-opacity=".7" stroke-width="2.5" />
+                                    <circle cx="102" cy="124" r="4" fill="#c8f031" />
+                                </g>
+                                <g class="pc-wheel" style="transform-origin:306px 124px">
+                                    <circle cx="306" cy="124" r="27" fill="#0e100a" />
+                                    <circle cx="306" cy="124" r="17" fill="#23261c" stroke="#c8f031" stroke-width="2" />
+                                    <path d="M306,108 L306,140 M290,124 L322,124 M295,113 L317,135 M317,113 L295,135" stroke="#c8f031" stroke-opacity=".7" stroke-width="2.5" />
+                                    <circle cx="306" cy="124" r="4" fill="#c8f031" />
+                                </g>
+                            </svg>
+                            <div class="pc-road"></div>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-end position-relative z-1">
                             <div>
-                                <div class="small text-white-50">Pick-up</div>
-                                <div class="fw-bold">Near you</div>
+                                <div class="small" style="color:rgba(255,255,255,.55)">Pick-up</div>
+                                <div class="fw-bold text-white">Near you · Today</div>
                             </div>
-                            <a asp-controller="Cars" asp-action="Index" class="btn btn-glass rounded-pill btn-sm px-3">Explore <i class="bi bi-arrow-right"></i></a>
+                            <a asp-controller="Cars" asp-action="Index" class="btn btn-primary btn-sm rounded-pill px-3" data-magnetic>Explore <i class="bi bi-arrow-right"></i></a>
                         </div>
                     </div>
 
-                    <div class="pc-float-chip" style="top:-18px; left:-34px;">
-                        <span class="ic" style="background:linear-gradient(135deg,#10b981,#06b6d4)"><i class="bi bi-shield-check"></i></span>
-                        <div>ID verified<small>Every host & renter</small></div>
+                    <div class="pc-float-chip d-none d-md-flex" style="top:-26px; right:36px;" data-parallax="34">
+                        <span class="ic" style="background:var(--pc-accent);color:var(--pc-on-accent)"><i class="bi bi-shield-check"></i></span>
+                        <div>ID verified<small>Every host &amp; renter</small></div>
                     </div>
-                    <div class="pc-float-chip" style="bottom:-30px; left:28px; animation-delay:-3s">
-                        <span class="ic" style="background:linear-gradient(135deg,#f59e0b,#ec4899)"><i class="bi bi-star-fill"></i></span>
+                    <div class="pc-float-chip d-none d-md-flex" style="bottom:-30px; left:36%; animation-delay:-3s" data-parallax="26">
+                        <span class="ic" style="background:var(--pc-orange)"><i class="bi bi-star-fill"></i></span>
                         <div>Rated by drivers<small>Real reviews only</small></div>
                     </div>
                 </div>
@@ -93,6 +136,22 @@
         </div>
     </div>
 </section>
+
+<!-- ============ TICKER ============ -->
+<div class="pc-tickers" aria-hidden="true">
+    <div class="pc-ticker is-dark"><div class="pc-ticker-track">
+        @for (int i = 0; i < 4; i++)
+        {
+            <span>Rent local</span><i class="bi bi-asterisk"></i><span>Drive further</span><i class="bi bi-asterisk"></i><span>Earn from your car</span><i class="bi bi-asterisk"></i>
+        }
+    </div></div>
+    <div class="pc-ticker is-lime"><div class="pc-ticker-track">
+        @for (int i = 0; i < 4; i++)
+        {
+            <span>Instant booking</span><i class="bi bi-lightning-charge-fill"></i><span>Verified owners</span><i class="bi bi-shield-fill-check"></i><span>AI trip assistant</span><i class="bi bi-stars"></i><span>Zero hidden fees</span><i class="bi bi-circle-fill"></i>
+        }
+    </div></div>
+</div>
 
 <!-- ============ BRAND MARQUEE ============ -->
 <section class="py-4 py-lg-5">
@@ -212,7 +271,7 @@
                     <p class="mb-0">Direct access to users, the vehicle fleet, review queues and platform-wide analytics.</p>
                 </div>
                 <div class="col-lg-4 d-flex flex-wrap gap-2 justify-content-lg-end">
-                    <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-light btn-lg rounded-pill px-4">Open dashboard <i class="bi bi-arrow-right"></i></a>
+                    <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-light btn-lg rounded-pill px-4" data-magnetic>Open dashboard <i class="bi bi-arrow-right"></i></a>
                 </div>
             </div>
         </div>
@@ -226,7 +285,7 @@
                     <p class="mb-0">List it in minutes. We verify every renter, and you stay in control of every booking.</p>
                 </div>
                 <div class="col-lg-4 d-flex flex-wrap gap-2 justify-content-lg-end">
-                    <a asp-controller="@(signedIn ? "Cars" : "Account")" asp-action="@(signedIn ? "Submit" : "Register")" class="btn btn-light btn-lg rounded-pill px-4">
+                    <a asp-controller="@(signedIn ? "Cars" : "Account")" asp-action="@(signedIn ? "Submit" : "Register")" class="btn btn-light btn-lg rounded-pill px-4" data-magnetic>
                         @(signedIn ? "List my car" : "Join PeerCar") <i class="bi bi-arrow-right"></i>
                     </a>
                 </div>

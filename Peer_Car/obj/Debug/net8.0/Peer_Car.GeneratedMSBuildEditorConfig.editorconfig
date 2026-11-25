@@ -242,6 +242,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL1NoYXJlZC9fQ2FyQ2FyZFBhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Shared/_CarSilhouette.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL1NoYXJlZC9fQ2FyU2lsaG91ZXR0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [/home/user/PeerCar/Peer_Car/Presentation/Views/Shared/_Layout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL1NoYXJlZC9fTGF5b3V0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 

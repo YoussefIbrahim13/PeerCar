@@ -1,4 +1,4 @@
-﻿@using Peer_Car.Domain.Entities
+@using Peer_Car.Domain.Entities
 @model Peer_Car.Application.ViewModels.CarViewModel
 
 @{
@@ -11,13 +11,13 @@
      data-price="@Model.PricePerDay.ToString(System.Globalization.CultureInfo.InvariantCulture)"
      data-year="@Model.Year"
      data-rating="@Model.AverageRating.ToString(System.Globalization.CultureInfo.InvariantCulture)">
-    <article class="pc-car-card pc-spotlight">
+    <article class="pc-car-card pc-spotlight" data-tilt="7" data-tilt-lift>
         <div class="pc-car-media">
             @if (!string.IsNullOrEmpty(Model.ImagePath))
             {
                 <img src="@Model.ImagePath" alt="@Model.Brand @Model.Model" loading="lazy" data-fallback="hide" />
             }
-            <div class="pc-car-placeholder" aria-hidden="true"><i class="bi bi-car-front-fill"></i></div>
+            <div class="pc-car-placeholder" aria-hidden="true"><partial name="_CarSilhouette" /></div>
 
             <span class="pc-car-tag @(available ? "" : "is-busy")">
                 <span class="dot"></span>@(available ? "Available" : "Rented")

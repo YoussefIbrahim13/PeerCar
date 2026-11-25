@@ -42,7 +42,7 @@
             {
                 <img src="@Model.ImagePath" alt="@Model.Brand @Model.Model" data-fallback="hide" />
             }
-            <div class="pc-car-placeholder" aria-hidden="true"><i class="bi bi-car-front-fill"></i></div>
+            <div class="pc-car-placeholder" aria-hidden="true"><partial name="_CarSilhouette" /></div>
             <span class="pc-car-tag @(available ? "" : "is-busy")"><span class="dot"></span>@(available ? "Ready to rent" : "Currently rented")</span>
             <button type="button" class="pc-car-fav" data-fav="@Model.Id" aria-label="Save car" aria-pressed="false"><i class="bi bi-heart"></i></button>
         </div>

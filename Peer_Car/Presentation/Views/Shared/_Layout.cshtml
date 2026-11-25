@@ -24,7 +24,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#f5f6fb" />
+    <meta name="theme-color" content="#f3f1ea" />
     <meta name="description" content="PeerCar — rent cars from people near you, or earn by sharing yours." />
     <title>@(ViewData["Title"] is string t && t.Length > 0 ? $"{t} · PeerCar" : "PeerCar")</title>
 
@@ -40,7 +40,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cairo:wght@400;600;700;800&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cairo:wght@400;600;700;800&display=swap" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
@@ -48,6 +48,7 @@
 </head>
 <body class="@(fullBleed ? "pc-has-hero" : null)">
     <div class="pc-progress" aria-hidden="true"></div>
+    <div class="pc-scroll-progress" aria-hidden="true"></div>
 
     <header class="pc-header">
         <nav class="navbar navbar-expand-lg pc-navbar" aria-label="Main">

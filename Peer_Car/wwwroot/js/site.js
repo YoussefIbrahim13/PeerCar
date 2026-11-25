@@ -1,4 +1,4 @@
-﻿/* =====================================================================
+/* =====================================================================
    PeerCar — interaction layer
    Small, dependency-free enhancements. Every feature degrades gracefully:
    without JS the pages still render and work.
@@ -19,7 +19,7 @@
     function applyTheme(theme) {
         root.setAttribute("data-bs-theme", theme);
         const meta = $('meta[name="theme-color"]');
-        if (meta) meta.setAttribute("content", theme === "dark" ? "#070a14" : "#f5f6fb");
+        if (meta) meta.setAttribute("content", theme === "dark" ? "#0a0b08" : "#f3f1ea");
     }
     function initTheme() {
         $$("[data-theme-toggle]").forEach(btn => btn.addEventListener("click", () => {
@@ -145,6 +145,7 @@
 
         $$("[data-tilt]").forEach(el => {
             const max = parseFloat(el.getAttribute("data-tilt")) || 8;
+            const lift = el.hasAttribute("data-tilt-lift") ? " translateY(-8px)" : "";
             let raf = 0;
             el.addEventListener("pointermove", e => {
                 cancelAnimationFrame(raf);
@@ -152,11 +153,85 @@
                     const r = el.getBoundingClientRect();
                     const x = (e.clientX - r.left) / r.width - 0.5;
                     const y = (e.clientY - r.top) / r.height - 0.5;
-                    el.style.transform = `rotateX(${(-y * max).toFixed(2)}deg) rotateY(${(x * max).toFixed(2)}deg)`;
+                    el.style.transition = "transform .15s ease-out, box-shadow .5s, border-color .3s";
+                    el.style.transform = `perspective(1000px) rotateX(${(-y * max).toFixed(2)}deg) rotateY(${(x * max).toFixed(2)}deg)${lift}`;
                 });
             });
-            el.addEventListener("pointerleave", () => { cancelAnimationFrame(raf); el.style.transform = ""; });
+            el.addEventListener("pointerleave", () => { cancelAnimationFrame(raf); el.style.transition = ""; el.style.transform = ""; });
         });
+
+        // Magnetic buttons: drift toward the cursor, spring back on leave
+        $$("[data-magnetic]").forEach(el => {
+            const strength = parseFloat(el.getAttribute("data-magnetic")) || 0.35;
+            el.addEventListener("pointermove", e => {
+                const r = el.getBoundingClientRect();
+                const x = (e.clientX - r.left - r.width / 2) * strength;
+                const y = (e.clientY - r.top - r.height / 2) * strength;
+                el.style.translate = `${x.toFixed(1)}px ${y.toFixed(1)}px`;
+            });
+            el.addEventListener("pointerleave", () => { el.style.translate = ""; });
+        });
+
+        // Parallax: layers inside the landing hero follow the pointer at different depths
+        const hero = $(".pc-hero");
+        if (hero) {
+            const layers = $$("[data-parallax]", hero);
+            const blobs = $$(".pc-blob", hero);
+            hero.addEventListener("pointermove", e => {
+                const r = hero.getBoundingClientRect();
+                const x = (e.clientX - r.left) / r.width - 0.5;
+                const y = (e.clientY - r.top) / r.height - 0.5;
+                layers.forEach(l => {
+                    const d = parseFloat(l.getAttribute("data-parallax")) || 10;
+                    l.style.translate = `${(-x * d).toFixed(1)}px ${(-y * d).toFixed(1)}px`;
+                });
+                blobs.forEach((b, i) => { b.style.translate = `${(x * (30 + i * 20)).toFixed(1)}px ${(y * (30 + i * 20)).toFixed(1)}px`; });
+            });
+            hero.addEventListener("pointerleave", () => layers.forEach(l => { l.style.translate = ""; }));
+        }
+    }
+
+    /* ---------- Split headline into animated words ---------- */
+    function initSplit() {
+        if (reduceMotion) return;
+        $$("[data-split]").forEach(el => {
+            let i = 0;
+            const wrap = node => {
+                const w = document.createElement("span");
+                w.className = "pc-w";
+                const inner = document.createElement("span");
+                inner.style.setProperty("--i", String(i++));
+                inner.appendChild(node);
+                w.appendChild(inner);
+                return w;
+            };
+            Array.from(el.childNodes).forEach(node => {
+                if (node.nodeType === Node.TEXT_NODE) {
+                    const frag = document.createDocumentFragment();
+                    node.textContent.split(/(\s+)/).forEach(part => {
+                        if (!part) return;
+                        frag.appendChild(/^\s+$/.test(part) ? document.createTextNode(part) : wrap(document.createTextNode(part)));
+                    });
+                    el.replaceChild(frag, node);
+                } else if (node.nodeType === Node.ELEMENT_NODE) {
+                    el.replaceChild(wrap(node.cloneNode(true)), node);
+                }
+            });
+        });
+    }
+
+    /* ---------- Reading progress ---------- */
+    function initScrollProgress() {
+        const bar = $(".pc-scroll-progress");
+        if (!bar) return;
+        let ticking = false;
+        const update = () => {
+            const max = document.documentElement.scrollHeight - innerHeight;
+            bar.style.transform = `scaleX(${max > 0 ? Math.min(1, scrollY / max) : 0})`;
+            ticking = false;
+        };
+        update();
+        window.addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } }, { passive: true });
     }
 
     /* ---------- Back to top (with scroll progress ring) ---------- */
@@ -357,7 +432,9 @@
         initReveal();
         initCounters();
         initRipple();
+        initSplit();
         initPointerFx();
+        initScrollProgress();
         initToTop();
         initToasts();
         initTransitions();
