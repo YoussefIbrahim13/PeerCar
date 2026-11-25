@@ -35,9 +35,16 @@
     function initNavbar() {
         const nav = $(".pc-navbar");
         if (!nav) return;
-        const onScroll = () => nav.classList.toggle("is-scrolled", window.scrollY > 8);
+        let menuOpen = false;
+        // While the mobile menu is open, use the solid bar so the logo stays readable over any background.
+        const onScroll = () => nav.classList.toggle("is-scrolled", menuOpen || window.scrollY > 8);
         onScroll();
         window.addEventListener("scroll", onScroll, { passive: true });
+        const collapse = $(".navbar-collapse", nav);
+        if (collapse) {
+            collapse.addEventListener("show.bs.collapse", () => { menuOpen = true; onScroll(); });
+            collapse.addEventListener("hidden.bs.collapse", () => { menuOpen = false; onScroll(); });
+        }
 
         // Highlight the link for the current section
         const path = location.pathname.toLowerCase().replace(/\/+$/, "") || "/";
