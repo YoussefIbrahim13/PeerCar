@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Peer_Car.Application.Interfaces;
@@ -32,9 +32,11 @@ namespace Peer_Car.Application.Services
                 TotalBookings = await _context.Bookings.CountAsync(),
                 PendingBookings = await _context.Bookings.CountAsync(b => b.Status == BookingStatus.Pending),
                 PendingSubmissions = await _context.CarSubmissions.CountAsync(cs => cs.Status == CarSubmissionStatus.Pending),
+                AvailableCars = await _context.Cars.CountAsync(c => c.AvailabilityStatus == CarAvailabilityStatus.Available),
+                NewUsersToday = await _context.Users.CountAsync(u => !u.IsDeleted && u.DateRegistered >= DateTime.UtcNow.Date),
                 RecentBookings = await _context.Bookings
                     .Include(b => b.Car).Include(b => b.Renter)
-                    .OrderByDescending(b => b.CreatedAt).Take(5).ToListAsync()
+                    .OrderByDescending(b => b.CreatedAt).Take(6).ToListAsync()
             };
         }
 

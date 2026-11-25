@@ -1,44 +1,47 @@
-﻿@{
-    ViewData["Title"] = "PeerCar AI Assistant";
+@{
+    ViewData["Title"] = "AI Assistant";
     ViewData["HideFooter"] = true;
+    string name = User.Identity?.Name?.Split('@')[0] ?? "";
 }
 
-<link rel="stylesheet" href="~/css/chatbot.css" asp-append-version="true" />
+@section Styles {
+    <link rel="stylesheet" href="~/css/chatbot.css" asp-append-version="true" />
+}
 
-<div class="chat-main-wrapper">
-    <div class="chat-container shadow-lg">
-        <div class="chat-header">
-            <div class="d-flex align-items-center">
-                <div class="avatar-status">
-                    <img src="https://cdn-icons-png.flaticon.com/512/4712/4712035.png" alt="AI" />
-                    <span class="status-dot"></span>
-                </div>
-                <div class="ms-3">
-                    <h5 class="mb-0 fw-bold">PeerCar Assistant</h5>
-                    <small class="opacity-75">AI-Powered Car Guide</small>
-                </div>
-            </div>
+<div class="pc-chat animate__animated animate__fadeInUp">
+    <header class="pc-chat-head">
+        <div class="pc-chat-avatar"><i class="bi bi-stars"></i><span class="pc-chat-status" id="chatStatus" data-state="connecting"></span></div>
+        <div class="flex-grow-1 min-w-0">
+            <h1 class="h6 mb-0">PeerCar Assistant</h1>
+            <div class="small text-muted" id="chatStatusText">Connecting…</div>
         </div>
+        <button type="button" class="pc-icon-btn" id="chatClear" title="Clear conversation" aria-label="Clear conversation"><i class="bi bi-trash3"></i></button>
+    </header>
 
-        <div id="chatMessages" class="chat-messages p-4">
-            <div class="message assistant-msg">
-                <div class="text">أهلاً يا @User.Identity?.Name! أنا مساعدك الذكي في PeerCar. محتاج مساعدة في اختيار عربية لرحلتك الجاية؟ 🚗</div>
-                <small class="time">@DateTime.Now.ToString("t")</small>
+    <div class="pc-chat-body" id="chatMessages" aria-live="polite">
+        <div class="pc-chat-intro" id="chatIntro">
+            <div class="pc-chat-orb"><i class="bi bi-stars"></i></div>
+            <h2 class="h4 mt-3 mb-1" dir="auto">أهلاً @name 👋</h2>
+            <p class="text-muted mb-4" dir="auto">أنا مساعدك الذكي في PeerCar. اسألني عن أي عربية، الأسعار، أو إزاي تحجز.</p>
+            <div class="pc-chat-suggest">
+                <button type="button" data-suggest="رشحلي عربية اقتصادية للمشاوير اليومية">🚗 عربية اقتصادية</button>
+                <button type="button" data-suggest="إيه أفضل عربية لرحلة عائلية لإسكندرية؟">👨‍👩‍👧 رحلة عائلية</button>
+                <button type="button" data-suggest="إزاي أحجز عربية على PeerCar؟">📅 إزاي أحجز؟</button>
+                <button type="button" data-suggest="How do I list my car on PeerCar?">💸 List my car</button>
             </div>
-        </div>
-
-        <div class="chat-input-area p-3">
-            <form id="chatForm" class="input-group shadow-sm rounded-pill overflow-hidden bg-white">
-                <input type="text" id="userInput" class="form-control border-0 px-4" placeholder="اسألني عن أي عربية..." autocomplete="off" />
-                <button class="btn btn-primary px-4" type="submit" id="sendBtn">
-                    <i class="bi bi-send-fill"></i>
-                </button>
-            </form>
         </div>
     </div>
+
+    <form id="chatForm" class="pc-chat-input" autocomplete="off" data-no-loading>
+        <textarea id="userInput" rows="1" dir="auto" placeholder="اسألني عن أي عربية…" aria-label="Message"></textarea>
+        <button class="btn btn-primary" type="submit" id="sendBtn" aria-label="Send" disabled>
+            <i class="bi bi-arrow-up"></i>
+        </button>
+    </form>
+    <div class="pc-chat-hint small text-muted text-center">Enter to send · Shift + Enter for a new line</div>
 </div>
 
 @section Scripts {
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/6.0.1/signalr.min.js"></script>
+    <script src="~/lib/microsoft-signalr/signalr.min.js"></script>
     <script src="~/js/chatbot.js" asp-append-version="true"></script>
 }

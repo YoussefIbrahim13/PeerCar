@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Peer_Car.Domain.Entities;
@@ -39,8 +39,8 @@ namespace Peer_Car.Infrastructure.Data
 
             builder.Entity<Booking>().HasQueryFilter(b => !b.Car.IsDeleted && !b.Renter.IsDeleted);
 
-            builder.Entity<Review>().HasQueryFilter(r => !r.User.IsDeleted);
-            builder.Entity<Review>().HasQueryFilter(r => !r.IsDeleted);
+            // EF Core keeps only the last HasQueryFilter call per entity, so both conditions must be combined.
+            builder.Entity<Review>().HasQueryFilter(r => !r.IsDeleted && !r.User.IsDeleted);
             #endregion
 
             #region 3. Relationships Configuration & Warning Fixes

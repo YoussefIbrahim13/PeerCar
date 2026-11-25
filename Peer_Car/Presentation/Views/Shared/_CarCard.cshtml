@@ -1,28 +1,58 @@
-﻿@model Peer_Car.Application.ViewModels.CarViewModel
+﻿@using Peer_Car.Domain.Entities
+@model Peer_Car.Application.ViewModels.CarViewModel
 
-<div class="col-md-4 mb-4">
-    <div class="card h-100 shadow-sm border-0">
-        @if (!string.IsNullOrEmpty(Model.ImagePath))
-        {
-            <img src="@Model.ImagePath" class="card-img-top" style="height: 200px; object-fit: cover;" alt="@Model.Brand @Model.Model">
-        }
-        else
-        {
-            <div class="bg-light text-center py-5">
-                <i class="bi bi-car-front text-secondary" style="font-size: 3rem;"></i>
-            </div>
-        }
-        <div class="card-body">
-            <h5 class="card-title fw-bold">@Model.Brand @Model.Model</h5>
-            <p class="card-text text-muted">
-                <i class="bi bi-geo-alt me-1"></i>@Model.Location
-            </p>
-            <div class="d-flex justify-content-between align-items-center mt-3">
-                <span class="text-primary fw-bold">@Model.PricePerDay SAR/day</span>
-                <a asp-controller="Cars" asp-action="Details" asp-route-id="@Model.Id" class="btn btn-primary">
-                    Details
-                </a>
+@{
+    bool available = Model.AvailabilityStatus == CarAvailabilityStatus.Available;
+    string searchText = $"{Model.Brand} {Model.Model} {Model.Location} {Model.Year}".ToLowerInvariant();
+}
+
+<div class="col-12 col-sm-6 col-lg-4 pc-car-col"
+     data-search="@searchText"
+     data-price="@Model.PricePerDay.ToString(System.Globalization.CultureInfo.InvariantCulture)"
+     data-year="@Model.Year"
+     data-rating="@Model.AverageRating.ToString(System.Globalization.CultureInfo.InvariantCulture)">
+    <article class="pc-car-card pc-spotlight">
+        <div class="pc-car-media">
+            @if (!string.IsNullOrEmpty(Model.ImagePath))
+            {
+                <img src="@Model.ImagePath" alt="@Model.Brand @Model.Model" loading="lazy" data-fallback="hide" />
+            }
+            <div class="pc-car-placeholder" aria-hidden="true"><i class="bi bi-car-front-fill"></i></div>
+
+            <span class="pc-car-tag @(available ? "" : "is-busy")">
+                <span class="dot"></span>@(available ? "Available" : "Rented")
+            </span>
+            <button type="button" class="pc-car-fav" data-fav="@Model.Id" aria-label="Save car" aria-pressed="false">
+                <i class="bi bi-heart"></i>
+            </button>
+            <div class="pc-car-price">
+                @Model.PricePerDay.ToString("N0")<small>SAR / day</small>
             </div>
         </div>
-    </div>
+
+        <div class="pc-car-body">
+            <h3 class="pc-car-title">
+                <a asp-controller="Cars" asp-action="Details" asp-route-id="@Model.Id">@Model.Brand @Model.Model</a>
+            </h3>
+            <div class="pc-car-meta">
+                <span class="pc-chip"><i class="bi bi-geo-alt"></i>@Model.Location</span>
+                <span class="pc-chip"><i class="bi bi-calendar3"></i>@Model.Year</span>
+            </div>
+            <div class="pc-car-foot">
+                <span class="pc-rating">
+                    <i class="bi bi-star-fill"></i>
+                    @if (Model.TotalReviews > 0)
+                    {
+                        <span>@Model.AverageRating.ToString("0.0")</span>
+                        <span class="text-muted fw-medium">(@Model.TotalReviews)</span>
+                    }
+                    else
+                    {
+                        <span class="text-muted fw-medium">New</span>
+                    }
+                </span>
+                <span class="pc-go">View details <i class="bi bi-arrow-right"></i></span>
+            </div>
+        </div>
+    </article>
 </div>

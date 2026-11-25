@@ -1,4 +1,4 @@
-﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Identity
 @using Peer_Car.Domain.Entities
 @using Peer_Car.Domain.Enums
 @model Car
@@ -6,147 +6,141 @@
 @inject UserManager<User> UserManager
 
 @{
-    ViewData["Title"] = $"{Model.Brand} {Model.Model} - Details";
-    
+    ViewData["Title"] = $"{Model.Brand} {Model.Model}";
+
     bool isAdmin = User.IsInRole("Admin");
     var currentUserId = UserManager.GetUserId(User);
-    bool isOwner = currentUserId != null && Guid.Parse(currentUserId) == Model.OwnerId;
+    bool isOwner = currentUserId != null && Guid.TryParse(currentUserId, out var uid) && uid == Model.OwnerId;
+    bool available = Model.AvailabilityStatus == CarAvailabilityStatus.Available;
+    var reviews = Model.Reviews ?? new List<Review>();
+    double avgRating = reviews.Any() ? Math.Round(reviews.Average(r => r.Rating), 1) : 0;
+
+    var rawPath = Model.Owner?.ProfileImageUrl;
+    string ownerImg = "/images/profiles/default.png";
+    if (!string.IsNullOrEmpty(rawPath) && rawPath != "default.png")
+    {
+        var cleanPath = rawPath.Replace("\\", "/").Replace("wwwroot", "").TrimStart('~').TrimStart('/');
+        ownerImg = cleanPath.Contains("images/profiles/")
+            ? "/" + cleanPath.Substring(cleanPath.IndexOf("images/"))
+            : "/images/profiles/" + cleanPath;
+    }
 }
 
-<div class="container my-5">
-    <nav aria-label="breadcrumb" class="mb-4">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a asp-action="Index">Cars</a></li>
-            <li class="breadcrumb-item active">@Model.Brand @Model.Model</li>
-        </ol>
-    </nav>
+<nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item"><a asp-action="Index">Explore</a></li>
+        <li class="breadcrumb-item active" aria-current="page">@Model.Brand @Model.Model</li>
+    </ol>
+</nav>
 
-    <div class="row justify-content-center">
-        <div class="col-lg-11">
-            <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
-                <div class="row g-0">
-                    <div class="col-md-6 bg-light d-flex align-items-center justify-content-center p-3">
-                        @if (!string.IsNullOrEmpty(Model.ImagePath))
+<div class="row g-4 g-xl-5">
+    <!-- Media + specs -->
+    <div class="col-lg-7">
+        <div class="pc-detail-media animate__animated animate__zoomIn" data-lightbox="@(string.IsNullOrEmpty(Model.ImagePath) ? null : Model.ImagePath)" aria-label="@Model.Brand @Model.Model photo">
+            @if (!string.IsNullOrEmpty(Model.ImagePath))
+            {
+                <img src="@Model.ImagePath" alt="@Model.Brand @Model.Model" data-fallback="hide" />
+            }
+            <div class="pc-car-placeholder" aria-hidden="true"><i class="bi bi-car-front-fill"></i></div>
+            <span class="pc-car-tag @(available ? "" : "is-busy")"><span class="dot"></span>@(available ? "Ready to rent" : "Currently rented")</span>
+            <button type="button" class="pc-car-fav" data-fav="@Model.Id" aria-label="Save car" aria-pressed="false"><i class="bi bi-heart"></i></button>
+        </div>
+
+        <div class="row g-3 mt-2" data-reveal-stagger="0.06">
+            <div class="col-6 col-md-3">
+                <div class="pc-spec"><span class="pc-icon-tile"><i class="bi bi-tag"></i></span><div><div class="k">Brand</div><div class="v">@Model.Brand</div></div></div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="pc-spec"><span class="pc-icon-tile is-info"><i class="bi bi-calendar3"></i></span><div><div class="k">Year</div><div class="v">@Model.Year</div></div></div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="pc-spec"><span class="pc-icon-tile is-success"><i class="bi bi-geo-alt"></i></span><div><div class="k">Location</div><div class="v text-truncate">@Model.Location</div></div></div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="pc-spec"><span class="pc-icon-tile is-warning"><i class="bi bi-star"></i></span><div><div class="k">Rating</div><div class="v">@(reviews.Any() ? $"{avgRating:0.0} ({reviews.Count})" : "New")</div></div></div>
+            </div>
+        </div>
+
+        <div class="pc-panel p-4 mt-4" data-reveal>
+            <h2 class="h5 mb-3">Why renters love it</h2>
+            <div class="row g-3 small">
+                <div class="col-md-4 d-flex gap-2"><i class="bi bi-shield-check text-success fs-5"></i><span>Owner identity verified by PeerCar</span></div>
+                <div class="col-md-4 d-flex gap-2"><i class="bi bi-calculator text-primary fs-5"></i><span>Instant price for your exact dates</span></div>
+                <div class="col-md-4 d-flex gap-2"><i class="bi bi-key text-warning fs-5"></i><span>In-app key hand-over confirmation</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Booking panel -->
+    <div class="col-lg-5">
+        <div class="pc-sticky">
+            <div class="pc-panel p-4 p-md-4 animate__animated animate__fadeInUp">
+                <div class="d-flex justify-content-between align-items-start gap-3">
+                    <div>
+                        <span class="eyebrow">@Model.Year · @Model.Location</span>
+                        <h1 class="h2 mt-2 mb-0">@Model.Brand @Model.Model</h1>
+                    </div>
+                    @if (reviews.Any())
+                    {
+                        <span class="badge bg-warning fs-6"><i class="bi bi-star-fill"></i> @avgRating.ToString("0.0")</span>
+                    }
+                </div>
+
+                <div class="d-flex align-items-end gap-2 my-4">
+                    <span class="pc-price-big text-gradient">@Model.PricePerDay.ToString("N0")</span>
+                    <span class="text-muted fw-semibold pb-1">SAR / day</span>
+                </div>
+
+                <div class="d-grid gap-2">
+                    @if (available && !isAdmin && !isOwner)
+                    {
+                        <a asp-controller="Bookings" asp-action="Create" asp-route-carId="@Model.Id" class="btn btn-primary btn-lg">
+                            <i class="bi bi-calendar-plus me-2"></i>Book this car
+                        </a>
+                    }
+                    else if (!available)
+                    {
+                        <button class="btn btn-light btn-lg" disabled><i class="bi bi-hourglass-split me-2"></i>Not available right now</button>
+                    }
+                    <a asp-controller="Reviews" asp-action="CarReviews" asp-route-carId="@Model.Id" class="btn btn-outline-secondary">
+                        <i class="bi bi-star-fill me-2 text-warning"></i>Read reviews
+                    </a>
+                </div>
+
+                <hr class="my-4" />
+
+                <div class="d-flex align-items-center gap-3">
+                    <img src="@ownerImg" alt="" class="rounded-circle" style="width:52px;height:52px;object-fit:cover;" data-fallback="/images/profiles/default.png" />
+                    <div class="flex-grow-1 min-w-0">
+                        <div class="small text-muted">Hosted by</div>
+                        @if (Model.Owner != null)
                         {
-                            <img src="@Model.ImagePath" alt="Car Image" class="img-fluid rounded-4 shadow-sm"
-                                 style="width:100%; max-height:450px; object-fit:cover;" />
-                        }
-                        else
-                        {
-                            <div class="text-center py-5">
-                                <i class="bi bi-image text-muted" style="font-size: 5rem;"></i>
-                                <p class="text-muted">No Image Available</p>
-                            </div>
+                            <a asp-controller="Account" asp-action="UserProfile" asp-route-id="@Model.OwnerId" class="fw-bold text-decoration-none d-block text-truncate" style="color:var(--pc-text)">@Model.Owner.FullName</a>
+                            <div class="small text-muted">Member since @Model.Owner.DateRegistered.Year</div>
                         }
                     </div>
-
-                    <div class="col-md-6 p-4 p-lg-5">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <div>
-                                <h1 class="fw-bold h2 mb-1">@Model.Brand @Model.Model</h1>
-                                <span class="badge bg-primary px-3 py-2">
-                                    <i class="bi bi-geo-alt me-1"></i> @Model.Location
-                                </span>
-                            </div>
-                            <div class="text-end">
-                                <div class="h3 fw-bold text-success mb-0">@Model.PricePerDay <small class="fs-6 text-muted">SAR/day</small></div>
-                                <span class="badge bg-light text-dark border">Year: @Model.Year</span>
-                            </div>
-                        </div>
-
-                        <hr class="my-4">
-
-                        <div class="mb-4">
-                            <h5 class="fw-bold mb-3">Owner Information</h5>
-                            <div class="d-flex align-items-center">
-                                <div class="flex-shrink-0">
-                                    @{
-                                        var rawPath = Model.Owner?.ProfileImageUrl;
-                                        string finalOwnerPath = "/images/profiles/default.png"; 
-
-                                        if (!string.IsNullOrEmpty(rawPath) && rawPath != "default.png")
-                                        {
-                                        
-                                            var cleanPath = rawPath.Replace("\\", "/").Replace("wwwroot", "").TrimStart('~').TrimStart('/');
-
-                                            if (cleanPath.Contains("images/profiles/"))
-                                            {
-                                                finalOwnerPath = "/" + cleanPath.Substring(cleanPath.IndexOf("images/"));
-                                            }
-                                            else
-                                            {
-                                                finalOwnerPath = "/images/profiles/" + cleanPath;
-                                            }
-                                        }
-                                    }
-                                    <img src="@finalOwnerPath"
-                                         class="rounded-circle border shadow-sm"
-                                         style="width:55px; height:55px; object-fit:cover;"
-                                         onerror="this.onerror=null;this.src='/images/profiles/default.png';" />
-                                </div>
-                                <div class="ms-3">
-                                    @if (Model.Owner != null)
-                                    {
-                                        <a asp-controller="Account" asp-action="UserProfile" asp-route-id="@Model.OwnerId"
-                                               class="fw-bold text-decoration-none text-dark d-block">
-                                            @Model.Owner.FullName
-                                        </a>
-                                        <div class="small text-muted">Member since @Model.Owner.DateRegistered.Year</div>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="mb-4">
-                            <h5 class="fw-bold mb-2">Availability</h5>
-                            @{
-                                var statusClass = Model.AvailabilityStatus == CarAvailabilityStatus.Available ? "success" : "danger";
-                                var statusText = Model.AvailabilityStatus == CarAvailabilityStatus.Available ? "Ready to Rent" : "Currently Rented";
-                            }
-                            <span class="badge bg-@statusClass p-2 px-3 fw-medium">
-                                <i class="bi bi-info-circle me-1"></i> @statusText
-                            </span>
-                        </div>
-
-                        <div class="d-grid gap-2 pt-3">
-                            @if (Model.AvailabilityStatus == CarAvailabilityStatus.Available && !isAdmin && !isOwner)
-                            {
-                                <a asp-controller="Bookings" asp-action="Create" asp-route-carId="@Model.Id"
-                                       class="btn btn-primary btn-lg fw-bold shadow-sm">
-                                    <i class="bi bi-calendar-plus me-2"></i> Book This Car
-                                </a>
-                            }
-
-                            <a asp-controller="Reviews" asp-action="CarReviews" asp-route-carId="@Model.Id"
-                                   class="btn btn-outline-dark">
-                                <i class="bi bi-star-fill me-2 text-warning"></i> View All Reviews
-                            </a>
-                        </div>
-
-                        @if (isAdmin || isOwner)
-                        {
-                            <div class="mt-4 p-3 bg-light rounded-3 border">
-                                <p class="small fw-bold text-muted mb-2">Owner/Admin Actions</p>
-                                <div class="d-flex gap-2">
-                                    @if (isOwner)
-                                    {
-                                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning btn-sm px-3 shadow-sm">
-                                            <i class="bi bi-pencil-square me-1"></i> Edit Details
-                                        </a>
-                                    }
-                                    <form asp-action="Delete" asp-route-id="@Model.Id" method="post"
-                                          onsubmit="return confirm('Are you sure you want to delete this car?')">
-                                        @Html.AntiForgeryToken()
-                                        <button type="submit" class="btn btn-danger btn-sm px-3 shadow-sm">
-                                            <i class="bi bi-trash me-1"></i> Delete
-                                        </button>
-                                    </form>
-                                </div>
-                            </div>
-                        }
-                    </div>
+                    @if (Model.Owner != null)
+                    {
+                        <a asp-controller="Account" asp-action="UserProfile" asp-route-id="@Model.OwnerId" class="pc-icon-btn" aria-label="View host profile"><i class="bi bi-arrow-up-right"></i></a>
+                    }
                 </div>
             </div>
+
+            @if (isAdmin || isOwner)
+            {
+                <div class="pc-panel p-3 mt-3 d-flex flex-wrap align-items-center gap-2" data-reveal>
+                    <span class="small fw-bold text-muted me-auto"><i class="bi bi-tools me-1"></i>@(isOwner ? "Owner" : "Admin") actions</span>
+                    @if (isOwner)
+                    {
+                        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-warning btn-sm"><i class="bi bi-pencil-square me-1"></i>Edit</a>
+                    }
+                    <form asp-action="Delete" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Are you sure you want to delete this car?')">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-outline-danger btn-sm"><i class="bi bi-trash me-1"></i>Delete</button>
+                    </form>
+                </div>
+            }
         </div>
     </div>
 </div>

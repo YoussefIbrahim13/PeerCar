@@ -1,113 +1,173 @@
-﻿@using Microsoft.AspNetCore.Identity
-@using Peer_Car.Application.ViewModels
-@using Peer_Car.Domain.Entities
+﻿@using Peer_Car.Application.ViewModels
 @model IEnumerable<CarViewModel>
 
-@inject UserManager<User> UserManager
-
 @{
-    ViewData["Title"] = "Available Cars";
+    ViewData["Title"] = "Explore cars";
     bool isAdmin = User.IsInRole("Admin");
+    bool signedIn = User.Identity?.IsAuthenticated == true;
+    var brands = ViewBag.Brands as IEnumerable<string> ?? Enumerable.Empty<string>();
+    string? selectedBrand = ViewBag.SelectedBrand as string;
+    string? selectedPrice = ViewBag.SelectedPriceRange as string;
+    bool hasFilters = !string.IsNullOrEmpty(selectedBrand) || !string.IsNullOrEmpty(selectedPrice);
+    var priceOptions = new List<(string val, string label)>
+    {
+        ("0-2000", "Under 2,000 SAR"),
+        ("2000-4000", "2,000 – 4,000 SAR"),
+        ("4000-6000", "4,000 – 6,000 SAR"),
+        ("6000+", "6,000+ SAR")
+    };
 }
 
-<div class="hero-section position-relative mb-5 bg-dark text-white py-5 shadow-sm" style="background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('/images/hero-bg.jpg') center/cover;">
-    <div class="container position-relative py-4">
-        <div class="row">
-            <div class="col-lg-8 mx-auto text-center">
-                <h1 class="display-3 fw-bold mb-3 animate__animated animate__fadeInDown">Available Cars</h1>
-                <p class="lead fs-4 mb-4 animate__animated animate__fadeInUp">Find the perfect vehicle for your next journey</p>
-                
-                <div class="d-flex justify-content-center gap-3 animate__animated animate__fadeInUp">
-@if (User.Identity?.IsAuthenticated == true && !isAdmin)
-    {
-        <a asp-action="Submit" class="btn btn-success btn-lg px-4 shadow">
-            <i class="bi bi-car-front me-2"></i>Submit Your Car
-        </a>
-    }
-    else if (User.Identity?.IsAuthenticated != true)
-    {
-        <a asp-controller="Account" asp-action="Register" class="btn btn-lg btn-outline-light px-5 py-3 rounded-pill fw-bold">
-            Join Now
-        </a>
-    }
-</div>
-                </div>
+<section class="hero-section mb-4">
+    <div class="container">
+        <div class="row align-items-end g-4">
+            <div class="col-lg-7">
+                <span class="pc-pill animate__animated animate__fadeInDown"><i class="bi bi-compass"></i> Explore</span>
+                <h1 class="mt-3 mb-2 animate__animated animate__fadeInUp">Find your next ride</h1>
+                <p class="lead mb-0 animate__animated animate__fadeInUp">@Model.Count() @(Model.Count() == 1 ? "car" : "cars") ready to book from verified local owners.</p>
+            </div>
+            <div class="col-lg-5 text-lg-end animate__animated animate__fadeInUp">
+                @if (signedIn && !isAdmin)
+                {
+                    <a asp-action="Submit" class="btn btn-glass btn-lg rounded-pill px-4"><i class="bi bi-plus-lg me-1"></i> List your car</a>
+                }
+                else if (!signedIn)
+                {
+                    <a asp-controller="Account" asp-action="Register" class="btn btn-glass btn-lg rounded-pill px-4">Join now <i class="bi bi-arrow-right"></i></a>
+                }
             </div>
         </div>
     </div>
-</div>
+</section>
 
-<div class="container mb-5">
-    <div class="card border-0 shadow-sm rounded-4">
-        <div class="card-body p-4">
-            <h5 class="fw-bold mb-3"><i class="bi bi-filter-right me-2"></i>Filter Options</h5>
-            <form method="get" class="row g-3">
-                <div class="col-md-4">
-                    <label class="form-label small fw-bold">Brand</label>
-                    <select class="form-select border-0 bg-light" name="brand">
-                        <option value="">All Brands</option>
-                        @if (ViewBag.Brands != null)
-                        {
-                            foreach (var b in (List<string>)ViewBag.Brands)
-                            {
-                                <option value="@b" selected="@(ViewBag.SelectedBrand == b)">@b</option>
-                            }
-                        }
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label small fw-bold">Price Range</label>
-                    <select class="form-select border-0 bg-light" name="priceRange">
-                        <option value="">Any Price</option>
-                        @{
-                            var priceOptions = new List<(string val, string label)>{
-                                    ("0-2000", "Under 2000 SAR"),
-                                  ("2000-4000", "2000 - 4000 SAR"),
-                                       ("4000-6000", "4000 - 6000 SAR"),
-                                               ("6000+", "Above 6000 SAR")
-                            };
-                            foreach (var opt in priceOptions)
-                            {
-                                <option value="@opt.val" selected="@(ViewBag.SelectedPriceRange == opt.val)">@opt.label</option>
-                            }
-                        }
-                    </select>
-                </div>
-                <div class="col-md-4 d-flex align-items-end">
-                    <button type="submit" class="btn btn-primary w-100 py-2 shadow-sm">
-                        <i class="bi bi-search me-2"></i>Apply Filters
-                    </button>
-                </div>
-            </form>
+<form method="get" class="pc-toolbar mb-4" id="carFilters" data-no-loading>
+    <div class="input-group flex-grow-1" style="min-width: 220px; max-width: 360px;">
+        <span class="input-group-text border-0"><i class="bi bi-search"></i></span>
+        <input type="search" class="form-control border-0" id="carSearch" placeholder="Search model, city, year…" aria-label="Search cars" autocomplete="off" />
+    </div>
+    <select class="form-select" name="brand" style="width:auto; min-width: 150px;" aria-label="Brand" data-autosubmit>
+        <option value="">All brands</option>
+        @foreach (var b in brands)
+        {
+            <option value="@b" selected="@(string.Equals(selectedBrand, b, StringComparison.OrdinalIgnoreCase))">@b</option>
+        }
+    </select>
+    <select class="form-select" name="priceRange" style="width:auto; min-width: 160px;" aria-label="Price range" data-autosubmit>
+        <option value="">Any price</option>
+        @foreach (var opt in priceOptions)
+        {
+            <option value="@opt.val" selected="@(selectedPrice == opt.val)">@opt.label</option>
+        }
+    </select>
+    <noscript><button type="submit" class="btn btn-primary">Apply</button></noscript>
+
+    <div class="ms-auto d-flex align-items-center gap-2">
+        <select class="form-select form-select-sm" id="carSort" style="width:auto;" aria-label="Sort by">
+            <option value="">Sort: Featured</option>
+            <option value="price-asc">Price: low to high</option>
+            <option value="price-desc">Price: high to low</option>
+            <option value="year-desc">Newest model</option>
+            <option value="rating-desc">Top rated</option>
+        </select>
+        <div class="pc-seg" role="group" aria-label="Layout">
+            <button type="button" class="active" data-view="grid" aria-label="Grid view"><i class="bi bi-grid-3x3-gap"></i></button>
+            <button type="button" data-view="list" aria-label="List view"><i class="bi bi-list-ul"></i></button>
         </div>
     </div>
-</div>
+</form>
 
-<div class="container mb-5">
-    @if (!Model.Any())
-    {
-        <div class="text-center py-5">
-            <i class="bi bi-search text-muted" style="font-size: 4rem;"></i>
-            <h3 class="mt-3 text-muted">No cars found matching your criteria.</h3>
-            <a asp-action="Index" class="btn btn-link text-primary">Clear all filters</a>
-        </div>
-    }
-    else
-    {
-        <div class="row g-4">
-            @foreach (var item in Model)
-            {
-                @* استخدمنا الـ Partial View هنا لتقليل تكرار الكود *@
-                <partial name="_CarCard" model="item" />
-            }
-        </div>
-    }
-</div>
+@if (hasFilters)
+{
+    <div class="d-flex flex-wrap align-items-center gap-2 mb-4">
+        <span class="small text-muted fw-semibold me-1">Active filters:</span>
+        @if (!string.IsNullOrEmpty(selectedBrand))
+        {
+            <a class="pc-chip text-decoration-none" asp-action="Index" asp-route-priceRange="@selectedPrice">@selectedBrand <i class="bi bi-x"></i></a>
+        }
+        @if (!string.IsNullOrEmpty(selectedPrice))
+        {
+            <a class="pc-chip text-decoration-none" asp-action="Index" asp-route-brand="@selectedBrand">@(priceOptions.FirstOrDefault(p => p.val == selectedPrice).label ?? selectedPrice) <i class="bi bi-x"></i></a>
+        }
+        <a asp-action="Index" class="small fw-semibold ms-1">Clear all</a>
+    </div>
+}
+
+@if (!Model.Any())
+{
+    <div class="pc-empty" data-reveal>
+        <span class="pc-icon-tile"><i class="bi bi-search"></i></span>
+        <h3 class="h4">No cars match those filters</h3>
+        <p class="text-muted">Try a different brand or widen your budget.</p>
+        <a asp-action="Index" class="btn btn-primary rounded-pill px-4">Clear filters</a>
+    </div>
+}
+else
+{
+    <div class="row g-4 pc-grid-list" id="carGrid" data-reveal-stagger="0.06">
+        @foreach (var item in Model)
+        {
+            <partial name="_CarCard" model="item" />
+        }
+    </div>
+    <div class="pc-empty mt-2 d-none" id="noLiveResults">
+        <span class="pc-icon-tile"><i class="bi bi-emoji-frown"></i></span>
+        <h3 class="h5">Nothing matches “<span id="noLiveTerm"></span>”</h3>
+        <p class="text-muted mb-0">Try another keyword.</p>
+    </div>
+}
 
 @section Scripts {
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log("PeerCar Index loaded successfully.");
-        });
+        (function () {
+            const form = document.getElementById('carFilters');
+            const grid = document.getElementById('carGrid');
+            form.querySelectorAll('[data-autosubmit]').forEach(s => s.addEventListener('change', () => {
+                document.body.classList.add('pc-leaving');
+                form.requestSubmit ? form.requestSubmit() : form.submit();
+            }));
+            // The live search box filters client-side; Enter should not reload the page.
+            document.getElementById('carSearch').addEventListener('keydown', e => { if (e.key === 'Enter') e.preventDefault(); });
+            if (!grid) return;
+
+            const cols = Array.from(grid.children);
+            const original = cols.slice();
+            const search = document.getElementById('carSearch');
+            const empty = document.getElementById('noLiveResults');
+
+            search.addEventListener('input', () => {
+                const q = search.value.trim().toLowerCase();
+                let shown = 0;
+                cols.forEach(c => {
+                    const hit = !q || c.dataset.search.includes(q);
+                    c.classList.toggle('is-hidden', !hit);
+                    if (hit) { shown++; c.classList.add('is-visible'); }
+                });
+                empty.classList.toggle('d-none', shown > 0);
+                document.getElementById('noLiveTerm').textContent = search.value.trim();
+            });
+
+            document.getElementById('carSort').addEventListener('change', e => {
+                const [key, dir] = (e.target.value || '').split('-');
+                const list = key ? cols.slice().sort((a, b) => (parseFloat(a.dataset[key]) - parseFloat(b.dataset[key])) * (dir === 'asc' ? 1 : -1)) : original;
+                // FLIP animation for a smooth re-order
+                const first = new Map(list.map(el => [el, el.getBoundingClientRect()]));
+                list.forEach(el => grid.appendChild(el));
+                list.forEach(el => {
+                    const a = first.get(el), b = el.getBoundingClientRect();
+                    const dx = a.left - b.left, dy = a.top - b.top;
+                    if (dx || dy) el.animate([{ transform: `translate(${dx}px, ${dy}px)` }, { transform: 'none' }], { duration: 500, easing: 'cubic-bezier(.22,1,.36,1)' });
+                });
+            });
+
+            const views = document.querySelectorAll('[data-view]');
+            const setView = v => {
+                grid.classList.toggle('is-list', v === 'list');
+                views.forEach(b => b.classList.toggle('active', b.dataset.view === v));
+                try { localStorage.setItem('pc-cars-view', v); } catch { }
+            };
+            views.forEach(b => b.addEventListener('click', () => setView(b.dataset.view)));
+            let saved = null; try { saved = localStorage.getItem('pc-cars-view'); } catch { }
+            if (saved) setView(saved);
+        })();
     </script>
 }

@@ -1,0 +1,29 @@
+@* Left-hand brand panel used by the sign-in / sign-up screens *@
+@{
+    string heading = ViewData["AuthHeading"] as string ?? "Your next drive starts here.";
+    string sub = ViewData["AuthSub"] as string ?? "Join a community of verified owners and renters.";
+}
+<aside class="pc-auth-art">
+    <span class="pc-blob b1" aria-hidden="true"></span>
+    <span class="pc-blob b2" aria-hidden="true"></span>
+
+    <a class="pc-brand" asp-controller="Home" asp-action="Index" style="color:#fff !important">
+        <span class="pc-brand-mark"><i class="bi bi-car-front-fill"></i></span>
+        <span>Peer<b style="background:linear-gradient(90deg,#a5b4fc,#67e8f9);-webkit-background-clip:text;background-clip:text">Car</b></span>
+    </a>
+
+    <div>
+        <h2 class="mb-3">@heading</h2>
+        <p class="mb-4">@sub</p>
+        <ul class="pc-auth-list">
+            <li><span class="ic"><i class="bi bi-shield-check"></i></span><span>Every owner and renter is ID-verified before their first trip.</span></li>
+            <li><span class="ic"><i class="bi bi-lightning-charge"></i></span><span>Instant pricing and real-time booking status updates.</span></li>
+            <li><span class="ic"><i class="bi bi-stars"></i></span><span>An AI assistant that helps you pick the right car.</span></li>
+        </ul>
+    </div>
+
+    <div class="pc-float-chip position-relative" style="animation:none; width:max-content;">
+        <span class="ic" style="background:linear-gradient(135deg,#f59e0b,#ec4899)"><i class="bi bi-star-fill"></i></span>
+        <div>“Booked a car in 3 minutes.”<small>— A happy PeerCar renter</small></div>
+    </div>
+</aside>

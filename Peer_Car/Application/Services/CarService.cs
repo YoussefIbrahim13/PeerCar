@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Peer_Car.Application.Interfaces;
 using Peer_Car.Application.ViewModels;
 using Peer_Car.Domain.Entities;
@@ -24,11 +24,15 @@ namespace Peer_Car.Application.Services
         {
             var query = _context.Cars
                 .Include(c => c.Owner)
+                .Include(c => c.Reviews)
                 .Where(c => c.SubmissionStatus == CarSubmissionStatus.Approved)
                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(brand))
-                query = query.Where(c => c.Brand == brand);
+            {
+                var term = brand.Trim();
+                query = query.Where(c => c.Brand.Contains(term));
+            }
             if (!string.IsNullOrEmpty(priceRange))
             {
                 if (priceRange.EndsWith("+"))
@@ -54,7 +58,7 @@ namespace Peer_Car.Application.Services
         }
 
         public async Task<Car?> GetCarByIdAsync(Guid id) =>
-            await _context.Cars.Include(c => c.Owner).FirstOrDefaultAsync(c => c.Id == id);
+            await _context.Cars.Include(c => c.Owner).Include(c => c.Reviews).FirstOrDefaultAsync(c => c.Id == id);
 
         public async Task<IEnumerable<string>> GetDistinctBrandsAsync() =>
             await _context.Cars.Where(c => c.SubmissionStatus == CarSubmissionStatus.Approved)
@@ -288,7 +292,8 @@ namespace Peer_Car.Application.Services
             var cars = await _context.Cars
                 .Include(c => c.Owner)
                 .Include(c => c.Reviews)
-                .OrderByDescending(c => c.CreatedAt) 
+                .Where(c => c.SubmissionStatus == CarSubmissionStatus.Approved)
+                .OrderByDescending(c => c.CreatedAt)
                 .Take(count)
                 .ToListAsync();
 
@@ -300,7 +305,7 @@ namespace Peer_Car.Application.Services
                 Year = c.Year,
                 PricePerDay = c.PricePerDay,
                 Location = c.Location ?? "Not Specified",
-                ImagePath = c.ImagePath ?? "/images/cars/default-car.png",
+                ImagePath = c.ImagePath,
 
                 OwnerId = c.OwnerId,
                 OwnerName = c.Owner?.FullName ?? "Unknown Owner",

@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Peer_Car.Domain.Entities;
 using Peer_Car.Infrastructure.Seeders;
 
@@ -19,7 +19,7 @@ namespace Peer_Car.Infrastructure.Data
             await UserSeeder.SeedAsync(userManager);
 
             // 3. تشغيل عربيات (محتاجين ID الأدمن اللي لسه مكرينه)
-            var admin = await userManager.FindByEmailAsync("admin@peercar.com");
+            var admin = await userManager.FindByEmailAsync(UserSeeder.AdminEmail);
             if (admin != null)
             {
                 await CarSeeder.SeedAsync(context, admin.Id);

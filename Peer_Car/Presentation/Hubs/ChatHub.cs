@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.SignalR;
+using Microsoft.AspNetCore.SignalR;
 using Peer_Car.Application.Interfaces;
 using System.Text;
 using System.Text.Json;
@@ -62,6 +62,8 @@ namespace Peer_Car.Presentation.Hubs
                         // نبعت "الحتة" اللي قريناها فوراً للمتصفح (Streaming)
                         await Clients.Caller.SendAsync("ReceiveChunk", chunk);
                     }
+
+                    await Clients.Caller.SendAsync("EndAssistantMessage");
                 }
                 else
                 {

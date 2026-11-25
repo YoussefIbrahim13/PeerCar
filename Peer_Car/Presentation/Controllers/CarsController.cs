@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Peer_Car.Application.Interfaces;
 using Peer_Car.Application.ViewModels;
@@ -36,7 +36,12 @@ namespace Peer_Car.Presentation.Controllers
                 PricePerDay = c.PricePerDay,
                 Location = c.Location,
                 ImagePath = c.ImagePath,
-                OwnerName = c.Owner?.FullName ?? "Unknown"
+                OwnerId = c.OwnerId,
+                OwnerName = c.Owner?.FullName ?? "Unknown",
+                AvailabilityStatus = c.AvailabilityStatus,
+                SubmissionStatus = c.SubmissionStatus,
+                AverageRating = c.Reviews.Any() ? Math.Round(c.Reviews.Average(r => r.Rating), 1) : 0,
+                TotalReviews = c.Reviews.Count
             }).ToList();
 
             ViewBag.Brands = await _carService.GetDistinctBrandsAsync();

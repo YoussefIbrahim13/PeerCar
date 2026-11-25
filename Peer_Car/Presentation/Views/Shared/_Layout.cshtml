@@ -1,137 +1,171 @@
-﻿@using Microsoft.AspNetCore.Identity
+@using Microsoft.AspNetCore.Identity
 @using Peer_Car.Domain.Entities
 @inject UserManager<User> UserManager
 
+@{
+    bool isAuthenticated = User.Identity?.IsAuthenticated == true;
+    bool isAdmin = User.IsInRole("Admin");
+    bool fullBleed = ViewData["FullBleed"] as bool? == true;
+    bool hideFooter = ViewData["HideFooter"] != null;
+
+    User? currentUser = isAuthenticated ? await UserManager.GetUserAsync(User) : null;
+    string displayName = currentUser?.FirstName ?? User.Identity?.Name ?? "User";
+    string initials = string.Concat(new[] { currentUser?.FirstName, currentUser?.LastName }
+        .Where(s => !string.IsNullOrWhiteSpace(s))
+        .Select(s => char.ToUpperInvariant(s!.Trim()[0])));
+    if (string.IsNullOrEmpty(initials)) { initials = displayName.Length > 0 ? displayName[..1].ToUpperInvariant() : "U"; }
+    string? profileImg = string.IsNullOrEmpty(currentUser?.ProfileImageUrl) || currentUser!.ProfileImageUrl == "default.png"
+        ? null
+        : "/images/profiles/" + currentUser.ProfileImageUrl;
+}
+
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-bs-theme="light">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - PeerCar</title>
+    <meta name="theme-color" content="#f5f6fb" />
+    <meta name="description" content="PeerCar — rent cars from people near you, or earn by sharing yours." />
+    <title>@(ViewData["Title"] is string t && t.Length > 0 ? $"{t} · PeerCar" : "PeerCar")</title>
+
+    @* Apply the saved / system theme before first paint to avoid a flash *@
+    <script>
+        (function () {
+            var d = document.documentElement; d.classList.add('js');
+            var t = null; try { t = localStorage.getItem('pc-theme'); } catch (e) { }
+            if (!t) t = window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            d.setAttribute('data-bs-theme', t);
+        })();
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cairo:wght@400;600;700;800&display=swap" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/Peer_Car.Presentation.styles.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-lg navbar-light bg-white border-bottom shadow-sm py-3">
+<body class="@(fullBleed ? "pc-has-hero" : null)">
+    <div class="pc-progress" aria-hidden="true"></div>
+
+    <header class="pc-header">
+        <nav class="navbar navbar-expand-lg pc-navbar" aria-label="Main">
             <div class="container">
-                <a class="navbar-brand fw-bold text-primary" asp-area="" asp-controller="Home" asp-action="Index">
-                    <i class="bi bi-car-front me-2"></i>PeerCar
+                <a class="pc-brand" asp-area="" asp-controller="Home" asp-action="Index" aria-label="PeerCar home">
+                    <span class="pc-brand-mark"><i class="bi bi-car-front-fill"></i></span>
+                    <span>Peer<b>Car</b></span>
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-lg-inline-flex justify-content-between">
-                    <ul class="navbar-nav">
-                        <li class="nav-item mx-2">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">
-                                <i class="bi bi-house-door me-1"></i> Home
-                            </a>
+
+                <div class="d-flex align-items-center gap-2 d-lg-none">
+                    <button type="button" class="pc-icon-btn pc-theme-toggle" data-theme-toggle aria-label="Toggle dark mode">
+                        <i class="bi bi-moon-stars"></i><i class="bi bi-sun"></i>
+                    </button>
+                    <button class="pc-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#pcNav" aria-controls="pcNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span></span>
+                    </button>
+                </div>
+
+                <div class="collapse navbar-collapse" id="pcNav">
+                    <ul class="navbar-nav mx-lg-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index"><i class="bi bi-house-door"></i> Home</a>
                         </li>
-                        <li class="nav-item mx-2">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Cars" asp-action="Index">
-                                <i class="bi bi-car-front-fill me-1"></i> Cars
-                            </a>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Cars" asp-action="Index"><i class="bi bi-grid-1x2"></i> Explore</a>
                         </li>
 
-                        @if (User.Identity?.IsAuthenticated == true)
+                        @if (isAuthenticated)
                         {
-                            <li class="nav-item mx-2">
-                                <a class="nav-link text-primary fw-bold" asp-area="" asp-controller="Chatbot" asp-action="Index">
-                                    <i class="bi bi-robot me-1"></i> AI Assistant
+                            <li class="nav-item">
+                                <a class="nav-link nav-link-ai" asp-area="" asp-controller="Chatbot" asp-action="Index">
+                                    <i class="bi bi-stars"></i> AI Assistant <span class="pc-ai-dot" aria-hidden="true"></span>
                                 </a>
                             </li>
                         }
 
-                        @if (User.Identity?.IsAuthenticated == true && !User.IsInRole("Admin"))
+                        @if (isAuthenticated && !isAdmin)
                         {
-                            <li class="nav-item mx-2">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Cars" asp-action="Submit">
-                                    <i class="bi bi-plus-circle me-1"></i> Submit Car
-                                </a>
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Bookings" asp-action="MyBookings"><i class="bi bi-calendar-check"></i> My Trips</a>
                             </li>
-                            <li class="nav-item mx-2">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Cars" asp-action="MyCars">
-                                    <i class="bi bi-car-front me-1"></i> My Cars
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-key"></i> Hosting
                                 </a>
-                            </li>
-                            <li class="nav-item mx-2">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="Bookings" asp-action="MyCarsBookings">
-                                    <i class="bi bi-calendar-range me-1"></i> Cars Bookings
-                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><h6 class="dropdown-header">Share your car</h6></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Cars" asp-action="Submit"><i class="bi bi-plus-circle me-2"></i>Submit a car</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Cars" asp-action="MyCars"><i class="bi bi-car-front me-2"></i>My cars</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Bookings" asp-action="MyCarsBookings"><i class="bi bi-calendar-range me-2"></i>Bookings on my cars</a></li>
+                                </ul>
                             </li>
                         }
 
-                        <li class="nav-item mx-2">
-                            @if (User.IsInRole("Admin"))
-                            {
-                                <a asp-area="" asp-controller="Admin" asp-action="UserReservations" class="nav-link">
-                                    <i class="bi bi-people me-1"></i> User Reservations
-                                </a>
-                            }
-                            else if (User.Identity?.IsAuthenticated == true)
-                            {
-                                <a asp-area="" asp-controller="Bookings" asp-action="MyBookings" class="nav-link">
-                                    <i class="bi bi-calendar-check me-1"></i> My Bookings
-                                </a>
-                            }
-                        </li>
-
-                        @if (User.IsInRole("Admin"))
+                        @if (isAdmin)
                         {
-                            <li class="nav-item dropdown mx-2">
-                                <a class="nav-link dropdown-toggle text-dark" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="bi bi-gear-fill me-1"></i> Admin
+                            <li class="nav-item">
+                                <a class="nav-link" asp-area="" asp-controller="Admin" asp-action="UserReservations"><i class="bi bi-journal-text"></i> Reservations</a>
+                            </li>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="bi bi-grid"></i> Admin
                                 </a>
-                                <ul class="dropdown-menu shadow-sm border-0" aria-labelledby="adminDropdown">
-                                    <li><a class="dropdown-item py-2" asp-controller="Admin" asp-action="Dashboard"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
-                                    <li><a class="dropdown-item py-2" asp-controller="Admin" asp-action="Users"><i class="bi bi-people me-2"></i>Users</a></li>
-                                    <li><a class="dropdown-item py-2" asp-controller="Admin" asp-action="Cars"><i class="bi bi-car-front me-2"></i>Cars</a></li>
-                                    <li><a class="dropdown-item py-2" asp-controller="Admin" asp-action="Bookings"><i class="bi bi-calendar2-check me-2"></i>Bookings</a></li>
-                                    <li><a class="dropdown-item py-2" asp-controller="Admin" asp-action="PendingVerifications"><i class="bi bi-shield-check me-2 text-success"></i>User Verifications</a></li>
-                                    <li><a class="dropdown-item py-2" asp-controller="Admin" asp-action="CarSubmissions"><i class="bi bi-file-earmark-check me-2"></i>Car Submissions</a></li>
-                                    <li><hr class="dropdown-divider"></li>
-                                    <li><a class="dropdown-item py-2" asp-controller="Admin" asp-action="Archive"><i class="bi bi-archive me-2 text-danger"></i>System Archive</a></li>
+                                <ul class="dropdown-menu" aria-labelledby="adminDropdown">
+                                    <li><h6 class="dropdown-header">Control center</h6></li>
+                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="Dashboard"><i class="bi bi-speedometer2 me-2"></i>Dashboard</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="Users"><i class="bi bi-people me-2"></i>Users</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="Cars"><i class="bi bi-car-front me-2"></i>Cars</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="Bookings"><i class="bi bi-calendar2-check me-2"></i>Bookings</a></li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li><h6 class="dropdown-header">Review queues</h6></li>
+                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="PendingVerifications"><i class="bi bi-shield-check me-2"></i>User verifications</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Admin" asp-action="CarSubmissions"><i class="bi bi-file-earmark-check me-2"></i>Car submissions</a></li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    <li><a class="dropdown-item text-danger" asp-controller="Admin" asp-action="Archive"><i class="bi bi-archive me-2"></i>System archive</a></li>
                                 </ul>
                             </li>
                         }
                     </ul>
 
-                    <div class="d-flex align-items-center">
-                        @if (User.Identity?.IsAuthenticated == true)
+                    <div class="d-flex align-items-center gap-2 pc-nav-actions">
+                        <button type="button" class="pc-icon-btn pc-theme-toggle d-none d-lg-inline-grid" data-theme-toggle aria-label="Toggle dark mode" title="Toggle theme">
+                            <i class="bi bi-moon-stars"></i><i class="bi bi-sun"></i>
+                        </button>
+
+                        @if (isAuthenticated)
                         {
-                            var userObj = await UserManager.GetUserAsync(User);
-                            string displayName = userObj?.FirstName ?? User.Identity.Name ?? "User";
-
-                            string profileImg = string.IsNullOrEmpty(userObj?.ProfileImageUrl) || userObj.ProfileImageUrl == "default.png"
-                                                ? "/images/profiles/default.png"
-                                                : "/images/profiles/" + userObj.ProfileImageUrl;
-
                             <div class="dropdown">
-                                <button class="btn btn-outline-primary dropdown-toggle d-flex align-items-center rounded-pill px-3" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <img src="@profileImg"
-                                         class="rounded-circle me-2"
-                                         style="width:30px; height:30px; object-fit:cover;"
-                                         alt="Profile"
-                                         onerror="this.onerror=null;this.src='/images/profiles/default.png';" />
-                                    @displayName
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-end shadow border-0" aria-labelledby="userDropdown">
-                                    @if (!User.IsInRole("Admin"))
+                                <button class="pc-user-btn dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                    @if (profileImg != null)
                                     {
-                                        <li><a class="dropdown-item" asp-controller="Bookings" asp-action="MyBookings"><i class="bi bi-calendar-check me-2"></i>My Bookings</a></li>
+                                        <img src="@profileImg" alt="" data-fallback="/images/profiles/default.png" />
                                     }
-                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="MyAccount"><i class="bi bi-person-lines-fill me-2"></i>My Account</a></li>
-                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="EditProfile"><i class="bi bi-pencil-square me-2"></i>Edit Profile</a></li>
-                                    <li><hr class="dropdown-divider"></li>
+                                    else
+                                    {
+                                        <span class="pc-avatar" aria-hidden="true">@initials</span>
+                                    }
+                                    <span>@displayName</span>
+                                    <i class="bi bi-chevron-down small text-muted"></i>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                    <li class="px-3 pt-2 pb-1">
+                                        <div class="fw-bold">@(currentUser?.FullName ?? displayName)</div>
+                                        <div class="small text-muted text-truncate" style="max-width: 220px;">@currentUser?.Email</div>
+                                    </li>
+                                    <li><hr class="dropdown-divider" /></li>
+                                    @if (!isAdmin)
+                                    {
+                                        <li><a class="dropdown-item" asp-controller="Bookings" asp-action="MyBookings"><i class="bi bi-calendar-check me-2"></i>My bookings</a></li>
+                                    }
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="MyAccount"><i class="bi bi-person-badge me-2"></i>My account</a></li>
+                                    <li><a class="dropdown-item" asp-controller="Account" asp-action="EditProfile"><i class="bi bi-sliders me-2"></i>Edit profile</a></li>
+                                    <li><hr class="dropdown-divider" /></li>
                                     <li>
-                                        <form asp-controller="Account" asp-action="Logout" method="post" class="px-3">
+                                        <form asp-controller="Account" asp-action="Logout" method="post" data-no-loading>
                                             @Html.AntiForgeryToken()
-                                            <button type="submit" class="btn btn-link text-danger p-0 text-decoration-none w-100 text-start">
-                                                <i class="bi bi-box-arrow-right me-2"></i>Logout
+                                            <button type="submit" class="dropdown-item text-danger">
+                                                <i class="bi bi-box-arrow-right me-2"></i>Sign out
                                             </button>
                                         </form>
                                     </li>
@@ -140,11 +174,9 @@
                         }
                         else
                         {
-                            <a asp-controller="Account" asp-action="Login" class="btn btn-outline-primary me-2 rounded-pill px-4">
-                                <i class="bi bi-box-arrow-in-right me-1"></i> Login
-                            </a>
-                            <a asp-controller="Account" asp-action="Register" class="btn btn-primary rounded-pill px-4 shadow-sm">
-                                <i class="bi bi-person-plus me-1"></i> Register
+                            <a asp-controller="Account" asp-action="Login" class="btn btn-light rounded-pill px-3">Sign in</a>
+                            <a asp-controller="Account" asp-action="Register" class="btn btn-primary rounded-pill px-3">
+                                Get started <i class="bi bi-arrow-right-short"></i>
                             </a>
                         }
                     </div>
@@ -153,47 +185,105 @@
         </nav>
     </header>
 
-    <div class="container mt-4">
-        <main role="main" class="pb-5">
-            @if (TempData["SuccessMessage"] != null)
+    @* Flash messages become toasts *@
+    @{
+        var flashes = new (string Key, string Kind, string Icon)[]
+        {
+            ("SuccessMessage", "success", "bi-check2-circle"),
+            ("ToastSuccess", "success", "bi-check2-circle"),
+            ("ErrorMessage", "error", "bi-exclamation-octagon"),
+            ("ToastError", "error", "bi-exclamation-octagon"),
+            ("InfoMessage", "info", "bi-info-circle")
+        };
+    }
+    <div class="pc-toasts" aria-live="polite">
+        @foreach (var f in flashes)
+        {
+            if (TempData[f.Key] is object msg && msg.ToString() is string text && text.Length > 0)
             {
-                <div class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm" role="alert">
-                    <i class="bi bi-check-circle-fill me-2"></i>@TempData["SuccessMessage"]
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <div class="pc-toast is-@f.Kind" role="@(f.Kind == "error" ? "alert" : "status")">
+                    <div class="pc-toast-icon"><i class="bi @f.Icon"></i></div>
+                    <div class="pc-toast-body">@text</div>
+                    <button type="button" class="pc-toast-close" aria-label="Close"><i class="bi bi-x-lg"></i></button>
+                    <span class="pc-toast-timer"></span>
                 </div>
             }
-            @if (TempData["ErrorMessage"] != null)
-            {
-                <div class="alert alert-danger alert-dismissible fade show rounded-3 shadow-sm" role="alert">
-                    <i class="bi bi-exclamation-triangle-fill me-2"></i>@TempData["ErrorMessage"]
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            }
-            @if (TempData["InfoMessage"] != null)
-            {
-                <div class="alert alert-info alert-dismissible fade show rounded-3 shadow-sm" role="alert">
-                    <i class="bi bi-info-circle-fill me-2"></i>@TempData["InfoMessage"]
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                </div>
-            }
-
-            @RenderBody()
-        </main>
+        }
     </div>
 
-    <footer class="footer text-muted border-top py-3 mt-auto bg-light">
-        <div class="container text-center">
-            &copy; @DateTime.Now.Year - <span class="fw-bold text-primary">PeerCar</span> - Your Trusted Peer-to-Peer Rental
-        </div>
-    </footer>
-    @* @if (ViewData["HideFooter"] == null)
+    @if (fullBleed)
     {
-        <footer class="footer text-muted border-top py-3 mt-auto bg-light">
-            <div class="container text-center">
-                &copy; @DateTime.Now.Year - <span class="fw-bold text-primary">PeerCar</span> - Your Trusted Peer-to-Peer Rental
+        <main role="main" class="pc-main pb-5">
+            @RenderBody()
+        </main>
+    }
+    else
+    {
+        <div class="container mt-3 mt-lg-4">
+            <main role="main" class="pc-main pb-5">
+                @RenderBody()
+            </main>
+        </div>
+    }
+
+    @if (!hideFooter)
+    {
+        <footer class="pc-footer">
+            <div class="container">
+                <div class="row g-4">
+                    <div class="col-lg-4">
+                        <a class="pc-brand mb-3" asp-controller="Home" asp-action="Index">
+                            <span class="pc-brand-mark"><i class="bi bi-car-front-fill"></i></span>
+                            <span>Peer<b>Car</b></span>
+                        </a>
+                        <p class="text-muted mt-3 mb-4" style="max-width: 34ch;">Rent the car you want from people near you — or earn from the one sitting in your driveway.</p>
+                        <div class="pc-social">
+                            <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+                            <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                            <a href="#" aria-label="X"><i class="bi bi-twitter-x"></i></a>
+                            <a href="#" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-6 col-lg-2 offset-lg-2">
+                        <h6>Explore</h6>
+                        <ul>
+                            <li><a asp-controller="Cars" asp-action="Index">Browse cars</a></li>
+                            <li><a asp-controller="Reviews" asp-action="Index">Reviews</a></li>
+                            @if (isAuthenticated)
+                            {
+                                <li><a asp-controller="Chatbot" asp-action="Index">AI Assistant</a></li>
+                            }
+                        </ul>
+                    </div>
+                    <div class="col-6 col-lg-2">
+                        <h6>Hosting</h6>
+                        <ul>
+                            <li><a asp-controller="Cars" asp-action="Submit">List your car</a></li>
+                            <li><a asp-controller="Cars" asp-action="MyCars">My cars</a></li>
+                            <li><a asp-controller="Bookings" asp-action="MyCarsBookings">Requests</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-6 col-lg-2">
+                        <h6>Company</h6>
+                        <ul>
+                            <li><a asp-controller="Home" asp-action="Privacy">Privacy</a></li>
+                            <li><a asp-controller="Account" asp-action="MyAccount">Account</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="pc-footer-bottom small">
+                    <span>&copy; @DateTime.Now.Year PeerCar. All rights reserved.</span>
+                    <span>Made for drivers, by drivers <i class="bi bi-heart-fill text-danger"></i></span>
+                </div>
             </div>
         </footer>
-    } *@
+    }
+
+    <button type="button" class="pc-to-top" aria-label="Back to top">
+        <svg viewBox="0 0 52 52" aria-hidden="true"><circle cx="26" cy="26" r="24"></circle></svg>
+        <i class="bi bi-arrow-up"></i>
+    </button>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

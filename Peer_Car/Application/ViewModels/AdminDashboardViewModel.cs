@@ -1,4 +1,4 @@
-﻿using Peer_Car.Domain.Entities;
+using Peer_Car.Domain.Entities;
 
 namespace Peer_Car.Application.ViewModels
 {
@@ -9,6 +9,8 @@ namespace Peer_Car.Application.ViewModels
         public int TotalBookings { get; set; }
         public int PendingBookings { get; set; }
         public int PendingSubmissions { get; set; }
+        public int AvailableCars { get; set; }
+        public int NewUsersToday { get; set; }
         public List<Booking> RecentBookings { get; set; } = new();
     }
 }

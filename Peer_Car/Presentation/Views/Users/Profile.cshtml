@@ -10,7 +10,7 @@
     var verified = Model.EmailConfirmed;
 }
 
-<div class="profile-header position-relative mb-5" style="background: linear-gradient(135deg, #0d6efd 0%, #212529 100%); min-height: 250px;">
+<div class="profile-header position-relative mb-5" style="background: var(--pc-grad-ink); min-height: 250px;">
     <div class="container position-relative z-2 py-5 text-center">
         <div class="avatar-wrapper position-relative d-inline-block mb-3">
             <img src="@(string.IsNullOrEmpty(Model.ProfileImageUrl) ? "/images/profiles/default.png" : Model.ProfileImageUrl)" 

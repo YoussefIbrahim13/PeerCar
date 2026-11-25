@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Peer_Car.Domain.Entities;
 using Peer_Car.Domain.Enums;
 
@@ -6,9 +6,11 @@ namespace Peer_Car.Infrastructure.Seeders
 {
     public static class UserSeeder
     {
+        public const string AdminEmail = "admin@gmail.com";
+
         public static async Task SeedAsync(UserManager<User> userManager)
         {
-            var adminEmail = "admin@gmail.com";
+            var adminEmail = AdminEmail;
             if (await userManager.FindByEmailAsync(adminEmail) == null)
             {
                 var admin = new User

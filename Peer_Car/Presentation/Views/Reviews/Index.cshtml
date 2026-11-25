@@ -1,4 +1,4 @@
-﻿@using Peer_Car.Domain.Entities
+@using Peer_Car.Domain.Entities
 @model IEnumerable<Review>
 
 @{
@@ -95,10 +95,8 @@
 </div>
 
 <style>
-    .rounded-4 { border-radius: 1.25rem !important; }
     .review-card { transition: all 0.3s ease; }
     .review-card:hover { transform: translateY(-5px); box-shadow: 0 12px 24px rgba(0,0,0,0.08) !important; }
-    .hover-primary:hover { color: #0d6efd !important; }
-    .bg-primary-subtle { background-color: #e7f1ff; }
+    .hover-primary:hover { color: var(--pc-primary) !important; }
     .x-small { font-size: 0.75rem; }
 </style>

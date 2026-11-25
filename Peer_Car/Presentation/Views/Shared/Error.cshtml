@@ -1,26 +1,24 @@
 ﻿@using Peer_Car.Application.ViewModels
 @model ErrorViewModel
 @{
-    ViewData["Title"] = "Error";
+    ViewData["Title"] = "Something went wrong";
 }
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
-
-@if (Model.ShowRequestId)
-{
-    <p>
-        <strong>Request ID:</strong> <code>@Model.RequestId</code>
-    </p>
-}
-
-<h3>Development Mode</h3>
-<p>
-    Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
-</p>
-<p>
-    <strong>The Development environment shouldn't be enabled for deployed applications.</strong>
-    It can result in displaying sensitive information from exceptions to end users.
-    For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
-    and restarting the app.
-</p>
+<div class="d-flex align-items-center justify-content-center py-5" style="min-height: 60vh;">
+    <div class="text-center animate__animated animate__zoomIn" style="max-width: 520px;">
+        <div class="pc-chat-orb mx-auto mb-4" style="width:88px;height:88px;border-radius:28px;display:grid;place-items:center;font-size:2.2rem;color:#fff;background:var(--pc-grad);box-shadow:var(--pc-glow)">
+            <i class="bi bi-cone-striped"></i>
+        </div>
+        <span class="eyebrow">Unexpected detour</span>
+        <h1 class="mt-2 mb-3">Something went wrong</h1>
+        <p class="text-muted mb-4">We hit a bump while processing your request. Please try again — if it keeps happening, let us know.</p>
+        @if (Model?.ShowRequestId == true)
+        {
+            <p class="small text-muted">Reference: <code>@Model.RequestId</code></p>
+        }
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+            <a href="javascript:history.back()" class="btn btn-light rounded-pill px-4"><i class="bi bi-arrow-left me-1"></i> Go back</a>
+            <a asp-controller="Home" asp-action="Index" class="btn btn-primary rounded-pill px-4">Home <i class="bi bi-house ms-1"></i></a>
+        </div>
+    </div>
+</div>
