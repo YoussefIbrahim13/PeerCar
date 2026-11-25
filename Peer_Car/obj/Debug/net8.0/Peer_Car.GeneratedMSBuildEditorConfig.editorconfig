@@ -1,280 +1,275 @@
 is_global = true
 build_property.TargetFramework = net8.0
-build_property.TargetFrameworkIdentifier = .NETCoreApp
-build_property.TargetFrameworkVersion = v8.0
 build_property.TargetPlatformMinVersion = 
 build_property.UsingMicrosoftNETSdkWeb = true
 build_property.ProjectTypeGuids = 
 build_property.InvariantGlobalization = 
 build_property.PlatformNeutralAssembly = 
 build_property.EnforceExtendedAnalyzerRules = 
-build_property.EntryPointFilePath = 
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Peer_Car
 build_property.RootNamespace = Peer_Car
-build_property.ProjectDir = Y:\projects\Peer_Car\Peer_Car\
+build_property.ProjectDir = /home/user/PeerCar/Peer_Car/
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = true
-build_property.MSBuildProjectDirectory = Y:\projects\Peer_Car\Peer_Car
+build_property.MSBuildProjectDirectory = /home/user/PeerCar/Peer_Car
 build_property._RazorSourceGeneratorDebug = 
-build_property.EffectiveAnalysisLevelStyle = 8.0
-build_property.EnableCodeStyleSeverity = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Account/ConfirmEmail.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEFjY291bnRcQ29uZmlybUVtYWlsLmNzaHRtbA==
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Account/ConfirmEmail.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0FjY291bnQvQ29uZmlybUVtYWlsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Account/EditProfile.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEFjY291bnRcRWRpdFByb2ZpbGUuY3NodG1s
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Account/EditProfile.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0FjY291bnQvRWRpdFByb2ZpbGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Account/EmailChangeRequested.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEFjY291bnRcRW1haWxDaGFuZ2VSZXF1ZXN0ZWQuY3NodG1s
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Account/EmailChangeRequested.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0FjY291bnQvRW1haWxDaGFuZ2VSZXF1ZXN0ZWQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Account/ForgotPassword.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEFjY291bnRcRm9yZ290UGFzc3dvcmQuY3NodG1s
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Account/ForgotPassword.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0FjY291bnQvRm9yZ290UGFzc3dvcmQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Account/ForgotPasswordConfirmation.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEFjY291bnRcRm9yZ290UGFzc3dvcmRDb25maXJtYXRpb24uY3NodG1s
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Account/ForgotPasswordConfirmation.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0FjY291bnQvRm9yZ290UGFzc3dvcmRDb25maXJtYXRpb24uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Account/Login.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEFjY291bnRcTG9naW4uY3NodG1s
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Account/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0FjY291bnQvTG9naW4uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Account/MyAccount.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEFjY291bnRcTXlBY2NvdW50LmNzaHRtbA==
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Account/MyAccount.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0FjY291bnQvTXlBY2NvdW50LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Account/Register.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEFjY291bnRcUmVnaXN0ZXIuY3NodG1s
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Account/Register.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0FjY291bnQvUmVnaXN0ZXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Account/RegistrationConfirmation.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEFjY291bnRcUmVnaXN0cmF0aW9uQ29uZmlybWF0aW9uLmNzaHRtbA==
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Account/RegistrationConfirmation.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0FjY291bnQvUmVnaXN0cmF0aW9uQ29uZmlybWF0aW9uLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Account/RequestDeleteAccount.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEFjY291bnRcUmVxdWVzdERlbGV0ZUFjY291bnQuY3NodG1s
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Account/RequestDeleteAccount.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0FjY291bnQvUmVxdWVzdERlbGV0ZUFjY291bnQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Account/ResendEmailConfirmation.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEFjY291bnRcUmVzZW5kRW1haWxDb25maXJtYXRpb24uY3NodG1s
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Account/ResendEmailConfirmation.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0FjY291bnQvUmVzZW5kRW1haWxDb25maXJtYXRpb24uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Account/ResetPassword.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEFjY291bnRcUmVzZXRQYXNzd29yZC5jc2h0bWw=
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Account/ResetPassword.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0FjY291bnQvUmVzZXRQYXNzd29yZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Admin/AddUser.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEFkbWluXEFkZFVzZXIuY3NodG1s
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Admin/AddUser.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0FkbWluL0FkZFVzZXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Admin/AddUserSuccess.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEFkbWluXEFkZFVzZXJTdWNjZXNzLmNzaHRtbA==
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Admin/AddUserSuccess.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0FkbWluL0FkZFVzZXJTdWNjZXNzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Admin/Archive.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEFkbWluXEFyY2hpdmUuY3NodG1s
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Admin/Archive.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0FkbWluL0FyY2hpdmUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Admin/BookingDetails.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEFkbWluXEJvb2tpbmdEZXRhaWxzLmNzaHRtbA==
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Admin/BookingDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0FkbWluL0Jvb2tpbmdEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Admin/Bookings.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEFkbWluXEJvb2tpbmdzLmNzaHRtbA==
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Admin/Bookings.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0FkbWluL0Jvb2tpbmdzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Admin/Cars.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEFkbWluXENhcnMuY3NodG1s
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Admin/Cars.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0FkbWluL0NhcnMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Admin/CarSubmissions.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEFkbWluXENhclN1Ym1pc3Npb25zLmNzaHRtbA==
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Admin/CarSubmissions.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0FkbWluL0NhclN1Ym1pc3Npb25zLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Admin/Dashboard.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEFkbWluXERhc2hib2FyZC5jc2h0bWw=
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Admin/Dashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0FkbWluL0Rhc2hib2FyZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Admin/DeletedUsers.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEFkbWluXERlbGV0ZWRVc2Vycy5jc2h0bWw=
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Admin/DeletedUsers.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0FkbWluL0RlbGV0ZWRVc2Vycy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Admin/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEFkbWluXERldGFpbHMuY3NodG1s
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Admin/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0FkbWluL0RldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Admin/PendingVerifications.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEFkbWluXFBlbmRpbmdWZXJpZmljYXRpb25zLmNzaHRtbA==
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Admin/PendingVerifications.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0FkbWluL1BlbmRpbmdWZXJpZmljYXRpb25zLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Admin/Reviews.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEFkbWluXFJldmlld3MuY3NodG1s
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Admin/Reviews.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0FkbWluL1Jldmlld3MuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Admin/SubmissionDetails.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEFkbWluXFN1Ym1pc3Npb25EZXRhaWxzLmNzaHRtbA==
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Admin/SubmissionDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0FkbWluL1N1Ym1pc3Npb25EZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Admin/UserDetails.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEFkbWluXFVzZXJEZXRhaWxzLmNzaHRtbA==
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Admin/UserDetails.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0FkbWluL1VzZXJEZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Admin/UserReservations.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEFkbWluXFVzZXJSZXNlcnZhdGlvbnMuY3NodG1s
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Admin/UserReservations.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0FkbWluL1VzZXJSZXNlcnZhdGlvbnMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Admin/Users.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEFkbWluXFVzZXJzLmNzaHRtbA==
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Admin/Users.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0FkbWluL1VzZXJzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Bookings/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEJvb2tpbmdzXENyZWF0ZS5jc2h0bWw=
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Bookings/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0Jvb2tpbmdzL0NyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Bookings/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEJvb2tpbmdzXERldGFpbHMuY3NodG1s
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Bookings/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0Jvb2tpbmdzL0RldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Bookings/DetailsUser.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEJvb2tpbmdzXERldGFpbHNVc2VyLmNzaHRtbA==
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Bookings/DetailsUser.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0Jvb2tpbmdzL0RldGFpbHNVc2VyLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Bookings/MyBookings.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEJvb2tpbmdzXE15Qm9va2luZ3MuY3NodG1s
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Bookings/MyBookings.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0Jvb2tpbmdzL015Qm9va2luZ3MuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Bookings/MyCarsBookings.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEJvb2tpbmdzXE15Q2Fyc0Jvb2tpbmdzLmNzaHRtbA==
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Bookings/MyCarsBookings.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0Jvb2tpbmdzL015Q2Fyc0Jvb2tpbmdzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Bookings/OwnerBookings.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEJvb2tpbmdzXE93bmVyQm9va2luZ3MuY3NodG1s
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Bookings/OwnerBookings.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0Jvb2tpbmdzL093bmVyQm9va2luZ3MuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Cars/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXENhcnNcQ3JlYXRlLmNzaHRtbA==
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Cars/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0NhcnMvQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Cars/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXENhcnNcRGV0YWlscy5jc2h0bWw=
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Cars/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0NhcnMvRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Cars/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXENhcnNcRWRpdC5jc2h0bWw=
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Cars/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0NhcnMvRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Cars/EditRejected.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXENhcnNcRWRpdFJlamVjdGVkLmNzaHRtbA==
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Cars/EditRejected.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0NhcnMvRWRpdFJlamVjdGVkLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Cars/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXENhcnNcSW5kZXguY3NodG1s
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Cars/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0NhcnMvSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Cars/MyCars.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXENhcnNcTXlDYXJzLmNzaHRtbA==
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Cars/MyCars.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0NhcnMvTXlDYXJzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Cars/Submit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXENhcnNcU3VibWl0LmNzaHRtbA==
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Cars/Submit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0NhcnMvU3VibWl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Chatbot/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXENoYXRib3RcSW5kZXguY3NodG1s
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Chatbot/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0NoYXRib3QvSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Home/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEhvbWVcSW5kZXguY3NodG1s
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0hvbWUvSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Home/Privacy.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXEhvbWVcUHJpdmFjeS5jc2h0bWw=
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Home/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL0hvbWUvUHJpdmFjeS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Reviews/CarReviews.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXFJldmlld3NcQ2FyUmV2aWV3cy5jc2h0bWw=
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Reviews/CarReviews.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL1Jldmlld3MvQ2FyUmV2aWV3cy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Reviews/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXFJldmlld3NcQ3JlYXRlLmNzaHRtbA==
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Reviews/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL1Jldmlld3MvQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Reviews/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXFJldmlld3NcRGVsZXRlLmNzaHRtbA==
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Reviews/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL1Jldmlld3MvRGVsZXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Reviews/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXFJldmlld3NcRGV0YWlscy5jc2h0bWw=
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Reviews/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL1Jldmlld3MvRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Reviews/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXFJldmlld3NcRWRpdC5jc2h0bWw=
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Reviews/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL1Jldmlld3MvRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Reviews/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXFJldmlld3NcSW5kZXguY3NodG1s
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Reviews/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL1Jldmlld3MvSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Reviews/ReviewList.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXFJldmlld3NcUmV2aWV3TGlzdC5jc2h0bWw=
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Reviews/ReviewList.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL1Jldmlld3MvUmV2aWV3TGlzdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Shared/Components/RecentCars/Default.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXFNoYXJlZFxDb21wb25lbnRzXFJlY2VudENhcnNcRGVmYXVsdC5jc2h0bWw=
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Shared/Components/RecentCars/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL1NoYXJlZC9Db21wb25lbnRzL1JlY2VudENhcnMvRGVmYXVsdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Shared/Error.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXFNoYXJlZFxFcnJvci5jc2h0bWw=
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Shared/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL1NoYXJlZC9FcnJvci5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Shared/_CarCard.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXFNoYXJlZFxfQ2FyQ2FyZC5jc2h0bWw=
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Shared/_AuthArt.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL1NoYXJlZC9fQXV0aEFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Shared/_CarCardPartial.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXFNoYXJlZFxfQ2FyQ2FyZFBhcnRpYWwuY3NodG1s
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Shared/_CarCard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL1NoYXJlZC9fQ2FyQ2FyZC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Shared/_ReviewCardPartial.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXFNoYXJlZFxfUmV2aWV3Q2FyZFBhcnRpYWwuY3NodG1s
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Shared/_CarCardPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL1NoYXJlZC9fQ2FyQ2FyZFBhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Shared/_ValidationScriptsPartial.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXFNoYXJlZFxfVmFsaWRhdGlvblNjcmlwdHNQYXJ0aWFsLmNzaHRtbA==
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL1NoYXJlZC9fTGF5b3V0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Users/MyAccount.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXFVzZXJzXE15QWNjb3VudC5jc2h0bWw=
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Shared/_ReviewCardPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL1NoYXJlZC9fUmV2aWV3Q2FyZFBhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Users/Profile.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXFVzZXJzXFByb2ZpbGUuY3NodG1s
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL1NoYXJlZC9fVmFsaWRhdGlvblNjcmlwdHNQYXJ0aWFsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Users/UploadProfilePicture.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXFVzZXJzXFVwbG9hZFByb2ZpbGVQaWN0dXJlLmNzaHRtbA==
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Users/MyAccount.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL1VzZXJzL015QWNjb3VudC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/_Layout.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXF9MYXlvdXQuY3NodG1s
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Users/Profile.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL1VzZXJzL1Byb2ZpbGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/_ViewImports.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXF9WaWV3SW1wb3J0cy5jc2h0bWw=
+[/home/user/PeerCar/Peer_Car/Presentation/Views/Users/UploadProfilePicture.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL1VzZXJzL1VwbG9hZFByb2ZpbGVQaWN0dXJlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/_ViewStart.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXF9WaWV3U3RhcnQuY3NodG1s
+[/home/user/PeerCar/Peer_Car/Presentation/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL19WaWV3SW1wb3J0cy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[Y:/projects/Peer_Car/Peer_Car/Presentation/Views/Shared/_Layout.cshtml]
-build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uXFZpZXdzXFNoYXJlZFxfTGF5b3V0LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = b-xlev8gqghi
+[/home/user/PeerCar/Peer_Car/Presentation/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UHJlc2VudGF0aW9uL1ZpZXdzL19WaWV3U3RhcnQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 

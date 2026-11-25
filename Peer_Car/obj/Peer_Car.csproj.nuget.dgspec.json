@@ -1,36 +1,29 @@
 {
   "format": 1,
   "restore": {
-    "Y:\\projects\\Peer_Car\\Peer_Car\\Peer_Car.csproj": {}
+    "/home/user/PeerCar/Peer_Car/Peer_Car.csproj": {}
   },
   "projects": {
-    "Y:\\projects\\Peer_Car\\Peer_Car\\Peer_Car.csproj": {
+    "/home/user/PeerCar/Peer_Car/Peer_Car.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "Y:\\projects\\Peer_Car\\Peer_Car\\Peer_Car.csproj",
+        "projectUniqueName": "/home/user/PeerCar/Peer_Car/Peer_Car.csproj",
         "projectName": "Peer_Car",
-        "projectPath": "Y:\\projects\\Peer_Car\\Peer_Car\\Peer_Car.csproj",
-        "packagesPath": "C:\\Users\\Youssef\\.nuget\\packages\\",
-        "outputPath": "Y:\\projects\\Peer_Car\\Peer_Car\\obj\\",
+        "projectPath": "/home/user/PeerCar/Peer_Car/Peer_Car.csproj",
+        "packagesPath": "/root/.nuget/packages/",
+        "outputPath": "/home/user/PeerCar/Peer_Car/obj/",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Youssef\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "/root/.nuget/NuGet/NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net8.0": {
-            "framework": "net8.0",
             "targetAlias": "net8.0",
             "projectReferences": {}
           }
@@ -39,17 +32,10 @@
           "warnAsError": [
             "NU1605"
           ]
-        },
-        "restoreAuditProperties": {
-          "enableAudit": "true",
-          "auditLevel": "low",
-          "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "10.0.300"
+        }
       },
       "frameworks": {
         "net8.0": {
-          "framework": "net8.0",
           "targetAlias": "net8.0",
           "dependencies": {
             "Microsoft.AspNetCore.Authentication.Google": {
@@ -94,7 +80,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.301/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.134/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
